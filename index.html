@@ -80,25 +80,29 @@ body { background:#05060A; perspective:1000px; }
 <div id="gradient-bg"></div>
 <canvas id="particles-bg" class="fixed inset-0 -z-10"></canvas>
 
-<!-- LOGO -->
+<!-- LOGO (Top-Left, Small) -->
 <div class="fixed top-6 left-6 z-50 flex items-center gap-2">
-  <svg id="logo-mark" class="svg-glow svg-3d" viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+  <svg id="logo-mark" viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg"
+       class="w-20 h-20 animate-fadeUp svg-glow svg-3d">
     <defs>
-      <linearGradient id="abroxGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <linearGradient id="abroxGradientSmall" x1="0%" y1="0%" x2="100%" y2="100%">
         <stop offset="0%" stop-color="#ff5fd2"/>
         <stop offset="50%" stop-color="#8b5cf6"/>
         <stop offset="100%" stop-color="#3b82f6"/>
       </linearGradient>
     </defs>
-    <g transform="translate(300,100) scale(1.15,1.15)">
-      <polygon points="-70,-90 70,-45 50,-30 0,-70 -50,-30 -70,-45" fill="url(#abroxGradient)" />
-      <polygon points="-70,90 70,45 50,30 0,70 -50,30 -70,45" fill="url(#abroxGradient)" />
-      <text x="0" y="12" text-anchor="middle" font-size="clamp(20px,7vw,70px)" font-weight="900"
+    <g transform="translate(300,100) scale(0.5,0.5)">
+      <!-- Top Polygon -->
+      <polygon points="-80,-90 80,-45 60,-30 0,-70 -60,-30 -80,-45" fill="url(#abroxGradientSmall)" />
+      <!-- Bottom Polygon -->
+      <polygon points="-80,90 80,45 60,30 0,70 -60,30 -80,45" fill="url(#abroxGradientSmall)" />
+      <!-- Logo Text -->
+      <text x="0" y="12" text-anchor="middle" font-size="28" font-weight="900"
             font-family="-apple-system,BlinkMacSystemFont,SF Pro Display,system-ui"
-            fill="url(#abroxGradient)"
-            style="filter: drop-shadow(0 0 10px #ff5fd2)
-                   drop-shadow(0 0 20px #8b5cf6)
-                   drop-shadow(0 0 30px #3b82f6);">
+            fill="url(#abroxGradientSmall)"
+            style="filter: drop-shadow(0 0 5px #ff5fd2)
+                   drop-shadow(0 0 10px #8b5cf6)
+                   drop-shadow(0 0 15px #3b82f6);">
         ABROX
       </text>
     </g>
@@ -110,7 +114,7 @@ body { background:#05060A; perspective:1000px; }
   <!-- Hero Text acting like logo -->
   <h1 id="hero-logo"
       class="font-bold bg-gradient-to-r from-violet-500 via-pink-500 to-blue-500 bg-clip-text text-transparent animate-fadeUp svg-glow svg-3d"
-      style="font-size: clamp(2.5rem, 7vw, 5.5rem); line-height: 1.1;">
+      style="font-size: clamp(3rem, 8vw, 6rem); line-height: 1.1;">
     ABROX
   </h1>
 
