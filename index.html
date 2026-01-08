@@ -1,84 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ABROX</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<!-- Tailwind CSS CDN -->
+<title>ABROX — AI-Powered Market Intelligence</title>
+
+<!-- SEO -->
+<meta name="description" content="AI-Powered Market Intelligence delivered directly via Telegram for serious traders. Real-time signals. Structured entries." />
+<meta name="keywords" content="trading signals, AI trading, telegram signals, crypto trading, forex signals" />
+<meta name="author" content="Abrox" />
+
+<!-- OpenGraph -->
+<meta property="og:title" content="ABROX — AI-Powered Market Intelligence" />
+<meta property="og:description" content="Real-time signals. Structured entries. Built for serious traders." />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="./og-image.jpg" />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+
+<!-- Tailwind -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
-  tailwind.config = {
-    theme: {
-      extend: {
-        animation: {
-          fadeUp: "fadeUp 0.8s ease-out both",
-          slideUp: "slideUp 0.8s ease-out both",
-          pulseSlow: "pulse 2.5s infinite",
+tailwind.config = {
+  theme: {
+    extend: {
+      animation: {
+        fadeUp: "fadeUp .9s cubic-bezier(.22,1,.36,1) both",
+        fadeUpDelay: "fadeUp 1s .25s both",
+        pulseSlow: "pulse 2.8s infinite",
+        floatSlow: "float 7s ease-in-out infinite"
+      },
+      keyframes: {
+        fadeUp: {
+          from:{opacity:0,transform:"translateY(16px) scale(.98)"},
+          to:{opacity:1,transform:"translateY(0) scale(1)"}
         },
-        keyframes: {
-          fadeUp: { from: { opacity:0, transform:"translateY(12px)" }, to:{opacity:1, transform:"translateY(0)"} },
-          slideUp: { from: { opacity:0, transform:"translateY(20px)" }, to:{opacity:1, transform:"translateY(0)"} }
+        float:{
+          "0%,100%":{transform:"translateY(0)"},
+          "50%":{transform:"translateY(-4px)"}
         }
       }
     }
   }
+}
 </script>
 
-<!-- Lucide Icons CDN -->
+<!-- Lucide -->
 <script src="https://unpkg.com/lucide@latest"></script>
 
 <style>
-  body {
-    background-color: #05060A;
-  }
-
-  /* Gradient Overlay Behind Particles */
-  #gradient-bg {
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    background: linear-gradient(135deg, #7C3AED, #EC4899, #3B82F6);
-    opacity: 0.35;
-  }
+body { background:#05060A; }
+#gradient-bg{
+  position:fixed; inset:0; z-index:-2;
+  background:linear-gradient(135deg,#7C3AED,#EC4899,#3B82F6);
+  opacity:.35;
+}
+.glass{
+  background:rgba(255,255,255,.06);
+  backdrop-filter:blur(18px);
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 20px 60px rgba(0,0,0,.45);
+}
 </style>
 </head>
-<body class="relative overflow-x-hidden text-[#E5E7EB]">
 
-<!-- GRADIENT BACKGROUND -->
+<body class="text-[#E5E7EB] overflow-x-hidden relative">
+
 <div id="gradient-bg"></div>
+<canvas id="particles-bg" class="fixed inset-0 -z-10"></canvas>
 
-<!-- PARTICLE BACKGROUND -->
-<canvas id="particles-bg" class="fixed inset-0 z-0"></canvas>
-
-<!-- TOP-LEFT LOGO -->
-<div class="fixed top-6 left-6 font-bold text-sm tracking-wide z-50">
+<!-- LOGO -->
+<div class="fixed top-6 left-6 z-50 text-sm font-semibold tracking-wide">
   ABROX LOGO
 </div>
 
-<!-- HERO SECTION -->
-<section class="min-h-screen flex flex-col items-center justify-center text-center px-6 z-10 relative">
+<!-- HERO -->
+<section class="min-h-screen flex flex-col justify-center items-center text-center px-6 relative z-10">
   <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold bg-gradient-to-r from-violet-500 via-pink-500 to-blue-500 bg-clip-text text-transparent animate-fadeUp">
     ABROX LOGO (Gradient Glow)
   </h1>
 
-  <p class="mt-6 text-base sm:text-lg animate-fadeUp">
-    AI‑Powered Market Intelligence
+  <p class="mt-6 text-base sm:text-lg animate-fadeUpDelay">
+    AI-Powered Market Intelligence
   </p>
-  <p class="text-base sm:text-lg animate-fadeUp">
+  <p class="text-base sm:text-lg animate-fadeUpDelay">
     Delivered Directly via Telegram for Serious Traders
   </p>
 
-  <p class="mt-6 text-sm sm:text-base text-[#9CA3AF] animate-fadeUp">
-    Real‑time signals. Structured entries.<br>
+  <p class="mt-6 text-sm sm:text-base text-[#9CA3AF] animate-fadeUpDelay">
+    Real-time signals. Structured entries.<br>
     Built for serious traders.
   </p>
 
-  <button class="mt-8 w-full sm:w-auto px-6 py-4 rounded-xl font-semibold text-black bg-[#22C55E] shadow-[0_0_30px_rgba(34,197,94,0.4)] animate-pulseSlow active:scale-[0.98]">
+  <!-- CTA (A/B ready) -->
+  <a id="cta-main"
+     href="https://t.me/YOUR_CHANNEL?utm_source=landing&utm_campaign=hero"
+     class="mt-8 px-8 py-4 rounded-2xl font-semibold text-black bg-[#22C55E] shadow-[0_0_40px_rgba(34,197,94,.45)] animate-pulseSlow">
     JOIN TELEGRAM — FREE ACCESS
-  </button>
+  </a>
 
-  <div class="mt-6 flex flex-col items-center gap-2 text-sm text-[#9CA3AF]">
+  <!-- SOCIAL PROOF -->
+  <div class="mt-8 flex flex-col items-center gap-2 text-sm text-[#9CA3AF]">
     <div class="flex gap-[2px]">
       <i data-lucide="star" class="w-[15px] h-[15px] fill-yellow-400 text-yellow-400"></i>
       <i data-lucide="star" class="w-[15px] h-[15px] fill-yellow-400 text-yellow-400"></i>
@@ -89,7 +113,7 @@
     <div>4.9/5 • 3,000+ members</div>
     <div class="flex items-center gap-2">
       <span class="relative flex h-[7px] w-[7px]">
-        <span class="animate-ping absolute h-full w-full rounded-full bg-green-400 opacity-75"></span>
+        <span class="absolute inset-0 rounded-full bg-green-400 opacity-75 animate-ping"></span>
         <span class="relative h-[7px] w-[7px] rounded-full bg-green-500"></span>
       </span>
       2,418 traders active now
@@ -97,23 +121,23 @@
   </div>
 </section>
 
-<!-- TRUST SECTION -->
+<!-- TRUST -->
 <section class="py-16 text-center px-6 z-10 relative">
   <p class="text-[#9CA3AF] mb-4">Trusted by traders in 40+ countries</p>
-  <div class="flex justify-center -space-x-2 animate-fadeUp">
-    <img src="./avatars/1.jpg" class="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border border-[#05060A] shadow-sm">
-    <img src="./avatars/2.jpg" class="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border border-[#05060A] shadow-sm">
-    <img src="./avatars/3.jpg" class="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border border-[#05060A] shadow-sm">
-    <img src="./avatars/4.jpg" class="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border border-[#05060A] shadow-sm">
+  <div class="flex justify-center -space-x-3 animate-floatSlow">
+    <img src="./avatars/1.jpg" class="w-8 h-8 rounded-full border border-black/40">
+    <img src="./avatars/2.jpg" class="w-8 h-8 rounded-full border border-black/40">
+    <img src="./avatars/3.jpg" class="w-8 h-8 rounded-full border border-black/40">
+    <img src="./avatars/4.jpg" class="w-8 h-8 rounded-full border border-black/40">
   </div>
   <div class="mt-2 text-xs text-[#9CA3AF]">Live activity indicator ●●●</div>
 </section>
 
-<!-- PRIVATE ACCESS WINDOW -->
+<!-- PRIVATE ACCESS -->
 <section class="px-6 py-16 flex justify-center z-10 relative">
-  <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-6 w-full max-w-md text-center animate-fadeUp">
+  <div class="glass rounded-2xl p-6 max-w-md w-full text-center">
     <p class="text-sm text-[#9CA3AF] mb-4">PRIVATE ACCESS WINDOW</p>
-    <div class="flex justify-center gap-4 font-mono text-lg">
+    <div class="flex justify-center gap-6 font-mono text-lg">
       <div><div>01</div><div class="text-xs text-[#9CA3AF]">Days</div></div>
       <div><div>14</div><div class="text-xs text-[#9CA3AF]">Hours</div></div>
       <div><div>22</div><div class="text-xs text-[#9CA3AF]">Minutes</div></div>
@@ -123,46 +147,30 @@
   </div>
 </section>
 
-<!-- WHY ABROX WORKS -->
-<section class="max-w-5xl mx-auto px-6 py-20 grid grid-cols-1 md:grid-cols-2 gap-4 z-10 relative">
-  <div class="flex items-center gap-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-5 animate-slideUp">
-    🧠 AI Market Scanning
-  </div>
-  <div class="flex items-center gap-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-5 animate-slideUp">
-    ⚡ Instant Telegram Alerts
-  </div>
-  <div class="flex items-center gap-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-5 animate-slideUp">
-    📊 Structured Trade Signals
-  </div>
-  <div class="flex items-center gap-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-5 animate-slideUp">
-    🔐 Risk‑Managed Entries
-  </div>
+<!-- WHY -->
+<section class="max-w-5xl mx-auto px-6 py-20 grid grid-cols-1 md:grid-cols-2 gap-6 z-10 relative">
+  <div class="glass rounded-2xl p-6 flex gap-3"><i data-lucide="brain-circuit"></i> AI Market Scanning</div>
+  <div class="glass rounded-2xl p-6 flex gap-3"><i data-lucide="zap"></i> Instant Telegram Alerts</div>
+  <div class="glass rounded-2xl p-6 flex gap-3"><i data-lucide="line-chart"></i> Structured Trade Signals</div>
+  <div class="glass rounded-2xl p-6 flex gap-3"><i data-lucide="shield-check"></i> Risk-Managed Entries</div>
 </section>
 
 <!-- TESTIMONIALS -->
 <section class="max-w-6xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 py-20 z-10 relative">
-  <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-5 animate-slideUp">
-    <div class="flex gap-[2px] mb-2">⭐⭐⭐⭐⭐</div>
+  <div class="glass rounded-2xl p-6">
+    <div class="mb-2">⭐⭐⭐⭐⭐</div>
     <p class="text-sm">“I was skeptical at first, but results came fast.”</p>
-    <div class="mt-4 flex items-center gap-3 text-xs text-[#9CA3AF]">
-      [Avatar placeholder] — M.R. 🇬🇧
-    </div>
+    <div class="mt-4 text-xs text-[#9CA3AF]">— M.R. 🇬🇧</div>
   </div>
-
-  <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-5 animate-slideUp">
-    <div class="flex gap-[2px] mb-2">⭐⭐⭐⭐⭐</div>
+  <div class="glass rounded-2xl p-6">
+    <div class="mb-2">⭐⭐⭐⭐⭐</div>
     <p class="text-sm">“Lost my job last year — this helped me recover.”</p>
-    <div class="mt-4 flex items-center gap-3 text-xs text-[#9CA3AF]">
-      [Avatar placeholder] — S.K. 🇺🇸
-    </div>
+    <div class="mt-4 text-xs text-[#9CA3AF]">— S.K. 🇺🇸</div>
   </div>
-
-  <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-5 animate-slideUp">
-    <div class="flex gap-[2px] mb-2">⭐⭐⭐⭐☆</div>
+  <div class="glass rounded-2xl p-6">
+    <div class="mb-2">⭐⭐⭐⭐☆</div>
     <p class="text-sm">“Not perfect, had one loss, but overall very solid.”</p>
-    <div class="mt-4 flex items-center gap-3 text-xs text-[#9CA3AF]">
-      [Avatar placeholder] — D.M. 🇨🇦
-    </div>
+    <div class="mt-4 text-xs text-[#9CA3AF]">— D.M. 🇨🇦</div>
   </div>
 </section>
 
@@ -170,44 +178,32 @@
 <section class="text-center px-6 pb-24 z-10 relative">
   <h2 class="text-2xl sm:text-3xl font-semibold">You’re Either In — Or Missing Out</h2>
   <p class="mt-2 text-[#9CA3AF]">Access closing soon</p>
-  <button class="mt-6 w-full sm:w-auto px-8 py-4 rounded-xl font-semibold text-black bg-[#22C55E] shadow-[0_0_40px_rgba(34,197,94,0.4)] animate-pulseSlow">
+  <a href="https://t.me/YOUR_CHANNEL?utm_source=landing&utm_campaign=final"
+     class="mt-6 inline-block px-8 py-4 rounded-2xl font-semibold text-black bg-[#22C55E] shadow-[0_0_40px_rgba(34,197,94,.45)] animate-pulseSlow">
     JOIN TELEGRAM NOW
-  </button>
+  </a>
 </section>
 
-<!-- FOOTER -->
 <footer class="text-center text-xs text-[#9CA3AF] pb-10 z-10 relative">
-  © 2026 Abrox<br>
-  Privacy • Terms • Disclaimer<br>
-  Telegram • X
+  © 2026 Abrox<br>Privacy • Terms • Disclaimer<br>Telegram • X
 </footer>
 
-<!-- Lucide Init -->
-<script>lucide.createIcons();</script>
+<script>lucide.createIcons()</script>
 
-<!-- PARTICLE BACKGROUND SCRIPT -->
+<!-- PARTICLES -->
 <script>
-const canvas=document.getElementById('particles-bg');
-const ctx=canvas.getContext('2d');
-let particles=[];
-function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
-window.addEventListener('resize',resize);resize();
-function createParticles(count){particles=[];for(let i=0;i<count;i++){particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*1.5+0.5,dx:(Math.random()-0.5)*0.2,dy:(Math.random()-0.5)*0.2});}}
-createParticles(120);
-function drawParticles(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  particles.forEach(p=>{
-    ctx.beginPath();
-    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle='rgba(255,255,255,0.7)';
-    ctx.fill();
-    p.x+=p.dx; p.y+=p.dy;
-    if(p.x>canvas.width)p.x=0;if(p.x<0)p.x=canvas.width;
-    if(p.y>canvas.height)p.y=0;if(p.y<0)p.y=canvas.height;
-  });
-  requestAnimationFrame(drawParticles);
-}
-drawParticles();
+const c=document.getElementById("particles-bg"),x=c.getContext("2d");
+let p=[];function r(){c.width=innerWidth;c.height=innerHeight}
+window.onresize=r;r();
+for(let i=0;i<120;i++)p.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*1.5+.5,dx:(Math.random()-.5)*.2,dy:(Math.random()-.5)*.2});
+(function a(){
+x.clearRect(0,0,c.width,c.height);
+p.forEach(e=>{x.beginPath();x.arc(e.x,e.y,e.r,0,7);x.fillStyle="rgba(255,255,255,.7)";x.fill();
+e.x+=e.dx;e.y+=e.dy;
+if(e.x<0||e.x>c.width)e.x=Math.random()*c.width;
+if(e.y<0||e.y>c.height)e.y=Math.random()*c.height;});
+requestAnimationFrame(a);
+})();
 </script>
 
 </body>
