@@ -34,18 +34,9 @@ tailwind.config = {
         glowPulse: "glowPulse 1s infinite alternate"
       },
       keyframes: {
-        fadeUp: {
-          from:{opacity:0,transform:"translateY(16px) scale(.98)"},
-          to:{opacity:1,transform:"translateY(0) scale(1)"}
-        },
-        float:{
-          "0%,100%":{transform:"translateY(0)"},
-          "50%":{transform:"translateY(-4px)"}
-        },
-        glowPulse: {
-          "0%": {boxShadow:"0 0 15px rgba(34,197,94,0.3)"},
-          "100%": {boxShadow:"0 0 40px rgba(34,197,94,0.7)"}
-        }
+        fadeUp: { from:{opacity:0,transform:"translateY(16px) scale(.98)"}, to:{opacity:1,transform:"translateY(0) scale(1)"} },
+        float:{ "0%,100%":{transform:"translateY(0)"}, "50%":{transform:"translateY(-4px)"} },
+        glowPulse: { "0%": {boxShadow:"0 0 15px rgba(34,197,94,0.3)"}, "100%": {boxShadow:"0 0 40px rgba(34,197,94,0.7)"} }
       }
     }
   }
@@ -71,11 +62,24 @@ body { background:#05060A; perspective:1000px; }
 #logo-mark {
   width: 96px;
   height: 96px;
-  background: radial-gradient(circle at 30% 30%, #7C3AED, #EC4899, #3B82F6);
-  border-radius: 50%;
   display:inline-block;
-  animation: pulseSlow 2.8s infinite;
-  transition: transform 0.2s ease, box-shadow 0.3s ease;
+  cursor:pointer;
+}
+.svg-glow {
+  animation: glowPulse 2s infinite ease-in-out;
+}
+.svg-3d {
+  animation: logo3D 6s infinite ease-in-out;
+  transform-origin: center;
+}
+@keyframes glowPulse {
+  0%,100% { filter: drop-shadow(0 0 10px #ff5fd2) drop-shadow(0 0 20px #8b5cf6) drop-shadow(0 0 30px #3b82f6); }
+  50% { filter: drop-shadow(0 0 25px #ff5fd2) drop-shadow(0 0 40px #8b5cf6) drop-shadow(0 0 55px #3b82f6); }
+}
+@keyframes logo3D {
+  0% { transform: rotateY(0deg) rotateX(0deg) scale(1); }
+  50% { transform: rotateY(15deg) rotateX(10deg) scale(1.05); }
+  100% { transform: rotateY(0deg) rotateX(0deg) scale(1); }
 }
 </style>
 </head>
@@ -86,9 +90,28 @@ body { background:#05060A; perspective:1000px; }
 <canvas id="particles-bg" class="fixed inset-0 -z-10"></canvas>
 
 <!-- LOGO -->
-<div class="fixed top-6 left-6 z-50 text-sm font-semibold tracking-wide flex items-center gap-2">
-  <div id="logo-mark"></div>
-  ABROX LOGO
+<div class="fixed top-6 left-6 z-50 flex items-center gap-2">
+  <svg id="logo-mark" class="svg-glow svg-3d" viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="abroxGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#ff5fd2"/>
+        <stop offset="50%" stop-color="#8b5cf6"/>
+        <stop offset="100%" stop-color="#3b82f6"/>
+      </linearGradient>
+    </defs>
+    <g transform="translate(300,100) scale(1.15,1.15)">
+      <polygon points="-70,-90 70,-45 50,-30 0,-70 -50,-30 -70,-45" fill="url(#abroxGradient)" />
+      <polygon points="-70,90 70,45 50,30 0,70 -50,30 -70,45" fill="url(#abroxGradient)" />
+      <text x="0" y="12" text-anchor="middle" font-size="clamp(20px,7vw,70px)" font-weight="900"
+            font-family="-apple-system,BlinkMacSystemFont,SF Pro Display,system-ui"
+            fill="url(#abroxGradient)"
+            style="filter: drop-shadow(0 0 10px #ff5fd2)
+                   drop-shadow(0 0 20px #8b5cf6)
+                   drop-shadow(0 0 30px #3b82f6);">
+        ABROX Binary Bot
+      </text>
+    </g>
+  </svg>
 </div>
 
 <!-- HERO -->
@@ -109,7 +132,7 @@ body { background:#05060A; perspective:1000px; }
     Built for serious traders.
   </p>
 
-  <!-- CTA (A/B ready) -->
+  <!-- CTA -->
   <a id="cta-main"
      href="https://t.me/YOUR_CHANNEL?utm_source=landing&utm_campaign=hero"
      class="mt-8 px-8 py-4 rounded-2xl font-semibold text-black bg-[#22C55E] shadow-[0_0_40px_rgba(34,197,94,.45)] animate-pulseSlow">
@@ -217,7 +240,7 @@ for(let i=0;i<120;i++)p.push({x:Math.random()*c.width,y:Math.random()*c.height,r
 /* COUNTDOWN + SYNC */
 const countdown = {days:1,hours:14,minutes:22,seconds:8};
 const ctaMain=document.getElementById("cta-main");
-const logoMark=document.getElementById("logo-mark");
+const logoMarkSvg=document.getElementById("logo-mark");
 
 function updateCountdown(){
   const sec=--countdown.seconds;
@@ -233,24 +256,24 @@ function renderCountdown(){
   else{ctaMain.style.animation="pulseSlow 2.8s infinite";}
 
   // Logo pulse speed based on urgency
-  logoMark.style.animation=`pulseSlow ${1.5 + countdown.seconds/10}s infinite`;
+  logoMarkSvg.style.animation=`glowPulse ${1.5 + countdown.seconds/10}s infinite`;
 }
 
 setInterval(()=>{updateCountdown();renderCountdown();},1000);
 
-/* HOVER TILT (DESKTOP) */
-document.getElementById("logo-mark").addEventListener("mousemove",e=>{
+/* HOVER TILT */
+logoMarkSvg.addEventListener("mousemove",e=>{
   const rect=e.target.getBoundingClientRect();
   const x=((e.clientX-rect.left)/rect.width-.5)*30;
   const y=((e.clientY-rect.top)/rect.height-.5)*30;
-  logoMark.style.transform=`rotateX(${-y}deg) rotateY(${x}deg)`;
+  logoMarkSvg.style.transform=`rotateX(${-y}deg) rotateY(${x}deg)`;
 });
-document.getElementById("logo-mark").addEventListener("mouseleave",()=>{logoMark.style.transform="rotateX(0) rotateY(0)";});
+logoMarkSvg.addEventListener("mouseleave",()=>{logoMarkSvg.style.transform="rotateX(0) rotateY(0)";});
 
 /* MOBILE GYRO */
 if(window.DeviceOrientationEvent){window.addEventListener("deviceorientation",e=>{
   const x=e.gamma/3;const y=e.beta/3;
-  logoMark.style.transform=`rotateX(${y}deg) rotateY(${x}deg)`;
+  logoMarkSvg.style.transform=`rotateX(${y}deg) rotateY(${x}deg)`;
 },true);}
 </script>
 
