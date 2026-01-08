@@ -30,7 +30,8 @@ tailwind.config = {
         fadeUp: "fadeUp .9s cubic-bezier(.22,1,.36,1) both",
         fadeUpDelay: "fadeUp 1s .25s both",
         pulseSlow: "pulse 2.8s infinite",
-        floatSlow: "float 7s ease-in-out infinite"
+        floatSlow: "float 7s ease-in-out infinite",
+        glowPulse: "glowPulse 1s infinite alternate"
       },
       keyframes: {
         fadeUp: {
@@ -40,6 +41,10 @@ tailwind.config = {
         float:{
           "0%,100%":{transform:"translateY(0)"},
           "50%":{transform:"translateY(-4px)"}
+        },
+        glowPulse: {
+          "0%": {boxShadow:"0 0 15px rgba(34,197,94,0.3)"},
+          "100%": {boxShadow:"0 0 40px rgba(34,197,94,0.7)"}
         }
       }
     }
@@ -51,7 +56,7 @@ tailwind.config = {
 <script src="https://unpkg.com/lucide@latest"></script>
 
 <style>
-body { background:#05060A; }
+body { background:#05060A; perspective:1000px; }
 #gradient-bg{
   position:fixed; inset:0; z-index:-2;
   background:linear-gradient(135deg,#7C3AED,#EC4899,#3B82F6);
@@ -63,6 +68,15 @@ body { background:#05060A; }
   border:1px solid rgba(255,255,255,.12);
   box-shadow:0 20px 60px rgba(0,0,0,.45);
 }
+#logo-mark {
+  width: 96px;
+  height: 96px;
+  background: radial-gradient(circle at 30% 30%, #7C3AED, #EC4899, #3B82F6);
+  border-radius: 50%;
+  display:inline-block;
+  animation: pulseSlow 2.8s infinite;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
 </style>
 </head>
 
@@ -72,7 +86,8 @@ body { background:#05060A; }
 <canvas id="particles-bg" class="fixed inset-0 -z-10"></canvas>
 
 <!-- LOGO -->
-<div class="fixed top-6 left-6 z-50 text-sm font-semibold tracking-wide">
+<div class="fixed top-6 left-6 z-50 text-sm font-semibold tracking-wide flex items-center gap-2">
+  <div id="logo-mark"></div>
   ABROX LOGO
 </div>
 
@@ -137,11 +152,11 @@ body { background:#05060A; }
 <section class="px-6 py-16 flex justify-center z-10 relative">
   <div class="glass rounded-2xl p-6 max-w-md w-full text-center">
     <p class="text-sm text-[#9CA3AF] mb-4">PRIVATE ACCESS WINDOW</p>
-    <div class="flex justify-center gap-6 font-mono text-lg">
-      <div><div>01</div><div class="text-xs text-[#9CA3AF]">Days</div></div>
-      <div><div>14</div><div class="text-xs text-[#9CA3AF]">Hours</div></div>
-      <div><div>22</div><div class="text-xs text-[#9CA3AF]">Minutes</div></div>
-      <div><div>08</div><div class="text-xs text-[#9CA3AF]">Seconds</div></div>
+    <div class="flex justify-center gap-6 font-mono text-lg" id="countdown">
+      <div><div id="days">01</div><div class="text-xs text-[#9CA3AF]">Days</div></div>
+      <div><div id="hours">14</div><div class="text-xs text-[#9CA3AF]">Hours</div></div>
+      <div><div id="minutes">22</div><div class="text-xs text-[#9CA3AF]">Minutes</div></div>
+      <div><div id="seconds">08</div><div class="text-xs text-[#9CA3AF]">Seconds</div></div>
     </div>
     <p class="mt-4 text-sm text-red-400">Only 17 spots remaining today</p>
   </div>
@@ -178,7 +193,7 @@ body { background:#05060A; }
 <section class="text-center px-6 pb-24 z-10 relative">
   <h2 class="text-2xl sm:text-3xl font-semibold">You’re Either In — Or Missing Out</h2>
   <p class="mt-2 text-[#9CA3AF]">Access closing soon</p>
-  <a href="https://t.me/YOUR_CHANNEL?utm_source=landing&utm_campaign=final"
+  <a href="https://t.me/YOUR_CHANNEL?utm_source=landing&utm_campaign=final" id="cta-final"
      class="mt-6 inline-block px-8 py-4 rounded-2xl font-semibold text-black bg-[#22C55E] shadow-[0_0_40px_rgba(34,197,94,.45)] animate-pulseSlow">
     JOIN TELEGRAM NOW
   </a>
@@ -190,20 +205,53 @@ body { background:#05060A; }
 
 <script>lucide.createIcons()</script>
 
-<!-- PARTICLES -->
+<!-- PARTICLES + Countdown + Logo -->
 <script>
-const c=document.getElementById("particles-bg"),x=c.getContext("2d");
-let p=[];function r(){c.width=innerWidth;c.height=innerHeight}
-window.onresize=r;r();
+/* PARTICLES */
+const c=document.getElementById("particles-bg"),x=c.getContext("2d"),p=[];
+function resizeCanvas(){c.width=innerWidth;c.height=innerHeight}
+window.onresize=resizeCanvas;resizeCanvas();
 for(let i=0;i<120;i++)p.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*1.5+.5,dx:(Math.random()-.5)*.2,dy:(Math.random()-.5)*.2});
-(function a(){
-x.clearRect(0,0,c.width,c.height);
-p.forEach(e=>{x.beginPath();x.arc(e.x,e.y,e.r,0,7);x.fillStyle="rgba(255,255,255,.7)";x.fill();
-e.x+=e.dx;e.y+=e.dy;
-if(e.x<0||e.x>c.width)e.x=Math.random()*c.width;
-if(e.y<0||e.y>c.height)e.y=Math.random()*c.height;});
-requestAnimationFrame(a);
-})();
+(function animParticles(){x.clearRect(0,0,c.width,c.height);p.forEach(e=>{x.beginPath();x.arc(e.x,e.y,e.r,0,7);x.fillStyle="rgba(255,255,255,.7)";x.fill();e.x+=e.dx;e.y+=e.dy;if(e.x<0||e.x>c.width)e.x=Math.random()*c.width;if(e.y<0||e.y>c.height)e.y=Math.random()*c.height});requestAnimationFrame(animParticles)})();
+
+/* COUNTDOWN + SYNC */
+const countdown = {days:1,hours:14,minutes:22,seconds:8};
+const ctaMain=document.getElementById("cta-main");
+const logoMark=document.getElementById("logo-mark");
+
+function updateCountdown(){
+  const sec=--countdown.seconds;
+  if(sec<0){countdown.seconds=59;countdown.minutes--; if(countdown.minutes<0){countdown.minutes=59;countdown.hours--; if(countdown.hours<0){countdown.hours=23;countdown.days--;}}}}
+function renderCountdown(){
+  document.getElementById("days").innerText=String(countdown.days).padStart(2,"0");
+  document.getElementById("hours").innerText=String(countdown.hours).padStart(2,"0");
+  document.getElementById("minutes").innerText=String(countdown.minutes).padStart(2,"0");
+  document.getElementById("seconds").innerText=String(countdown.seconds).padStart(2,"0");
+
+  // CTA glow sync
+  if(countdown.seconds<=5){ctaMain.style.animation="glowPulse 1s infinite alternate";}
+  else{ctaMain.style.animation="pulseSlow 2.8s infinite";}
+
+  // Logo pulse speed based on urgency
+  logoMark.style.animation=`pulseSlow ${1.5 + countdown.seconds/10}s infinite`;
+}
+
+setInterval(()=>{updateCountdown();renderCountdown();},1000);
+
+/* HOVER TILT (DESKTOP) */
+document.getElementById("logo-mark").addEventListener("mousemove",e=>{
+  const rect=e.target.getBoundingClientRect();
+  const x=((e.clientX-rect.left)/rect.width-.5)*30;
+  const y=((e.clientY-rect.top)/rect.height-.5)*30;
+  logoMark.style.transform=`rotateX(${-y}deg) rotateY(${x}deg)`;
+});
+document.getElementById("logo-mark").addEventListener("mouseleave",()=>{logoMark.style.transform="rotateX(0) rotateY(0)";});
+
+/* MOBILE GYRO */
+if(window.DeviceOrientationEvent){window.addEventListener("deviceorientation",e=>{
+  const x=e.gamma/3;const y=e.beta/3;
+  logoMark.style.transform=`rotateX(${y}deg) rotateY(${x}deg)`;
+},true);}
 </script>
 
 </body>
