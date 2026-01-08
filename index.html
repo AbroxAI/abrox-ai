@@ -3,23 +3,18 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
 <title>ABROX — AI-Powered Market Intelligence</title>
-
 <!-- SEO -->
 <meta name="description" content="AI-Powered Market Intelligence delivered directly via Telegram for serious traders. Real-time signals. Structured entries." />
 <meta name="keywords" content="trading signals, AI trading, telegram signals, crypto trading, forex signals" />
 <meta name="author" content="Abrox" />
-
 <!-- OpenGraph -->
 <meta property="og:title" content="ABROX — AI-Powered Market Intelligence" />
 <meta property="og:description" content="Real-time signals. Structured entries. Built for serious traders." />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="./og-image.jpg" />
-
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
-
 <!-- Tailwind -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
@@ -42,10 +37,8 @@ tailwind.config = {
   }
 }
 </script>
-
 <!-- Lucide -->
 <script src="https://unpkg.com/lucide@latest"></script>
-
 <style>
 body { background:#05060A; perspective:1000px; }
 #gradient-bg{
@@ -83,9 +76,7 @@ body { background:#05060A; perspective:1000px; }
 }
 </style>
 </head>
-
 <body class="text-[#E5E7EB] overflow-x-hidden relative">
-
 <div id="gradient-bg"></div>
 <canvas id="particles-bg" class="fixed inset-0 -z-10"></canvas>
 
@@ -116,7 +107,10 @@ body { background:#05060A; perspective:1000px; }
 
 <!-- HERO -->
 <section class="min-h-screen flex flex-col justify-center items-center text-center px-6 relative z-10">
-  <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold bg-gradient-to-r from-violet-500 via-pink-500 to-blue-500 bg-clip-text text-transparent animate-fadeUp">
+  <!-- Hero Text acting like logo -->
+  <h1 id="hero-logo"
+      class="font-bold bg-gradient-to-r from-violet-500 via-pink-500 to-blue-500 bg-clip-text text-transparent animate-fadeUp svg-glow svg-3d"
+      style="font-size: clamp(2.5rem, 7vw, 5.5rem); line-height: 1.1;">
     ABROX LOGO (Gradient Glow)
   </h1>
 
@@ -228,7 +222,7 @@ body { background:#05060A; perspective:1000px; }
 
 <script>lucide.createIcons()</script>
 
-<!-- PARTICLES + Countdown + Logo -->
+<!-- PARTICLES + Countdown + Logo + Hero Glow/Tilt -->
 <script>
 /* PARTICLES */
 const c=document.getElementById("particles-bg"),x=c.getContext("2d"),p=[];
@@ -241,6 +235,7 @@ for(let i=0;i<120;i++)p.push({x:Math.random()*c.width,y:Math.random()*c.height,r
 const countdown = {days:1,hours:14,minutes:22,seconds:8};
 const ctaMain=document.getElementById("cta-main");
 const logoMarkSvg=document.getElementById("logo-mark");
+const heroLogo = document.getElementById('hero-logo');
 
 function updateCountdown(){
   const sec=--countdown.seconds;
@@ -257,24 +252,31 @@ function renderCountdown(){
 
   // Logo pulse speed based on urgency
   logoMarkSvg.style.animation=`glowPulse ${1.5 + countdown.seconds/10}s infinite`;
+
+  // Hero logo glow
+  heroLogo.style.animation=`glowPulse ${1.5 + countdown.seconds/10}s infinite`;
 }
 
 setInterval(()=>{updateCountdown();renderCountdown();},1000);
 
 /* HOVER TILT */
-logoMarkSvg.addEventListener("mousemove",e=>{
-  const rect=e.target.getBoundingClientRect();
-  const x=((e.clientX-rect.left)/rect.width-.5)*30;
-  const y=((e.clientY-rect.top)/rect.height-.5)*30;
-  logoMarkSvg.style.transform=`rotateX(${-y}deg) rotateY(${x}deg)`;
+[logoMarkSvg, heroLogo].forEach(el => {
+  el.addEventListener("mousemove", e=>{
+    const rect=e.target.getBoundingClientRect();
+    const x=((e.clientX-rect.left)/rect.width-.5)*30;
+    const y=((e.clientY-rect.top)/rect.height-.5)*30;
+    el.style.transform=`rotateX(${-y}deg) rotateY(${x}deg)`;
+  });
+  el.addEventListener("mouseleave", ()=>{el.style.transform="rotateX(0) rotateY(0)";});
 });
-logoMarkSvg.addEventListener("mouseleave",()=>{logoMarkSvg.style.transform="rotateX(0) rotateY(0)";});
 
 /* MOBILE GYRO */
-if(window.DeviceOrientationEvent){window.addEventListener("deviceorientation",e=>{
-  const x=e.gamma/3;const y=e.beta/3;
-  logoMarkSvg.style.transform=`rotateX(${y}deg) rotateY(${x}deg)`;
-},true);}
+if(window.DeviceOrientationEvent){
+  window.addEventListener("deviceorientation", e=>{
+    const x=e.gamma/3; const y=e.beta/3;
+    [logoMarkSvg, heroLogo].forEach(el => el.style.transform=`rotateX(${y}deg) rotateY(${x}deg)`);
+  },true);
+}
 </script>
 
 </body>
