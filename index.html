@@ -4,19 +4,25 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>ABROX — AI-Powered Market Intelligence</title>
+
 <!-- SEO -->
 <meta name="description" content="AI-Powered Market Intelligence delivered directly via Telegram for serious traders. Real-time signals. Structured entries." />
 <meta name="keywords" content="trading signals, AI trading, telegram signals, crypto trading, forex signals" />
 <meta name="author" content="Abrox" />
+
 <!-- OpenGraph -->
 <meta property="og:title" content="ABROX — AI-Powered Market Intelligence" />
 <meta property="og:description" content="Real-time signals. Structured entries. Built for serious traders." />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="./og-image.jpg" />
+
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
-<!-- Tailwind -->
+
+<!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Tailwind config -->
 <script>
 tailwind.config = {
   theme: {
@@ -29,7 +35,7 @@ tailwind.config = {
         glowPulse: "glowPulse 1s infinite alternate"
       },
       keyframes: {
-        fadeUp: { from:{opacity:0,transform:"translateY(16px) scale(.98)"}, to:{opacity:1,transform:"translateY(0) scale(1)"} },
+        fadeUp: { from:{opacity:0, transform:"translateY(16px) scale(.98)"}, to:{opacity:1, transform:"translateY(0) scale(1)"} },
         float:{ "0%,100%":{transform:"translateY(0)"}, "50%":{transform:"translateY(-4px)"} },
         glowPulse: { "0%": {boxShadow:"0 0 15px rgba(34,197,94,0.3)"}, "100%": {boxShadow:"0 0 40px rgba(34,197,94,0.7)"} }
       }
@@ -37,26 +43,33 @@ tailwind.config = {
   }
 }
 </script>
-<!-- Lucide -->
+
+<!-- Lucide Icons -->
 <script src="https://unpkg.com/lucide@latest"></script>
+
 <style>
-body { background:#05060A; perspective:1000px; }
+body {
+  background: #05060A;
+  perspective: 1000px;
+}
 #gradient-bg{
-  position:fixed; inset:0; z-index:-2;
-  background:linear-gradient(135deg,#7C3AED,#EC4899,#3B82F6);
-  opacity:.35;
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background: linear-gradient(135deg,#7C3AED,#EC4899,#3B82F6);
+  opacity: 0.35;
 }
 .glass{
-  background:rgba(255,255,255,.06);
-  backdrop-filter:blur(18px);
-  border:1px solid rgba(255,255,255,.12);
-  box-shadow:0 20px 60px rgba(0,0,0,.45);
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(18px);
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.45);
 }
 #logo-mark {
   width: 96px;
   height: 96px;
-  display:inline-block;
-  cursor:pointer;
+  display: inline-block;
+  cursor: pointer;
 }
 .svg-glow {
   animation: glowPulse 2s infinite ease-in-out;
@@ -76,11 +89,16 @@ body { background:#05060A; perspective:1000px; }
 }
 </style>
 </head>
+
 <body class="text-[#E5E7EB] overflow-x-hidden relative">
+
+<!-- Gradient Background -->
 <div id="gradient-bg"></div>
+
+<!-- Particles Background -->
 <canvas id="particles-bg" class="fixed inset-0 -z-10"></canvas>
 
-<!-- LOGO (Top-Left, Small) -->
+<!-- LOGO (Top-Left) -->
 <div class="fixed top-6 left-6 z-50 flex items-center gap-2">
   <svg id="logo-mark" viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg"
        class="w-20 h-20 animate-fadeUp svg-glow svg-3d">
@@ -111,7 +129,6 @@ body { background:#05060A; perspective:1000px; }
 
 <!-- HERO -->
 <section class="min-h-screen flex flex-col justify-center items-center text-center px-6 relative z-10">
-  <!-- Hero Text acting like logo -->
   <h1 id="hero-logo"
       class="font-bold bg-gradient-to-r from-violet-500 via-pink-500 to-blue-500 bg-clip-text text-transparent animate-fadeUp svg-glow svg-3d"
       style="font-size: clamp(3rem, 8vw, 6rem); line-height: 1.1;">
@@ -224,47 +241,57 @@ body { background:#05060A; perspective:1000px; }
   © 2026 Abrox<br>Privacy • Terms • Disclaimer<br>Telegram • X
 </footer>
 
-<script>lucide.createIcons()</script>
-
-<!-- PARTICLES + Countdown + Logo + Hero Glow/Tilt -->
 <script>
-/* PARTICLES */
-const c=document.getElementById("particles-bg"),x=c.getContext("2d"),p=[];
-function resizeCanvas(){c.width=innerWidth;c.height=innerHeight}
-window.onresize=resizeCanvas;resizeCanvas();
-for(let i=0;i<120;i++)p.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*1.5+.5,dx:(Math.random()-.5)*.2,dy:(Math.random()-.5)*.2});
-(function animParticles(){x.clearRect(0,0,c.width,c.height);p.forEach(e=>{x.beginPath();x.arc(e.x,e.y,e.r,0,7);x.fillStyle="rgba(255,255,255,.7)";x.fill();e.x+=e.dx;e.y+=e.dy;if(e.x<0||e.x>c.width)e.x=Math.random()*c.width;if(e.y<0||e.y>c.height)e.y=Math.random()*c.height});requestAnimationFrame(animParticles)})();
+lucide.createIcons();
 
-/* COUNTDOWN + SYNC */
+/* PARTICLES */
+const c = document.getElementById("particles-bg");
+const x = c.getContext("2d");
+const p = [];
+function resizeCanvas(){ c.width = innerWidth; c.height = innerHeight; }
+window.onresize = resizeCanvas;
+resizeCanvas();
+for(let i=0;i<120;i++){
+  p.push({x:Math.random()*c.width, y:Math.random()*c.height, r:Math.random()*1.5+.5, dx:(Math.random()-.5)*.2, dy:(Math.random()-.5)*.2});
+}
+(function animParticles(){
+  x.clearRect(0,0,c.width,c.height);
+  p.forEach(e=>{
+    x.beginPath();
+    x.arc(e.x,e.y,e.r,0,7);
+    x.fillStyle="rgba(255,255,255,.7)";
+    x.fill();
+    e.x+=e.dx; e.y+=e.dy;
+    if(e.x<0||e.x>c.width) e.x=Math.random()*c.width;
+    if(e.y<0||e.y>c.height) e.y=Math.random()*c.height;
+  });
+  requestAnimationFrame(animParticles);
+})();
+
+/* COUNTDOWN */
 const countdown = {days:1,hours:14,minutes:22,seconds:8};
-const ctaMain=document.getElementById("cta-main");
-const logoMarkSvg=document.getElementById("logo-mark");
-const heroLogo = document.getElementById('hero-logo');
+const ctaMain = document.getElementById("cta-main");
+const logoMarkSvg = document.getElementById("logo-mark");
+const heroLogo = document.getElementById("hero-logo");
 
 function updateCountdown(){
-  const sec=--countdown.seconds;
-  if(sec<0){countdown.seconds=59;countdown.minutes--; if(countdown.minutes<0){countdown.minutes=59;countdown.hours--; if(countdown.hours<0){countdown.hours=23;countdown.days--;}}}}
+  const sec = --countdown.seconds;
+  if(sec<0){ countdown.seconds=59; countdown.minutes--; if(countdown.minutes<0){ countdown.minutes=59; countdown.hours--; if(countdown.hours<0){ countdown.hours=23; countdown.days--;}}}}
 function renderCountdown(){
-  document.getElementById("days").innerText=String(countdown.days).padStart(2,"0");
-  document.getElementById("hours").innerText=String(countdown.hours).padStart(2,"0");
-  document.getElementById("minutes").innerText=String(countdown.minutes).padStart(2,"0");
-  document.getElementById("seconds").innerText=String(countdown.seconds).padStart(2,"0");
-
+  document.getElementById("days").innerText = String(countdown.days).padStart(2,"0");
+  document.getElementById("hours").innerText = String(countdown.hours).padStart(2,"0");
+  document.getElementById("minutes").innerText = String(countdown.minutes).padStart(2,"0");
+  document.getElementById("seconds").innerText = String(countdown.seconds).padStart(2,"0");
   // CTA glow sync
-  if(countdown.seconds<=5){ctaMain.style.animation="glowPulse 1s infinite alternate";}
-  else{ctaMain.style.animation="pulseSlow 2.8s infinite";}
-
-  // Logo pulse speed based on urgency
-  logoMarkSvg.style.animation=`glowPulse ${1.5 + countdown.seconds/10}s infinite`;
-
-  // Hero logo glow
-  heroLogo.style.animation=`glowPulse ${1.5 + countdown.seconds/10}s infinite`;
+  ctaMain.style.animation = countdown.seconds<=5?"glowPulse 1s infinite alternate":"pulseSlow 2.8s infinite";
+  // Logo pulse
+  logoMarkSvg.style.animation = `glowPulse ${1.5 + countdown.seconds/10}s infinite`;
+  heroLogo.style.animation = `glowPulse ${1.5 + countdown.seconds/10}s infinite`;
 }
-
-setInterval(()=>{updateCountdown();renderCountdown();},1000);
+setInterval(()=>{updateCountdown(); renderCountdown();},1000);
 
 /* HOVER TILT */
-[logoMarkSvg, heroLogo].forEach(el => {
+[logoMarkSvg, heroLogo].forEach(el=>{
   el.addEventListener("mousemove", e=>{
     const rect=e.target.getBoundingClientRect();
     const x=((e.clientX-rect.left)/rect.width-.5)*30;
@@ -279,7 +306,7 @@ if(window.DeviceOrientationEvent){
   window.addEventListener("deviceorientation", e=>{
     const x=e.gamma/3; const y=e.beta/3;
     [logoMarkSvg, heroLogo].forEach(el => el.style.transform=`rotateX(${y}deg) rotateY(${x}deg)`);
-  },true);
+  }, true);
 }
 </script>
 
