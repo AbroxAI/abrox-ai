@@ -51,7 +51,6 @@ tailwind.config = {
 body { background: #05060A; perspective: 1000px; }
 #gradient-bg{ position: fixed; inset:0; z-index:-2; background: linear-gradient(135deg,#7C3AED,#EC4899,#3B82F6); opacity:.35; }
 .glass{ background: rgba(255,255,255,.06); backdrop-filter: blur(18px); border:1px solid rgba(255,255,255,.12); box-shadow:0 20px 60px rgba(0,0,0,.45);}
-#logo-mark { width:96px; height:96px; display:inline-block; cursor:pointer; }
 .svg-glow { animation: glowPulse 2s infinite ease-in-out; }
 .svg-3d { animation: logo3D 6s infinite ease-in-out; transform-origin: center; }
 @keyframes glowPulse { 0%,100% { filter: drop-shadow(0 0 10px #ff5fd2) drop-shadow(0 0 20px #8b5cf6) drop-shadow(0 0 30px #3b82f6); } 50% { filter: drop-shadow(0 0 25px #ff5fd2) drop-shadow(0 0 40px #8b5cf6) drop-shadow(0 0 55px #3b82f6); } }
@@ -67,31 +66,7 @@ body { background: #05060A; perspective: 1000px; }
 <!-- Particles Background -->
 <canvas id="particles-bg" class="fixed inset-0 -z-10"></canvas>
 
-<!-- LOGO (Top-Left) -->
-<div class="fixed top-6 left-6 z-50 flex items-center gap-2">
-  <svg id="logo-mark" viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg"
-       class="w-20 h-20 animate-fadeUp svg-glow svg-3d">
-    <defs>
-      <linearGradient id="abroxGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stop-color="#ff5fd2"/>
-        <stop offset="50%" stop-color="#8b5cf6"/>
-        <stop offset="100%" stop-color="#3b82f6"/>
-      </linearGradient>
-    </defs>
-    <g transform="translate(300,100) scale(0.5)">
-      <polygon points="-80,-90 80,-45 60,-30 0,-70 -60,-30 -80,-45" fill="url(#abroxGradient)" />
-      <polygon points="-80,90 80,45 60,30 0,70 -60,30 -80,45" fill="url(#abroxGradient)" />
-      <text x="0" y="12" text-anchor="middle" font-size="28" font-weight="900"
-            font-family="-apple-system,BlinkMacSystemFont,SF Pro Display,system-ui"
-            fill="url(#abroxGradient)"
-            style="filter: drop-shadow(0 0 5px #ff5fd2)
-                   drop-shadow(0 0 10px #8b5cf6)
-                   drop-shadow(0 0 15px #3b82f6);">
-        ABROX
-      </text>
-    </g>
-  </svg>
-</div>
+<!-- NOTE: small top-left logo removed as requested (kept only the big hero logo) -->
 
 <!-- HERO -->
 <section class="min-h-screen flex flex-col justify-center items-center text-center px-6 relative z-10">
@@ -109,6 +84,7 @@ body { background: #05060A; perspective: 1000px; }
 
   <p class="mt-6 text-base sm:text-lg animate-fadeUpDelay">AI-Powered Market Intelligence</p>
   <p class="text-base sm:text-lg animate-fadeUpDelay">Delivered Directly via Telegram for Serious Traders</p>
+
   <p class="mt-6 text-sm sm:text-base text-[#9CA3AF] animate-fadeUpDelay">
     Real-time signals. Structured entries.<br>
     Built for serious traders.
@@ -144,10 +120,11 @@ body { background: #05060A; perspective: 1000px; }
 <section class="py-16 text-center px-6 z-10 relative">
   <p class="text-[#9CA3AF] mb-4">Trusted by traders in 40+ countries</p>
   <div class="flex justify-center -space-x-3 animate-floatSlow">
-    <img src="./avatars/1.jpg" class="w-8 h-8 rounded-full border border-black/40">
-    <img src="./avatars/2.jpg" class="w-8 h-8 rounded-full border border-black/40">
-    <img src="./avatars/3.jpg" class="w-8 h-8 rounded-full border border-black/40">
-    <img src="./avatars/4.jpg" class="w-8 h-8 rounded-full border border-black/40">
+    <!-- Hand-picked RandomUser images (diverse mix) -->
+    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="avatar 1" class="w-8 h-8 rounded-full border border-black/40">
+    <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="avatar 2" class="w-8 h-8 rounded-full border border-black/40">
+    <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="avatar 3" class="w-8 h-8 rounded-full border border-black/40">
+    <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="avatar 4" class="w-8 h-8 rounded-full border border-black/40">
   </div>
   <div class="mt-2 text-xs text-[#9CA3AF]">Live activity indicator ●●●</div>
 </section>
@@ -222,36 +199,54 @@ for(let i=0;i<120;i++){ p.push({x:Math.random()*c.width, y:Math.random()*c.heigh
 /* COUNTDOWN */
 const countdown = {days:1,hours:14,minutes:22,seconds:8};
 const ctaMain = document.getElementById("cta-main");
-const logoMarkSvg = document.getElementById("logo-mark");
+const logoMarkSvg = document.getElementById("logo-mark"); // will be null (we removed small logo) — safe guard below
 const heroLogo = document.getElementById("hero-logo");
-function updateCountdown(){ const sec = --countdown.seconds; if(sec<0){ countdown.seconds=59; countdown.minutes--; if(countdown.minutes<0){ countdown.minutes=59; countdown.hours--; if(countdown.hours<0){ countdown.hours=23; countdown.days--;}}}}
+
+// Create activeLogoElements array that includes heroLogo and the small logo only if it exists
+const activeLogoElements = [heroLogo];
+if (logoMarkSvg) activeLogoElements.push(logoMarkSvg);
+
+function updateCountdown(){ 
+  const sec = --countdown.seconds; 
+  if(sec<0){ countdown.seconds=59; countdown.minutes--; if(countdown.minutes<0){ countdown.minutes=59; countdown.hours--; if(countdown.hours<0){ countdown.hours=23; countdown.days--;}}}
+}
 function renderCountdown(){
   document.getElementById("days").innerText = String(countdown.days).padStart(2,"0");
   document.getElementById("hours").innerText = String(countdown.hours).padStart(2,"0");
   document.getElementById("minutes").innerText = String(countdown.minutes).padStart(2,"0");
   document.getElementById("seconds").innerText = String(countdown.seconds).padStart(2,"0");
-  ctaMain.style.animation = countdown.seconds<=5?"glowPulse 1s infinite alternate":"pulseSlow 2.8s infinite";
-  logoMarkSvg.style.animation = `glowPulse ${1.5 + countdown.seconds/10}s infinite`;
-  heroLogo.style.animation = `glowPulse ${1.5 + countdown.seconds/10}s infinite`;
+
+  // CTA glow sync
+  if(countdown.seconds<=5){ ctaMain.style.animation="glowPulse 1s infinite alternate"; }
+  else{ ctaMain.style.animation="pulseSlow 2.8s infinite"; }
+
+  // Update logo animations only for elements that exist
+  activeLogoElements.forEach(el => {
+    if(el) el.style.animation = `glowPulse ${1.5 + countdown.seconds/10}s infinite`;
+  });
 }
+
 setInterval(()=>{updateCountdown(); renderCountdown();},1000);
 
 /* HOVER TILT */
-[logoMarkSvg, heroLogo].forEach(el=>{
+// Apply hover tilt to heroLogo and to the small logo only if it exists
+activeLogoElements.forEach(el => {
+  if(!el) return;
   el.addEventListener("mousemove", e=>{
-    const rect=e.target.getBoundingClientRect();
-    const x=((e.clientX-rect.left)/rect.width-.5)*30;
-    const y=((e.clientY-rect.top)/rect.height-.5)*30;
-    el.style.transform=`rotateX(${-y}deg) rotateY(${x}deg)`;
+    const rect = el.getBoundingClientRect();
+    const mx = ((e.clientX-rect.left)/rect.width - .5) * 30;
+    const my = ((e.clientY-rect.top)/rect.height - .5) * 30;
+    el.style.transform = `rotateX(${-my}deg) rotateY(${mx}deg)`;
   });
-  el.addEventListener("mouseleave", ()=>{el.style.transform="rotateX(0) rotateY(0)";});
+  el.addEventListener("mouseleave", ()=>{ el.style.transform = "rotateX(0) rotateY(0)"; });
 });
 
 /* MOBILE GYRO */
 if(window.DeviceOrientationEvent){
   window.addEventListener("deviceorientation", e=>{
-    const x=e.gamma/3; const y=e.beta/3;
-    [logoMarkSvg, heroLogo].forEach(el => el.style.transform=`rotateX(${y}deg) rotateY(${x}deg)`);
+    const rx = e.beta/3 || 0;
+    const ry = e.gamma/3 || 0;
+    activeLogoElements.forEach(el => { if(el) el.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`; });
   }, true);
 }
 </script>
