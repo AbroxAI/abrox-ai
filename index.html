@@ -19,6 +19,9 @@
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
 
+<!-- Google font to approximate the original wordmark -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;900&display=swap" rel="stylesheet">
+
 <!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
 
@@ -48,16 +51,23 @@ tailwind.config = {
 <script src="https://unpkg.com/lucide@latest"></script>
 
 <style>
-body { background: #05060A; perspective: 1000px; }
-#gradient-bg{ position: fixed; inset:0; z-index:-2; background: linear-gradient(135deg,#7C3AED,#EC4899,#3B82F6); opacity:.35; }
-.glass{ background: rgba(255,255,255,.06); backdrop-filter: blur(18px); border:1px solid rgba(255,255,255,.12); box-shadow:0 20px 60px rgba(0,0,0,.45);}
-.svg-glow { animation: glowPulse 2s infinite ease-in-out; }
-.svg-3d { animation: logo3D 6s infinite ease-in-out; transform-origin: center; display:block; margin:auto; }
-@keyframes glowPulse { 0%,100% { filter: drop-shadow(0 0 10px #ff5fd2) drop-shadow(0 0 20px #8b5cf6) drop-shadow(0 0 30px #3b82f6); } 50% { filter: drop-shadow(0 0 25px #ff5fd2) drop-shadow(0 0 40px #8b5cf6) drop-shadow(0 0 55px #3b82f6); } }
-@keyframes logo3D { 0% { transform: rotateY(0deg) rotateX(0deg) scale(1); } 50% { transform: rotateY(15deg) rotateX(10deg) scale(1.05); } 100% { transform: rotateY(0deg) rotateX(0deg) scale(1); } }
+  body { background: #05060A; perspective: 1000px; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+  #gradient-bg{ position: fixed; inset:0; z-index:-2; background: linear-gradient(135deg,#7C3AED,#EC4899,#3B82F6); opacity:.35; }
+  .glass{ background: rgba(255,255,255,.06); backdrop-filter: blur(18px); border:1px solid rgba(255,255,255,.12); box-shadow:0 20px 60px rgba(0,0,0,.45);}
+  .svg-glow { animation: glowPulse 2s infinite ease-in-out; }
+  .svg-3d { animation: logo3D 6s infinite ease-in-out; transform-origin: center; display:block; margin:auto; }
 
-/* Make sure the hero SVG scales nicely and remains balanced */
-#hero-logo-svg { width: clamp(160px, 35vw, 520px); height: auto; }
+  /* thin glossy edge for facets */
+  .chev-edge { fill: rgba(0,0,0,0.12); opacity: 0.55; }
+
+  @keyframes glowPulse { 0%,100% { filter: drop-shadow(0 0 10px #ff5fd2) drop-shadow(0 0 20px #8b5cf6) drop-shadow(0 0 30px #3b82f6); } 50% { filter: drop-shadow(0 0 25px #ff5fd2) drop-shadow(0 0 40px #8b5cf6) drop-shadow(0 0 55px #3b82f6); } }
+  @keyframes logo3D { 0% { transform: rotateY(0deg) rotateX(0deg) scale(1); } 50% { transform: rotateY(10deg) rotateX(6deg) scale(1.02); } 100% { transform: rotateY(0deg) rotateX(0deg) scale(1); } }
+
+  /* hero SVG sizing and balance */
+  #hero-logo { width: clamp(260px, 48vw, 780px); height: auto; }
+
+  /* tighter ABROX style */
+  .abrox-text { font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, Arial; font-weight:900; letter-spacing:6px; }
 </style>
 </head>
 
@@ -69,36 +79,90 @@ body { background: #05060A; perspective: 1000px; }
 <!-- Particles Background -->
 <canvas id="particles-bg" class="fixed inset-0 -z-10"></canvas>
 
-<!-- NOTE: small top-left logo removed as requested (kept only the big hero logo) -->
-
 <!-- HERO -->
 <section class="min-h-screen flex flex-col justify-center items-center text-center px-6 relative z-10">
-  <!-- Replaced hero text with SVG logo (balanced, scaled) -->
-  <svg id="hero-logo" viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg"
-       class="svg-glow svg-3d" role="img" aria-label="ABROX logo" id="hero-logo-svg">
+
+  <!-- New improved SVG: layered facets, sharper bevels, highlight slivers, mirrored bottom piece -->
+  <svg id="hero-logo" viewBox="0 0 1000 700" xmlns="http://www.w3.org/2000/svg" class="svg-glow svg-3d" role="img" aria-label="ABROX logo" preserveAspectRatio="xMidYMid meet">
     <defs>
-      <linearGradient id="abroxGradientHero" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stop-color="#ff5fd2"/>
-        <stop offset="50%" stop-color="#8b5cf6"/>
+      <!-- gradient with multiple stops to mimic abrupt color shifts on the real mark -->
+      <linearGradient id="gMain" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#ff53c7"/>
+        <stop offset="30%" stop-color="#ff72d4"/>
+        <stop offset="55%" stop-color="#9b6ef0"/>
+        <stop offset="80%" stop-color="#5aa3ff"/>
         <stop offset="100%" stop-color="#3b82f6"/>
       </linearGradient>
+
+      <!-- highlight gradient -->
+      <linearGradient id="gHighlight" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#ffd0f0" stop-opacity="0.95"/>
+        <stop offset="50%" stop-color="#cdaaff" stop-opacity="0.7"/>
+        <stop offset="100%" stop-color="#9dc9ff" stop-opacity="0.7"/>
+      </linearGradient>
+
+      <!-- small bright ridge for glossy slice -->
+      <linearGradient id="gRidge" x1="0" x2="1">
+        <stop offset="0%" stop-color="#fff" stop-opacity="0.85"/>
+        <stop offset="100%" stop-color="#fff" stop-opacity="0.05"/>
+      </linearGradient>
+
+      <!-- soft drop glow -->
+      <filter id="dropGlow" x="-50%" y="-50%" width="200%" height="200%">
+        <feDropShadow dx="0" dy="10" stdDeviation="22" flood-color="#8b5cf6" flood-opacity="0.14"/>
+        <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#ff5fd2" flood-opacity="0.06"/>
+      </filter>
+
+      <!-- subtle inner shadow to create the beveled edge feel (used with overlay path) -->
+      <filter id="innerShade">
+        <feOffset dx="0" dy="2" />
+        <feGaussianBlur stdDeviation="4" result="blur"/>
+        <feComposite operator="out" in="SourceGraphic" in2="blur" />
+        <feColorMatrix type="matrix" values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.18 0" />
+      </filter>
     </defs>
 
-    <g transform="translate(300,100) scale(0.9)">
-      <!-- Top Polygon -->
-      <polygon points="-120,-110 120,-60 90,-40 0,-95 -90,-40 -120,-60" fill="url(#abroxGradientHero)" />
-      <!-- Bottom Polygon -->
-      <polygon points="-120,110 120,60 90,40 0,95 -90,40 -120,60" fill="url(#abroxGradientHero)" />
-      <!-- Circle coin behind text for balance -->
-      <circle cx="0" cy="0" r="70" fill="rgba(255,255,255,0.04)" />
-      <!-- Logo Text -->
-      <text x="0" y="14" text-anchor="middle" font-size="44" font-weight="900"
-            font-family="-apple-system,BlinkMacSystemFont,SF Pro Display,system-ui"
-            fill="url(#abroxGradientHero)"
-            style="filter: drop-shadow(0 0 6px rgba(255,95,210,0.12))
-                   drop-shadow(0 0 10px rgba(139,92,246,0.08));">
-        ABROX
-      </text>
+    <g transform="translate(500,350)">
+
+      <!-- TOP CHEVRON GROUP -->
+      <g transform="translate(0,-170)">
+        <!-- left slab -->
+        <path d="M-260,-16 L-160,-88 L-40,-32 L-145,36 Z" fill="url(#gMain)" filter="url(#dropGlow)"/>
+        <!-- right slab -->
+        <path d="M-40,-32 L220,-148 L260,-122 L60,-4 Z" fill="url(#gMain)" filter="url(#dropGlow)"/>
+        <!-- thin glossy ridge on right slab -->
+        <path d="M20,-82 L150,-144 L202,-118 L75,-46 Z" fill="url(#gRidge)" opacity="0.9" />
+        <!-- highlight strip on left slab -->
+        <path d="M-235,-6 L-150,-70 L-40,-18 L-130,30 Z" fill="url(#gHighlight)" opacity="0.7" />
+        <!-- bevel inner cut to emulate the layered cut -->
+        <path d="M-20,-40 L40,-64 L170,-16 L115,-2 L35,-44 Z" class="chev-edge" opacity="0.6"/>
+      </g>
+
+      <!-- WORDMARK centered - use Poppins for closer match -->
+      <g transform="translate(0,28)">
+        <text x="0" y="40" text-anchor="middle"
+              class="abrox-text"
+              font-size="120"
+              fill="url(#gMain)"
+              style="paint-order:stroke; stroke: rgba(0,0,0,0.08); stroke-width:1.4;">
+          ABROX
+        </text>
+      </g>
+
+      <!-- BOTTOM CHEVRON: mirrored but adjusted to match real geometry -->
+      <g transform="translate(0,220) scale(1,-1)">
+        <!-- left slab (mirrored) -->
+        <path d="M-260,-16 L-160,-88 L-40,-32 L-145,36 Z" fill="url(#gMain)" filter="url(#dropGlow)"/>
+        <!-- right slab (mirrored) -->
+        <path d="M-40,-32 L220,-148 L260,-122 L60,-4 Z" fill="url(#gMain)" filter="url(#dropGlow)"/>
+        <!-- glossy ridge -->
+        <path d="M20,-82 L150,-144 L202,-118 L75,-46 Z" fill="url(#gRidge)" opacity="0.9" />
+        <!-- highlight strip -->
+        <path d="M-235,-6 L-150,-70 L-40,-18 L-130,30 Z" fill="url(#gHighlight)" opacity="0.7" />
+        <!-- inner cut edge -->
+        <path d="M-20,-40 L40,-64 L170,-16 L115,-2 L35,-44 Z" class="chev-edge" opacity="0.6"/>
+      </g>
+
     </g>
   </svg>
 
@@ -140,7 +204,7 @@ body { background: #05060A; perspective: 1000px; }
 <section class="py-16 text-center px-6 z-10 relative">
   <p class="text-[#9CA3AF] mb-4">Trusted by traders in 40+ countries</p>
   <div class="flex justify-center -space-x-3 animate-floatSlow">
-    <!-- Hand-picked RandomUser images (diverse mix of faces from different ranges) -->
+    <!-- Hand-picked RandomUser images (diverse mix) -->
     <img src="https://randomuser.me/api/portraits/men/12.jpg" alt="avatar 1" class="w-8 h-8 rounded-full border border-black/40" loading="lazy">
     <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="avatar 2" class="w-8 h-8 rounded-full border border-black/40" loading="lazy">
     <img src="https://randomuser.me/api/portraits/men/85.jpg" alt="avatar 3" class="w-8 h-8 rounded-full border border-black/40" loading="lazy">
@@ -216,48 +280,31 @@ window.onresize = resizeCanvas; resizeCanvas();
 for(let i=0;i<120;i++){ p.push({x:Math.random()*c.width, y:Math.random()*c.height, r:Math.random()*1.5+.5, dx:(Math.random()-.5)*.2, dy:(Math.random()-.5)*.2}); }
 (function animParticles(){ x.clearRect(0,0,c.width,c.height); p.forEach(e=>{ x.beginPath(); x.arc(e.x,e.y,e.r,0,7); x.fillStyle="rgba(255,255,255,.7)"; x.fill(); e.x+=e.dx; e.y+=e.dy; if(e.x<0||e.x>c.width)e.x=Math.random()*c.width; if(e.y<0||e.y>c.height)e.y=Math.random()*c.height; }); requestAnimationFrame(animParticles); })();
 
-/* COUNTDOWN */
+/* COUNTDOWN + LOGO ANIM */
 const countdown = {days:1,hours:14,minutes:22,seconds:8};
 const ctaMain = document.getElementById("cta-main");
-const logoMarkSvg = document.getElementById("logo-mark"); // may be null (we removed small logo)
 const heroLogo = document.getElementById("hero-logo");
-
-// Create activeLogoElements array that includes heroLogo and the small logo only if it exists
 const activeLogoElements = [heroLogo];
-if (logoMarkSvg) activeLogoElements.push(logoMarkSvg);
 
-function updateCountdown(){
-  const sec = --countdown.seconds;
-  if(sec<0){ countdown.seconds=59; countdown.minutes--; if(countdown.minutes<0){ countdown.minutes=59; countdown.hours--; if(countdown.hours<0){ countdown.hours=23; countdown.days--;}}}
-}
+function updateCountdown(){ const sec = --countdown.seconds; if(sec<0){ countdown.seconds=59; countdown.minutes--; if(countdown.minutes<0){ countdown.minutes=59; countdown.hours--; if(countdown.hours<0){ countdown.hours=23; countdown.days--;}}}}
 function renderCountdown(){
   document.getElementById("days").innerText = String(countdown.days).padStart(2,"0");
   document.getElementById("hours").innerText = String(countdown.hours).padStart(2,"0");
   document.getElementById("minutes").innerText = String(countdown.minutes).padStart(2,"0");
   document.getElementById("seconds").innerText = String(countdown.seconds).padStart(2,"0");
-
-  // CTA glow sync
-  if(countdown.seconds<=5){ ctaMain.style.animation="glowPulse 1s infinite alternate"; }
-  else{ ctaMain.style.animation="pulseSlow 2.8s infinite"; }
-
-  // Update logo animations only for elements that exist
-  activeLogoElements.forEach(el => {
-    if(el) el.style.animation = `glowPulse ${1.5 + countdown.seconds/10}s infinite`;
-  });
+  ctaMain.style.animation = countdown.seconds<=5?"glowPulse 1s infinite alternate":"pulseSlow 2.8s infinite";
+  activeLogoElements.forEach(el => { if(el) el.style.animation = `glowPulse ${1.5 + countdown.seconds/10}s infinite`; });
 }
-
-// Render immediately once (so values show without 1s wait)
 renderCountdown();
-
 setInterval(()=>{updateCountdown(); renderCountdown();},1000);
 
 /* HOVER TILT */
-activeLogoElements.forEach(el => {
+activeLogoElements.forEach(el=>{
   if(!el) return;
   el.addEventListener("mousemove", e=>{
     const rect = el.getBoundingClientRect();
-    const mx = ((e.clientX-rect.left)/rect.width - .5) * 30;
-    const my = ((e.clientY-rect.top)/rect.height - .5) * 30;
+    const mx = ((e.clientX-rect.left)/rect.width - .5) * 18;
+    const my = ((e.clientY-rect.top)/rect.height - .5) * 12;
     el.style.transform = `rotateX(${-my}deg) rotateY(${mx}deg)`;
   });
   el.addEventListener("mouseleave", ()=>{ el.style.transform = "rotateX(0) rotateY(0)"; });
@@ -266,8 +313,8 @@ activeLogoElements.forEach(el => {
 /* MOBILE GYRO */
 if(window.DeviceOrientationEvent){
   window.addEventListener("deviceorientation", e=>{
-    const rx = e.beta/3 || 0;
-    const ry = e.gamma/3 || 0;
+    const rx = e.beta/4 || 0;
+    const ry = e.gamma/4 || 0;
     activeLogoElements.forEach(el => { if(el) el.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`; });
   }, true);
 }
