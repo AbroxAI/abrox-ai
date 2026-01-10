@@ -4,27 +4,21 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>ABROX — AI-Powered Market Intelligence</title>
-
 <!-- SEO -->
 <meta name="description" content="AI-Powered Market Intelligence delivered directly via Telegram for serious traders. Real-time signals. Structured entries." />
 <meta name="keywords" content="trading signals, AI trading, telegram signals, crypto trading, forex signals" />
 <meta name="author" content="Abrox" />
-
 <!-- OpenGraph -->
 <meta property="og:title" content="ABROX — AI-Powered Market Intelligence" />
 <meta property="og:description" content="Real-time signals. Structured entries. Built for serious traders." />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="./og-image.jpg" />
-
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
-
 <!-- Google font to approximate the original wordmark -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;900&display=swap" rel="stylesheet">
-
 <!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
-
 <!-- Tailwind config -->
 <script>
 tailwind.config = {
@@ -46,10 +40,8 @@ tailwind.config = {
   }
 }
 </script>
-
 <!-- Lucide Icons -->
 <script src="https://unpkg.com/lucide@latest"></script>
-
 <style>
   body { background: #05060A; perspective: 1000px; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
   #gradient-bg{ position: fixed; inset:0; z-index:-2; background: linear-gradient(135deg,#7C3AED,#EC4899,#3B82F6); opacity:.35; }
@@ -70,158 +62,118 @@ tailwind.config = {
   .abrox-text { font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, Arial; font-weight:900; letter-spacing:6px; }
 </style>
 </head>
-
 <body class="text-[#E5E7EB] overflow-x-hidden relative">
-
 <!-- Gradient Background -->
 <div id="gradient-bg"></div>
-
 <!-- Particles Background -->
 <canvas id="particles-bg" class="fixed inset-0 -z-10"></canvas>
-
 <!-- HERO -->
 <section class="min-h-screen flex flex-col justify-center items-center text-center px-6 relative z-10">
 
-  <!-- FINAL MATCH SVG: polygons, slivers, and color stops tuned for 1:1 likeness -->
-  <svg id="hero-logo" viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg" class="svg-glow svg-3d" role="img" aria-label="ABROX logo" preserveAspectRatio="xMidYMid meet" >
+  <!-- UPDATED SVG: replace original hero mark with the refined chevrons + gradients -->
+  <svg id="hero-logo" viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg"
+       class="svg-glow svg-3d" role="img" aria-label="ABROX logo" preserveAspectRatio="xMidYMid meet">
     <defs>
-      <!-- main gradient tuned to match the reference tone and abrupt transitions -->
+      <!-- sharper, high-contrast magenta→purple→blue ramp -->
       <linearGradient id="gMain" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%"  stop-color="#ff33ad"/>
-        <stop offset="14%" stop-color="#ff57c8"/>
-        <stop offset="33%" stop-color="#ff7fe0"/>
-        <stop offset="48%" stop-color="#c86aff"/>
-        <stop offset="66%" stop-color="#7a57ff"/>
-        <stop offset="84%" stop-color="#4aa7ff"/>
+        <stop offset="0%"  stop-color="#ff2fb8"/>
+        <stop offset="28%" stop-color="#ff57c8"/>
+        <!-- abrupt mid-cut -->
+        <stop offset="48%" stop-color="#c24dff"/>
+        <stop offset="52%" stop-color="#7b5bff"/>
+        <stop offset="78%" stop-color="#4aa7ff"/>
         <stop offset="100%" stop-color="#2d7ef6"/>
       </linearGradient>
 
-      <!-- small cold-blue emphasis for blade tip -->
+      <!-- strong cold-blue at blade tips -->
       <linearGradient id="gBlade" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stop-color="#8fb7ff"/>
-        <stop offset="50%" stop-color="#5fb5ff"/>
-        <stop offset="100%" stop-color="#1f7fff"/>
+        <stop offset="0%" stop-color="#7fb9ff"/>
+        <stop offset="45%" stop-color="#4eaaff"/>
+        <stop offset="100%" stop-color="#1675f4"/>
       </linearGradient>
 
-      <!-- glossy highlight sliver -->
+      <!-- thin glossy highlight -->
       <linearGradient id="gGloss" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stop-color="#fff9fc" stop-opacity="0.95"/>
-        <stop offset="40%" stop-color="#ffdaf7" stop-opacity="0.78"/>
-        <stop offset="100%" stop-color="#dff0ff" stop-opacity="0.45"/>
+        <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
+        <stop offset="40%" stop-color="#ffdff8" stop-opacity="0.75"/>
+        <stop offset="100%" stop-color="#e6f3ff" stop-opacity="0.35"/>
       </linearGradient>
 
-      <!-- thin bright micro-edge -->
       <linearGradient id="gRidge" x1="0" y1="0" x2="1" y2="0">
         <stop offset="0%" stop-color="#fff" stop-opacity="0.96"/>
-        <stop offset="100%" stop-color="#fff" stop-opacity="0.03"/>
+        <stop offset="100%" stop-color="#fff" stop-opacity="0.02"/>
       </linearGradient>
 
-      <!-- dark separator sliver -->
       <linearGradient id="gDark" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stop-color="#000" stop-opacity="0.62"/>
-        <stop offset="100%" stop-color="#000" stop-opacity="0.22"/>
+        <stop offset="0%" stop-color="#000" stop-opacity="0.6"/>
+        <stop offset="100%" stop-color="#000" stop-opacity="0.18"/>
       </linearGradient>
 
-      <!-- subtle drop glow used on primary facets -->
       <filter id="dropGlow" x="-60%" y="-60%" width="220%" height="220%">
-        <feDropShadow dx="0" dy="10" stdDeviation="18" flood-color="#8b5cf6" flood-opacity="0.14"/>
-        <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#ff5fd2" flood-opacity="0.06"/>
+        <feDropShadow dx="0" dy="10" stdDeviation="18" flood-color="#8b5cf6" flood-opacity="0.12"/>
+        <feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#ff5fd2" flood-opacity="0.06"/>
       </filter>
-
-      <!-- sharpen mask to help crisp edges -->
-      <mask id="hardMask">
-        <rect width="100%" height="100%" fill="#fff"/>
-      </mask>
     </defs>
 
-    <!-- center the mark -->
+    <!-- center mark group -->
     <g transform="translate(600,440)">
 
-      <!-- TOP CHEVRON BLOCK (sliver + main + blade) -->
-      <g transform="translate(0,-205)">
+      <!-- TOP CHEVRON -->
+      <g transform="translate(0,-220)">
 
-        <!-- tiny upper slab (top-most) -->
-        <path d="M-210,-32 L-125,-108 L-28,-82 L-110,-12 Z"
-              fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.9" filter="url(#dropGlow)"/>
+        <!-- left flange -->
+        <polygon points="-240,-20 -140,-120 10,-40 -120,40"
+                 fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.8" filter="url(#dropGlow)"/>
+        <!-- right blade -->
+        <polygon points="10,-40 420,-210 460,-178 130,26"
+                 fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.8" filter="url(#dropGlow)"/>
+        <!-- blade tip cold-blue -->
+        <polygon points="300,-150 460,-178 420,-165 260,-120"
+                 fill="url(#gBlade)" opacity="0.98" />
 
-        <!-- main center slab (broad, magenta-to-purple) -->
-        <path d="M-190,-8 L 52,-150 L 180,-120 L 22,-6 Z"
-              fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.9" filter="url(#dropGlow)"/>
+        <!-- glossy sliver across blade -->
+        <polygon points="80,-26 420,-206 456,-175 120,12"
+                 fill="url(#gGloss)" opacity="0.95" style="mix-blend-mode:screen"/>
 
-        <!-- long right blade (base), uses gBlade at tip for strong blue -->
-        <path d="M22,-6 L 420,-200 L 462,-170 L 120,22 Z"
-              fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.9" filter="url(#dropGlow)"/>
+        <!-- thin dark separation sliver -->
+        <polygon points="6,-36 120,-92 340,-154 420,-180 116,-6"
+                 fill="url(#gDark)" opacity="0.62"/>
 
-        <!-- top glossy sliver across the blade -->
-        <path d="M72,-24 L 420,-196 L 458,-170 L 110,8 Z"
-              fill="url(#gGloss)" opacity="0.96" style="mix-blend-mode:screen"/>
-
-        <!-- accent blade tip (small) to tilt strongly blue at the end -->
-        <path d="M320,-150 L 462,-170 L 420,-160 L 280,-120 Z" fill="url(#gBlade)" opacity="0.98" />
-
-        <!-- thin dark separation sliver between main slab and blade to emulate layered cut -->
-        <path d="M20,-4 L 120,-86 L 340,-154 L 420,-180 L 118,-10 Z"
-              fill="url(#gDark)" opacity="0.62"/>
-
-        <!-- tiny bright ridge near the join -->
-        <path d="M40,-22 L120,-86 L142,-74 L60,-18 Z"
-              fill="url(#gRidge)" opacity="0.94"/>
-
-        <!-- highlight strip on left main slab -->
-        <path d="M-170,-2 L-82,-86 L-36,-56 L-118,12 Z"
-              fill="url(#gGloss)" opacity="0.70"/>
-
-        <!-- bevel inner shadow at center join -->
-        <path d="M-8,-22 L34,-58 L120,-18 L82,-2 L24,-32 Z"
-              class="chev-edge" opacity="0.7"/>
-
+        <!-- bright ridge highlight near join -->
+        <polygon points="36,-22 116,-86 140,-74 60,-18"
+                 fill="url(#gRidge)" opacity="0.95"/>
       </g>
 
-      <!-- WORDMARK centered -->
+      <!-- WORDMARK -->
       <g transform="translate(0,34)">
         <text x="0" y="48" text-anchor="middle"
-              class="abrox-text"
-              font-size="144"
+              class="abrox-text" font-size="144"
               fill="url(#gMain)"
               style="paint-order:stroke; stroke: rgba(0,0,0,0.08); stroke-width:1.6;">
           ABROX
         </text>
       </g>
 
-      <!-- BOTTOM CHEVRON — mirrored, pulled up slightly for compact spacing -->
-      <g transform="translate(0,235) scale(1,-1)">
+      <!-- BOTTOM CHEVRON (mirror of top) -->
+      <g transform="translate(0,250) scale(1,-1)">
+        <!-- left flange (mirrored) -->
+        <polygon points="-240,-20 -140,-120 10,-40 -120,40"
+                 fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.8" filter="url(#dropGlow)"/>
+        <!-- right blade -->
+        <polygon points="10,-40 420,-210 460,-178 130,26"
+                 fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.8" filter="url(#dropGlow)"/>
+        <!-- blade tip cold-blue -->
+        <polygon points="300,-150 460,-178 420,-165 260,-120"
+                 fill="url(#gBlade)" opacity="0.98" />
 
-        <!-- small bottom slab -->
-        <path d="M-210,-32 L-125,-108 L-28,-82 L-110,-12 Z"
-              fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.9" filter="url(#dropGlow)"/>
+        <polygon points="80,-26 420,-206 456,-175 120,12"
+                 fill="url(#gGloss)" opacity="0.95" style="mix-blend-mode:screen"/>
 
-        <!-- bottom main slab -->
-        <path d="M-190,-8 L 52,-150 L 180,-120 L 22,-6 Z"
-              fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.9" filter="url(#dropGlow)"/>
+        <polygon points="6,-36 120,-92 340,-154 420,-180 116,-6"
+                 fill="url(#gDark)" opacity="0.62"/>
 
-        <!-- bottom blade -->
-        <path d="M22,-6 L 420,-200 L 462,-170 L 120,22 Z"
-              fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.9" filter="url(#dropGlow)"/>
-
-        <!-- glossy sliver mirrored -->
-        <path d="M72,-24 L 420,-196 L 458,-170 L 110,8 Z"
-              fill="url(#gGloss)" opacity="0.96" style="mix-blend-mode:screen"/>
-
-        <!-- blade blue tip -->
-        <path d="M320,-150 L 462,-170 L 420,-160 L 280,-120 Z" fill="url(#gBlade)" opacity="0.98" />
-
-        <!-- dark separator mirrored -->
-        <path d="M20,-4 L 120,-86 L 340,-154 L 420,-180 L 118,-10 Z"
-              fill="url(#gDark)" opacity="0.62"/>
-
-        <!-- tiny ridge mirrored -->
-        <path d="M40,-22 L120,-86 L142,-74 L60,-18 Z"
-              fill="url(#gRidge)" opacity="0.94"/>
-
-        <!-- inner bevel mirrored -->
-        <path d="M-8,-22 L34,-58 L120,-18 L82,-2 L24,-32 Z"
-              class="chev-edge" opacity="0.7"/>
-
+        <polygon points="36,-22 116,-86 140,-74 60,-18"
+                 fill="url(#gRidge)" opacity="0.95"/>
       </g>
 
     </g>
