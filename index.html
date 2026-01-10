@@ -43,6 +43,13 @@ tailwind.config = {
 <!-- Lucide Icons -->
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
+  /* Smooth scrolling & touch/native scroll optimizations */
+  html, body {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+  }
+
   body { background: #05060A; perspective: 1000px; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
   #gradient-bg{ position: fixed; inset:0; z-index:-2; background: linear-gradient(135deg,#7C3AED,#EC4899,#3B82F6); opacity:.35; }
   .glass{ background: rgba(255,255,255,.06); backdrop-filter: blur(18px); border:1px solid rgba(255,255,255,.12); box-shadow:0 20px 60px rgba(0,0,0,.45);}
@@ -71,6 +78,9 @@ tailwind.config = {
     .svg-glow, .svg-3d { animation: none !important; filter: none !important; }
     #particles-bg { opacity: 0.2 !important; }
   }
+
+  /* Ensure the canvas doesn't intercept pointer events (avoids expensive hit testing while scrolling) */
+  #particles-bg { pointer-events: none; }
 </style>
 </head>
 <body class="text-[#E5E7EB] overflow-x-hidden relative">
@@ -205,7 +215,7 @@ tailwind.config = {
   </p>
 
   <a id="cta-main"
-     href="https://t.me/YOUR_CHANNEL?utm_source=landing&utm_campaign=hero"
+     href="https://t.me/+_Pi6MntFFss2ODU0"
      class="mt-8 px-8 py-4 rounded-2xl font-semibold text-black bg-[#22C55E] shadow-[0_0_40px_rgba(34,197,94,.45)] animate-pulseSlow">
     JOIN TELEGRAM — FREE ACCESS
   </a>
@@ -288,7 +298,7 @@ tailwind.config = {
 <section class="text-center px-6 pb-24 z-10 relative">
   <h2 class="text-2xl sm:text-3xl font-semibold">You’re Either In — Or Missing Out</h2>
   <p class="mt-2 text-[#9CA3AF]">Access closing soon</p>
-  <a href="https://t.me/YOUR_CHANNEL?utm_source=landing&utm_campaign=final" id="cta-final"
+  <a href="https://t.me/+_Pi6MntFFss2ODU0" id="cta-final"
      class="mt-6 inline-block px-8 py-4 rounded-2xl font-semibold text-black bg-[#22C55E] shadow-[0_0_40px_rgba(34,197,94,.45)] animate-pulseSlow">
     JOIN TELEGRAM NOW
   </a>
@@ -409,6 +419,7 @@ if(window.DeviceOrientationEvent){
    - Throttle canvas particle work while scrolling instead of turning off SVG animations
    - Draw fewer particles while scrolling (cheap)
    - Keep FPS high normally, drop FPS during scroll
+   - Batch DOM changes with requestAnimationFrame to avoid layout thrash
    -------------------------- */
 
 let reduceTimer = null;
@@ -425,14 +436,24 @@ function endScrollReduce(){
 }
 
 function onScrollActivity(){
-  // start reduced mode immediately (fast reaction)
-  startScrollReduce();
+  // start reduced mode, but batch DOM changes for smoother scrolling
+  // If a start is already scheduled, we don't schedule again (avoids repeated rAF calls)
+  if(!reduceTimer){
+    // immediate visual reaction but executed inside rAF to reduce layout thrash
+    requestAnimationFrame(() => startScrollReduce());
+  } else {
+    // still ensure reduced mode is active quickly
+    requestAnimationFrame(() => { reduced = true; particleFps = 20; });
+  }
 
   // debounce end
   if(reduceTimer) clearTimeout(reduceTimer);
   reduceTimer = setTimeout(()=>{
-    endScrollReduce();
-    reduceTimer = null;
+    // end in rAF to batch DOM changes
+    requestAnimationFrame(()=>{
+      endScrollReduce();
+      reduceTimer = null;
+    });
   }, 200); // 200ms after last scroll event, return to full rendering
 }
 
