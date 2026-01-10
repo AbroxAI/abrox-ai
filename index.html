@@ -4,27 +4,21 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>ABROX — AI-Powered Market Intelligence</title>
-
 <!-- SEO -->
 <meta name="description" content="AI-Powered Market Intelligence delivered directly via Telegram for serious traders. Real-time signals. Structured entries." />
 <meta name="keywords" content="trading signals, AI trading, telegram signals, crypto trading, forex signals" />
 <meta name="author" content="Abrox" />
-
 <!-- OpenGraph -->
 <meta property="og:title" content="ABROX — AI-Powered Market Intelligence" />
 <meta property="og:description" content="Real-time signals. Structured entries. Built for serious traders." />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="./og-image.jpg" />
-
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
-
 <!-- Google font to approximate the original wordmark -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;900&display=swap" rel="stylesheet">
-
 <!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
-
 <!-- Tailwind config -->
 <script>
 tailwind.config = {
@@ -46,15 +40,11 @@ tailwind.config = {
   }
 }
 </script>
-
 <!-- Lucide Icons -->
 <script src="https://unpkg.com/lucide@latest"></script>
-
 <style>
-  html,body { background-color:#05060A; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; -webkit-overflow-scrolling: touch; }
   body { background: #05060A; perspective: 1000px; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
-
-  #gradient-bg{ position: fixed; inset:0; z-index:-2; background: linear-gradient(135deg,#7C3AED,#EC4899,#3B82F6); opacity:.35; will-change:opacity; }
+  #gradient-bg{ position: fixed; inset:0; z-index:-2; background: linear-gradient(135deg,#7C3AED,#EC4899,#3B82F6); opacity:.35; }
   .glass{ background: rgba(255,255,255,.06); backdrop-filter: blur(18px); border:1px solid rgba(255,255,255,.12); box-shadow:0 20px 60px rgba(0,0,0,.45);}
   .svg-glow { animation: glowPulse 2s infinite ease-in-out; }
   .svg-3d { animation: logo3D 6s infinite ease-in-out; transform-origin: center; display:block; margin:auto; }
@@ -91,124 +81,126 @@ tailwind.config = {
   }
 </style>
 </head>
-
 <body class="text-[#E5E7EB] overflow-x-hidden relative">
-
 <!-- Gradient Background -->
 <div id="gradient-bg"></div>
-
 <!-- Particles Background -->
 <canvas id="particles-bg" class="fixed inset-0 -z-10"></canvas>
-
 <!-- HERO -->
 <section class="min-h-screen flex flex-col justify-center items-center text-center px-6 relative z-10">
 
-  <!-- POLYGON-FIRST LOGO: drop this in place of earlier SVG -->
-  <svg id="hero-logo" viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg"
-       class="svg-glow svg-3d" role="img" aria-label="ABROX logo" preserveAspectRatio="xMidYMid meet">
+  <!-- FINAL MATCH SVG: polygons, slivers, and color stops tuned for 1:1 likeness -->
+  <svg id="hero-logo" viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg" class="svg-glow svg-3d" role="img" aria-label="ABROX logo" preserveAspectRatio="xMidYMid meet" >
     <defs>
-      <!-- very hard stops to create faceted color jumps -->
+      <!-- main gradient tuned to match the reference tone and abrupt transitions -->
       <linearGradient id="gMain" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%"  stop-color="#ff2fb8"/>
-        <stop offset="30%" stop-color="#ff57c8"/>
-        <stop offset="48.5%" stop-color="#ff57c8"/>
-        <stop offset="49%" stop-color="#c24dff"/>
-        <stop offset="52%" stop-color="#7b5bff"/>
-        <stop offset="78%" stop-color="#4aa7ff"/>
+        <stop offset="0%"  stop-color="#ff33ad"/>
+        <stop offset="14%" stop-color="#ff57c8"/>
+        <stop offset="33%" stop-color="#ff7fe0"/>
+        <stop offset="48%" stop-color="#c86aff"/>
+        <stop offset="66%" stop-color="#7a57ff"/>
+        <stop offset="84%" stop-color="#4aa7ff"/>
         <stop offset="100%" stop-color="#2d7ef6"/>
       </linearGradient>
-
+      <!-- small cold-blue emphasis for blade tip -->
       <linearGradient id="gBlade" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stop-color="#7fb9ff"/>
-        <stop offset="40%" stop-color="#4eaaff"/>
-        <stop offset="100%" stop-color="#1675f4"/>
+        <stop offset="0%" stop-color="#8fb7ff"/>
+        <stop offset="50%" stop-color="#5fb5ff"/>
+        <stop offset="100%" stop-color="#1f7fff"/>
       </linearGradient>
-
+      <!-- glossy highlight sliver -->
       <linearGradient id="gGloss" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stop-color="#ffffff" stop-opacity="0.98"/>
-        <stop offset="100%" stop-color="#fff0ff" stop-opacity="0.35"/>
+        <stop offset="0%" stop-color="#fff9fc" stop-opacity="0.95"/>
+        <stop offset="40%" stop-color="#ffdaf7" stop-opacity="0.78"/>
+        <stop offset="100%" stop-color="#dff0ff" stop-opacity="0.45"/>
       </linearGradient>
-
+      <!-- thin bright micro-edge -->
+      <linearGradient id="gRidge" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#fff" stop-opacity="0.96"/>
+        <stop offset="100%" stop-color="#fff" stop-opacity="0.03"/>
+      </linearGradient>
+      <!-- dark separator sliver -->
       <linearGradient id="gDark" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stop-color="#000" stop-opacity="0.7"/>
-        <stop offset="100%" stop-color="#000" stop-opacity="0.18"/>
+        <stop offset="0%" stop-color="#000" stop-opacity="0.62"/>
+        <stop offset="100%" stop-color="#000" stop-opacity="0.22"/>
       </linearGradient>
-
+      <!-- subtle drop glow used on primary facets -->
       <filter id="dropGlow" x="-60%" y="-60%" width="220%" height="220%">
-        <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#8b5cf6" flood-opacity="0.10"/>
+        <feDropShadow dx="0" dy="10" stdDeviation="18" flood-color="#8b5cf6" flood-opacity="0.14"/>
+        <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#ff5fd2" flood-opacity="0.06"/>
       </filter>
+      <!-- sharpen mask to help crisp edges -->
+      <mask id="hardMask">
+        <rect width="100%" height="100%" fill="#fff"/>
+      </mask>
     </defs>
-
-    <!-- Centered group -->
+    <!-- center the mark -->
     <g transform="translate(600,440)">
-
-      <!-- TOP CHEVRON: micro-slab, main slab, blade, gloss, under-slice — all polygons -->
-      <g transform="translate(0,-220)">
-
-        <!-- thin top micro-slab -->
-        <polygon points="-150,-138 -80,-188 40,-162 -20,-114"
-                 fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.6"/>
-
-        <!-- broad main slab -->
-        <polygon points="-220,-12 72,-162 190,-128 18,10"
-                 fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.9" filter="url(#dropGlow)"/>
-
-        <!-- long thin blade (sharp triangle facets) -->
-        <polygon points="18,10 420,-210 470,-175 120,20"
-                 fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.9" filter="url(#dropGlow)"/>
-
-        <!-- blade blue triangular tip -->
-        <polygon points="330,-145 470,-175 430,-160 270,-118"
-                 fill="url(#gBlade)" />
-
-        <!-- extremely thin glossy facet (sharp) -->
-        <polygon points="92,-36 420,-206 452,-176 120,8"
-                 fill="url(#gGloss)" opacity="0.95" style="mix-blend-mode:screen"/>
-
-        <!-- single straight under-slice (hard edge) -->
-        <polygon points="24,2 126,-86 352,-154 418,-182 118,-6"
-                 fill="url(#gDark)" opacity="0.76"/>
-
+      <!-- TOP CHEVRON BLOCK (sliver + main + blade) -->
+      <g transform="translate(0,-205)">
+        <!-- tiny upper slab (top-most) -->
+        <path d="M-210,-32 L-125,-108 L-28,-82 L-110,-12 Z"
+              fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.9" filter="url(#dropGlow)"/>
+        <!-- main center slab (broad, magenta-to-purple) -->
+        <path d="M-190,-8 L 52,-150 L 180,-120 L 22,-6 Z"
+              fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.9" filter="url(#dropGlow)"/>
+        <!-- long right blade (base), uses gBlade at tip for strong blue -->
+        <path d="M22,-6 L 420,-200 L 462,-170 L 120,22 Z"
+              fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.9" filter="url(#dropGlow)"/>
+        <!-- top glossy sliver across the blade -->
+        <path d="M72,-24 L 420,-196 L 458,-170 L 110,8 Z"
+              fill="url(#gGloss)" opacity="0.96" style="mix-blend-mode:screen"/>
+        <!-- accent blade tip (small) to tilt strongly blue at the end -->
+        <path d="M320,-150 L 462,-170 L 420,-160 L 280,-120 Z" fill="url(#gBlade)" opacity="0.98" />
+        <!-- thin dark separation sliver between main slab and blade to emulate layered cut -->
+        <path d="M20,-4 L 120,-86 L 340,-154 L 420,-180 L 118,-10 Z"
+              fill="url(#gDark)" opacity="0.62"/>
+        <!-- tiny bright ridge near the join -->
+        <path d="M40,-22 L120,-86 L142,-74 L60,-18 Z"
+              fill="url(#gRidge)" opacity="0.94"/>
+        <!-- highlight strip on left main slab -->
+        <path d="M-170,-2 L-82,-86 L-36,-56 L-118,12 Z"
+              fill="url(#gGloss)" opacity="0.70"/>
+        <!-- bevel inner shadow at center join -->
+        <path d="M-8,-22 L34,-58 L120,-18 L82,-2 L24,-32 Z"
+              class="chev-edge" opacity="0.7"/>
       </g>
-
-      <!-- WORDMARK -->
+      <!-- WORDMARK centered -->
       <g transform="translate(0,34)">
         <text x="0" y="48" text-anchor="middle"
-              class="abrox-text" font-size="144"
+              class="abrox-text"
+              font-size="144"
               fill="url(#gMain)"
               style="paint-order:stroke; stroke: rgba(0,0,0,0.08); stroke-width:1.6;">
           ABROX
         </text>
       </g>
-
-      <!-- BOTTOM CHEVRON: mirrored polygonal facets -->
-      <g transform="translate(0,250) scale(1,-1)">
-
-        <!-- lower left flange -->
-        <polygon points="-240,-20 -140,-120 10,-40 -120,40"
-                 fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.9" filter="url(#dropGlow)"/>
-
-        <!-- inner join triangular piece -->
-        <polygon points="16,-38 160,-150 260,-112 94,10"
-                 fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.7"/>
-
-        <!-- lower blade facet -->
-        <polygon points="120,18 430,-210 468,-178 130,26"
-                 fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.9"/>
-
-        <!-- lower blade tip blue triangle -->
-        <polygon points="300,-150 468,-178 420,-162 260,-120"
-                 fill="url(#gBlade)" />
-
-        <!-- short dark slit for separation -->
-        <polygon points="118,-8 340,-154 420,-180 120,6"
-                 fill="url(#gDark)" opacity="0.76"/>
-
-        <!-- tiny glossy ridge -->
-        <polygon points="36,-22 116,-86 140,-74 60,-18"
-                 fill="url(#gGloss)" opacity="0.92" style="mix-blend-mode:screen"/>
+      <!-- BOTTOM CHEVRON — mirrored, pulled up slightly for compact spacing -->
+      <g transform="translate(0,235) scale(1,-1)">
+        <!-- small bottom slab -->
+        <path d="M-210,-32 L-125,-108 L-28,-82 L-110,-12 Z"
+              fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.9" filter="url(#dropGlow)"/>
+        <!-- bottom main slab -->
+        <path d="M-190,-8 L 52,-150 L 180,-120 L 22,-6 Z"
+              fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.9" filter="url(#dropGlow)"/>
+        <!-- bottom blade -->
+        <path d="M22,-6 L 420,-200 L 462,-170 L 120,22 Z"
+              fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.9" filter="url(#dropGlow)"/>
+        <!-- glossy sliver mirrored -->
+        <path d="M72,-24 L 420,-196 L 458,-170 L 110,8 Z"
+              fill="url(#gGloss)" opacity="0.96" style="mix-blend-mode:screen"/>
+        <!-- blade blue tip -->
+        <path d="M320,-150 L 462,-170 L 420,-160 L 280,-120 Z" fill="url(#gBlade)" opacity="0.98" />
+        <!-- dark separator mirrored -->
+        <path d="M20,-4 L 120,-86 L 340,-154 L 420,-180 L 118,-10 Z"
+              fill="url(#gDark)" opacity="0.62"/>
+        <!-- tiny ridge mirrored -->
+        <path d="M40,-22 L120,-86 L142,-74 L60,-18 Z"
+              fill="url(#gRidge)" opacity="0.94"/>
+        <!-- inner bevel mirrored -->
+        <path d="M-8,-22 L34,-58 L120,-18 L82,-2 L24,-32 Z"
+              class="chev-edge" opacity="0.7"/>
       </g>
-
     </g>
   </svg>
 
@@ -316,7 +308,6 @@ tailwind.config = {
 
 <script>
 lucide.createIcons();
-
 /* PARTICLES */
 const c = document.getElementById("particles-bg");
 const x = c.getContext("2d");
@@ -325,8 +316,11 @@ function resizeCanvas(){ c.width = innerWidth; c.height = innerHeight; }
 window.onresize = resizeCanvas; resizeCanvas();
 for(let i=0;i<120;i++){ p.push({x:Math.random()*c.width, y:Math.random()*c.height, r:Math.random()*1.5+.5, dx:(Math.random()-.5)*.2, dy:(Math.random()-.5)*.2}); }
 
+/* particle animator stored so we can pause/resume during scrolling */
 let particleRaf = null;
+let particlesPaused = false;
 function animParticles(){
+  if(particlesPaused){ particleRaf = null; return; }
   x.clearRect(0,0,c.width,c.height);
   p.forEach(e=>{
     x.beginPath();
@@ -349,11 +343,15 @@ const activeLogoElements = [heroLogo];
 
 function updateCountdown(){ const sec = --countdown.seconds; if(sec<0){ countdown.seconds=59; countdown.minutes--; if(countdown.minutes<0){ countdown.minutes=59; countdown.hours--; if(countdown.hours<0){ countdown.hours=23; countdown.days--;}}}}
 function renderCountdown(){
-  document.getElementById("days").innerText = String(countdown.days).padStart(2,"0");
-  document.getElementById("hours").innerText = String(countdown.hours).padStart(2,"0");
-  document.getElementById("minutes").innerText = String(countdown.minutes).padStart(2,"0");
-  document.getElementById("seconds").innerText = String(countdown.seconds).padStart(2,"0");
-  ctaMain.style.animation = countdown.seconds<=5?"glowPulse 1s infinite alternate":"pulseSlow 2.8s infinite";
+  const daysEl = document.getElementById("days");
+  const hoursEl = document.getElementById("hours");
+  const minsEl = document.getElementById("minutes");
+  const secsEl = document.getElementById("seconds");
+  if(daysEl) daysEl.innerText = String(countdown.days).padStart(2,"0");
+  if(hoursEl) hoursEl.innerText = String(countdown.hours).padStart(2,"0");
+  if(minsEl) minsEl.innerText = String(countdown.minutes).padStart(2,"0");
+  if(secsEl) secsEl.innerText = String(countdown.seconds).padStart(2,"0");
+  if(ctaMain) ctaMain.style.animation = countdown.seconds<=5?"glowPulse 1s infinite alternate":"pulseSlow 2.8s infinite";
   activeLogoElements.forEach(el => { if(el) el.style.animation = `glowPulse ${1.5 + countdown.seconds/10}s infinite`; });
 }
 renderCountdown();
@@ -380,17 +378,97 @@ if(window.DeviceOrientationEvent){
   }, true);
 }
 
-/* Debounced scroll handler to temporarily reduce heavy effects while scrolling */
+/* --------------------------
+   Scroll performance handler
+   - pauses particles RAF during scroll
+   - removes heavy SVG filter attributes during scroll
+   - restores everything shortly after scroll ends
+   -------------------------- */
+
+// collect all elements that use a 'filter' attribute so we can remove/restore them
+const elementsWithFilter = Array.from(document.querySelectorAll('[filter]'));
+const filterBackup = new Map();
+elementsWithFilter.forEach(el => {
+  const f = el.getAttribute('filter');
+  if(f) filterBackup.set(el, f);
+});
+
+// helpers to remove/restore filter attributes
+function removeSvgFilters(){
+  elementsWithFilter.forEach(el => {
+    if(el.hasAttribute('filter')) {
+      el.setAttribute('data-orig-filter', el.getAttribute('filter'));
+      el.removeAttribute('filter');
+    }
+  });
+}
+function restoreSvgFilters(){
+  elementsWithFilter.forEach(el => {
+    const orig = el.getAttribute('data-orig-filter') || filterBackup.get(el);
+    if(orig) {
+      el.setAttribute('filter', orig);
+      el.removeAttribute('data-orig-filter');
+    } else {
+      // nothing to restore
+    }
+  });
+}
+
+// debounced scroll start/stop
 let reduceTimer = null;
-function onScrollStart(){
+let scrolling = false;
+
+// start reduced mode immediately
+function startReducedMode(){
+  if(scrolling) return;
+  scrolling = true;
+
+  // add class which disables animations via CSS
   document.documentElement.classList.add('reduce-motion');
+
+  // pause particles RAF
+  particlesPaused = true;
+  if(particleRaf) { cancelAnimationFrame(particleRaf); particleRaf = null; }
+
+  // remove heavy SVG filters (drop glows)
+  removeSvgFilters();
+}
+
+// end reduced mode (restore)
+function endReducedMode(){
+  if(!scrolling) return;
+  scrolling = false;
+
+  // restore filters
+  restoreSvgFilters();
+
+  // resume particles RAF after a tiny delay so the browser can settle
+  setTimeout(()=>{
+    particlesPaused = false;
+    if(!particleRaf) animParticles();
+  }, 80);
+
+  // remove class
+  document.documentElement.classList.remove('reduce-motion');
+}
+
+// unified scroll handler (passive for performance)
+function onScrollActivity(){
+  // start reduced mode immediately
+  startReducedMode();
+
+  // debounce the end
   if(reduceTimer) clearTimeout(reduceTimer);
   reduceTimer = setTimeout(()=>{
-    document.documentElement.classList.remove('reduce-motion');
+    endReducedMode();
     reduceTimer = null;
   }, 250);
 }
-window.addEventListener('scroll', onScrollStart, { passive: true });
+
+// attach both scroll and touchmove/start so mobile is responsive
+window.addEventListener('scroll', onScrollActivity, { passive: true });
+window.addEventListener('touchstart', onScrollActivity, { passive: true });
+window.addEventListener('touchmove', onScrollActivity, { passive: true });
 
 </script>
 </body>
