@@ -43,8 +43,13 @@ tailwind.config = {
 <!-- Lucide Icons -->
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
+  /* base + scrolling optimizations */
+  html,body { background-color:#05060A; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; -webkit-overflow-scrolling: touch; }
   body { background: #05060A; perspective: 1000px; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
-  #gradient-bg{ position: fixed; inset:0; z-index:-2; background: linear-gradient(135deg,#7C3AED,#EC4899,#3B82F6); opacity:.35; }
+
+  /* keep your existing gradient background */
+  #gradient-bg{ position: fixed; inset:0; z-index:-2; background: linear-gradient(135deg,#7C3AED,#EC4899,#3B82F6); opacity:.35; will-change:opacity; }
+
   .glass{ background: rgba(255,255,255,.06); backdrop-filter: blur(18px); border:1px solid rgba(255,255,255,.12); box-shadow:0 20px 60px rgba(0,0,0,.45);}
   .svg-glow { animation: glowPulse 2s infinite ease-in-out; }
   .svg-3d { animation: logo3D 6s infinite ease-in-out; transform-origin: center; display:block; margin:auto; }
@@ -60,6 +65,25 @@ tailwind.config = {
 
   /* tighter ABROX style */
   .abrox-text { font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, Arial; font-weight:900; letter-spacing:6px; }
+
+  /* GPU hints to reduce repaint flicker */
+  #hero-logo, #particles-bg, #gradient-bg { will-change: transform, opacity; transform: translateZ(0); backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+
+  /* reduce-motion state while scrolling (temporarily disables heavy effects) */
+  .reduce-motion .svg-glow,
+  .reduce-motion .svg-3d {
+    animation: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+  .reduce-motion #particles-bg { opacity: 0.22 !important; pointer-events: none; }
+  .reduce-motion #gradient-bg { opacity: 0.18 !important; }
+
+  /* accessibility preference: respect prefers-reduced-motion too */
+  @media (prefers-reduced-motion: reduce) {
+    .svg-glow, .svg-3d { animation: none !important; filter: none !important; }
+    #particles-bg { opacity: 0.2 !important; }
+  }
 </style>
 </head>
 <body class="text-[#E5E7EB] overflow-x-hidden relative">
@@ -70,29 +94,25 @@ tailwind.config = {
 <!-- HERO -->
 <section class="min-h-screen flex flex-col justify-center items-center text-center px-6 relative z-10">
 
-  <!-- UPDATED SVG: replace original hero mark with the refined chevrons + gradients -->
+  <!-- UPDATED SVG (same refined logo you approved) -->
   <svg id="hero-logo" viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg"
        class="svg-glow svg-3d" role="img" aria-label="ABROX logo" preserveAspectRatio="xMidYMid meet">
     <defs>
-      <!-- sharper, high-contrast magenta→purple→blue ramp -->
       <linearGradient id="gMain" x1="0" y1="0" x2="1" y2="1">
         <stop offset="0%"  stop-color="#ff2fb8"/>
         <stop offset="28%" stop-color="#ff57c8"/>
-        <!-- abrupt mid-cut -->
         <stop offset="48%" stop-color="#c24dff"/>
         <stop offset="52%" stop-color="#7b5bff"/>
         <stop offset="78%" stop-color="#4aa7ff"/>
         <stop offset="100%" stop-color="#2d7ef6"/>
       </linearGradient>
 
-      <!-- strong cold-blue at blade tips -->
       <linearGradient id="gBlade" x1="0" y1="0" x2="1" y2="0">
         <stop offset="0%" stop-color="#7fb9ff"/>
         <stop offset="45%" stop-color="#4eaaff"/>
         <stop offset="100%" stop-color="#1675f4"/>
       </linearGradient>
 
-      <!-- thin glossy highlight -->
       <linearGradient id="gGloss" x1="0" y1="0" x2="1" y2="0">
         <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
         <stop offset="40%" stop-color="#ffdff8" stop-opacity="0.75"/>
@@ -115,36 +135,22 @@ tailwind.config = {
       </filter>
     </defs>
 
-    <!-- center mark group -->
     <g transform="translate(600,440)">
-
-      <!-- TOP CHEVRON -->
       <g transform="translate(0,-220)">
-
-        <!-- left flange -->
         <polygon points="-240,-20 -140,-120 10,-40 -120,40"
                  fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.8" filter="url(#dropGlow)"/>
-        <!-- right blade -->
         <polygon points="10,-40 420,-210 460,-178 130,26"
                  fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.8" filter="url(#dropGlow)"/>
-        <!-- blade tip cold-blue -->
         <polygon points="300,-150 460,-178 420,-165 260,-120"
                  fill="url(#gBlade)" opacity="0.98" />
-
-        <!-- glossy sliver across blade -->
         <polygon points="80,-26 420,-206 456,-175 120,12"
                  fill="url(#gGloss)" opacity="0.95" style="mix-blend-mode:screen"/>
-
-        <!-- thin dark separation sliver -->
         <polygon points="6,-36 120,-92 340,-154 420,-180 116,-6"
                  fill="url(#gDark)" opacity="0.62"/>
-
-        <!-- bright ridge highlight near join -->
         <polygon points="36,-22 116,-86 140,-74 60,-18"
                  fill="url(#gRidge)" opacity="0.95"/>
       </g>
 
-      <!-- WORDMARK -->
       <g transform="translate(0,34)">
         <text x="0" y="48" text-anchor="middle"
               class="abrox-text" font-size="144"
@@ -154,28 +160,20 @@ tailwind.config = {
         </text>
       </g>
 
-      <!-- BOTTOM CHEVRON (mirror of top) -->
       <g transform="translate(0,250) scale(1,-1)">
-        <!-- left flange (mirrored) -->
         <polygon points="-240,-20 -140,-120 10,-40 -120,40"
                  fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.8" filter="url(#dropGlow)"/>
-        <!-- right blade -->
         <polygon points="10,-40 420,-210 460,-178 130,26"
                  fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.8" filter="url(#dropGlow)"/>
-        <!-- blade tip cold-blue -->
         <polygon points="300,-150 460,-178 420,-165 260,-120"
                  fill="url(#gBlade)" opacity="0.98" />
-
         <polygon points="80,-26 420,-206 456,-175 120,12"
                  fill="url(#gGloss)" opacity="0.95" style="mix-blend-mode:screen"/>
-
         <polygon points="6,-36 120,-92 340,-154 420,-180 116,-6"
                  fill="url(#gDark)" opacity="0.62"/>
-
         <polygon points="36,-22 116,-86 140,-74 60,-18"
                  fill="url(#gRidge)" opacity="0.95"/>
       </g>
-
     </g>
   </svg>
 
@@ -217,7 +215,6 @@ tailwind.config = {
 <section class="py-16 text-center px-6 z-10 relative">
   <p class="text-[#9CA3AF] mb-4">Trusted by traders in 40+ countries</p>
   <div class="flex justify-center -space-x-3 animate-floatSlow">
-    <!-- Hand-picked RandomUser images (diverse mix) -->
     <img src="https://randomuser.me/api/portraits/men/12.jpg" alt="avatar 1" class="w-8 h-8 rounded-full border border-black/40" loading="lazy">
     <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="avatar 2" class="w-8 h-8 rounded-full border border-black/40" loading="lazy">
     <img src="https://randomuser.me/api/portraits/men/85.jpg" alt="avatar 3" class="w-8 h-8 rounded-full border border-black/40" loading="lazy">
@@ -284,16 +281,32 @@ tailwind.config = {
 <script>
 lucide.createIcons();
 
-/* PARTICLES */
+/* PARTICLES (unchanged) */
 const c = document.getElementById("particles-bg");
 const x = c.getContext("2d");
 const p = [];
 function resizeCanvas(){ c.width = innerWidth; c.height = innerHeight; }
 window.onresize = resizeCanvas; resizeCanvas();
 for(let i=0;i<120;i++){ p.push({x:Math.random()*c.width, y:Math.random()*c.height, r:Math.random()*1.5+.5, dx:(Math.random()-.5)*.2, dy:(Math.random()-.5)*.2}); }
-(function animParticles(){ x.clearRect(0,0,c.width,c.height); p.forEach(e=>{ x.beginPath(); x.arc(e.x,e.y,e.r,0,7); x.fillStyle="rgba(255,255,255,.7)"; x.fill(); e.x+=e.dx; e.y+=e.dy; if(e.x<0||e.x>c.width)e.x=Math.random()*c.width; if(e.y<0||e.y>c.height)e.y=Math.random()*c.height; }); requestAnimationFrame(animParticles); })();
 
-/* COUNTDOWN + LOGO ANIM */
+/* particle animator stored so we can let it run normally but reduce its visual impact while scrolling */
+let particleRaf = null;
+function animParticles(){
+  x.clearRect(0,0,c.width,c.height);
+  p.forEach(e=>{
+    x.beginPath();
+    x.arc(e.x,e.y,e.r,0,7);
+    x.fillStyle="rgba(255,255,255,.7)";
+    x.fill();
+    e.x+=e.dx; e.y+=e.dy;
+    if(e.x<0||e.x>c.width)e.x=Math.random()*c.width;
+    if(e.y<0||e.y>c.height)e.y=Math.random()*c.height;
+  });
+  particleRaf = requestAnimationFrame(animParticles);
+}
+animParticles();
+
+/* COUNTDOWN + LOGO ANIM (unchanged) */
 const countdown = {days:1,hours:14,minutes:22,seconds:8};
 const ctaMain = document.getElementById("cta-main");
 const heroLogo = document.getElementById("hero-logo");
@@ -311,7 +324,7 @@ function renderCountdown(){
 renderCountdown();
 setInterval(()=>{updateCountdown(); renderCountdown();},1000);
 
-/* HOVER TILT */
+/* HOVER TILT (unchanged) */
 activeLogoElements.forEach(el=>{
   if(!el) return;
   el.addEventListener("mousemove", e=>{
@@ -323,7 +336,7 @@ activeLogoElements.forEach(el=>{
   el.addEventListener("mouseleave", ()=>{ el.style.transform = "rotateX(0) rotateY(0)"; });
 });
 
-/* MOBILE GYRO */
+/* MOBILE GYRO (unchanged) */
 if(window.DeviceOrientationEvent){
   window.addEventListener("deviceorientation", e=>{
     const rx = e.beta/4 || 0;
@@ -331,7 +344,26 @@ if(window.DeviceOrientationEvent){
     activeLogoElements.forEach(el => { if(el) el.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`; });
   }, true);
 }
-</script>
 
+/* --- NEW: Debounced scroll handler to temporarily reduce heavy effects while scrolling --- */
+let reduceTimer = null;
+function onScrollStart(){
+  // add class immediately when scroll starts
+  document.documentElement.classList.add('reduce-motion');
+
+  // clear any previous timer
+  if(reduceTimer) clearTimeout(reduceTimer);
+
+  // after 250ms of no scroll, remove the reduced-motion state
+  reduceTimer = setTimeout(()=>{
+    document.documentElement.classList.remove('reduce-motion');
+    reduceTimer = null;
+  }, 250);
+}
+
+// Use passive listener for better scrolling performance
+window.addEventListener('scroll', onScrollStart, { passive: true });
+
+</script>
 </body>
 </html>
