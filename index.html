@@ -4,21 +4,27 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>ABROX — AI-Powered Market Intelligence</title>
+
 <!-- SEO -->
 <meta name="description" content="AI-Powered Market Intelligence delivered directly via Telegram for serious traders. Real-time signals. Structured entries." />
 <meta name="keywords" content="trading signals, AI trading, telegram signals, crypto trading, forex signals" />
 <meta name="author" content="Abrox" />
+
 <!-- OpenGraph -->
 <meta property="og:title" content="ABROX — AI-Powered Market Intelligence" />
 <meta property="og:description" content="Real-time signals. Structured entries. Built for serious traders." />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="./og-image.jpg" />
+
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
+
 <!-- Google font to approximate the original wordmark -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;900&display=swap" rel="stylesheet">
+
 <!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
+
 <!-- Tailwind config -->
 <script>
 tailwind.config = {
@@ -40,16 +46,15 @@ tailwind.config = {
   }
 }
 </script>
+
 <!-- Lucide Icons -->
 <script src="https://unpkg.com/lucide@latest"></script>
+
 <style>
-  /* base + scrolling optimizations */
   html,body { background-color:#05060A; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; -webkit-overflow-scrolling: touch; }
   body { background: #05060A; perspective: 1000px; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
 
-  /* keep your existing gradient background */
   #gradient-bg{ position: fixed; inset:0; z-index:-2; background: linear-gradient(135deg,#7C3AED,#EC4899,#3B82F6); opacity:.35; will-change:opacity; }
-
   .glass{ background: rgba(255,255,255,.06); backdrop-filter: blur(18px); border:1px solid rgba(255,255,255,.12); box-shadow:0 20px 60px rgba(0,0,0,.45);}
   .svg-glow { animation: glowPulse 2s infinite ease-in-out; }
   .svg-3d { animation: logo3D 6s infinite ease-in-out; transform-origin: center; display:block; margin:auto; }
@@ -86,22 +91,28 @@ tailwind.config = {
   }
 </style>
 </head>
+
 <body class="text-[#E5E7EB] overflow-x-hidden relative">
+
 <!-- Gradient Background -->
 <div id="gradient-bg"></div>
+
 <!-- Particles Background -->
 <canvas id="particles-bg" class="fixed inset-0 -z-10"></canvas>
+
 <!-- HERO -->
 <section class="min-h-screen flex flex-col justify-center items-center text-center px-6 relative z-10">
 
-  <!-- UPDATED SVG (same refined logo you approved) -->
+  <!-- POLYGON-FIRST LOGO: drop this in place of earlier SVG -->
   <svg id="hero-logo" viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg"
        class="svg-glow svg-3d" role="img" aria-label="ABROX logo" preserveAspectRatio="xMidYMid meet">
     <defs>
+      <!-- very hard stops to create faceted color jumps -->
       <linearGradient id="gMain" x1="0" y1="0" x2="1" y2="1">
         <stop offset="0%"  stop-color="#ff2fb8"/>
-        <stop offset="28%" stop-color="#ff57c8"/>
-        <stop offset="48%" stop-color="#c24dff"/>
+        <stop offset="30%" stop-color="#ff57c8"/>
+        <stop offset="48.5%" stop-color="#ff57c8"/>
+        <stop offset="49%" stop-color="#c24dff"/>
         <stop offset="52%" stop-color="#7b5bff"/>
         <stop offset="78%" stop-color="#4aa7ff"/>
         <stop offset="100%" stop-color="#2d7ef6"/>
@@ -109,48 +120,58 @@ tailwind.config = {
 
       <linearGradient id="gBlade" x1="0" y1="0" x2="1" y2="0">
         <stop offset="0%" stop-color="#7fb9ff"/>
-        <stop offset="45%" stop-color="#4eaaff"/>
+        <stop offset="40%" stop-color="#4eaaff"/>
         <stop offset="100%" stop-color="#1675f4"/>
       </linearGradient>
 
       <linearGradient id="gGloss" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
-        <stop offset="40%" stop-color="#ffdff8" stop-opacity="0.75"/>
-        <stop offset="100%" stop-color="#e6f3ff" stop-opacity="0.35"/>
-      </linearGradient>
-
-      <linearGradient id="gRidge" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stop-color="#fff" stop-opacity="0.96"/>
-        <stop offset="100%" stop-color="#fff" stop-opacity="0.02"/>
+        <stop offset="0%" stop-color="#ffffff" stop-opacity="0.98"/>
+        <stop offset="100%" stop-color="#fff0ff" stop-opacity="0.35"/>
       </linearGradient>
 
       <linearGradient id="gDark" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stop-color="#000" stop-opacity="0.6"/>
+        <stop offset="0%" stop-color="#000" stop-opacity="0.7"/>
         <stop offset="100%" stop-color="#000" stop-opacity="0.18"/>
       </linearGradient>
 
       <filter id="dropGlow" x="-60%" y="-60%" width="220%" height="220%">
-        <feDropShadow dx="0" dy="10" stdDeviation="18" flood-color="#8b5cf6" flood-opacity="0.12"/>
-        <feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#ff5fd2" flood-opacity="0.06"/>
+        <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#8b5cf6" flood-opacity="0.10"/>
       </filter>
     </defs>
 
+    <!-- Centered group -->
     <g transform="translate(600,440)">
+
+      <!-- TOP CHEVRON: micro-slab, main slab, blade, gloss, under-slice — all polygons -->
       <g transform="translate(0,-220)">
-        <polygon points="-240,-20 -140,-120 10,-40 -120,40"
-                 fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.8" filter="url(#dropGlow)"/>
-        <polygon points="10,-40 420,-210 460,-178 130,26"
-                 fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.8" filter="url(#dropGlow)"/>
-        <polygon points="300,-150 460,-178 420,-165 260,-120"
-                 fill="url(#gBlade)" opacity="0.98" />
-        <polygon points="80,-26 420,-206 456,-175 120,12"
+
+        <!-- thin top micro-slab -->
+        <polygon points="-150,-138 -80,-188 40,-162 -20,-114"
+                 fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.6"/>
+
+        <!-- broad main slab -->
+        <polygon points="-220,-12 72,-162 190,-128 18,10"
+                 fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.9" filter="url(#dropGlow)"/>
+
+        <!-- long thin blade (sharp triangle facets) -->
+        <polygon points="18,10 420,-210 470,-175 120,20"
+                 fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.9" filter="url(#dropGlow)"/>
+
+        <!-- blade blue triangular tip -->
+        <polygon points="330,-145 470,-175 430,-160 270,-118"
+                 fill="url(#gBlade)" />
+
+        <!-- extremely thin glossy facet (sharp) -->
+        <polygon points="92,-36 420,-206 452,-176 120,8"
                  fill="url(#gGloss)" opacity="0.95" style="mix-blend-mode:screen"/>
-        <polygon points="6,-36 120,-92 340,-154 420,-180 116,-6"
-                 fill="url(#gDark)" opacity="0.62"/>
-        <polygon points="36,-22 116,-86 140,-74 60,-18"
-                 fill="url(#gRidge)" opacity="0.95"/>
+
+        <!-- single straight under-slice (hard edge) -->
+        <polygon points="24,2 126,-86 352,-154 418,-182 118,-6"
+                 fill="url(#gDark)" opacity="0.76"/>
+
       </g>
 
+      <!-- WORDMARK -->
       <g transform="translate(0,34)">
         <text x="0" y="48" text-anchor="middle"
               class="abrox-text" font-size="144"
@@ -160,20 +181,34 @@ tailwind.config = {
         </text>
       </g>
 
+      <!-- BOTTOM CHEVRON: mirrored polygonal facets -->
       <g transform="translate(0,250) scale(1,-1)">
+
+        <!-- lower left flange -->
         <polygon points="-240,-20 -140,-120 10,-40 -120,40"
-                 fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.8" filter="url(#dropGlow)"/>
-        <polygon points="10,-40 420,-210 460,-178 130,26"
-                 fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.8" filter="url(#dropGlow)"/>
-        <polygon points="300,-150 460,-178 420,-165 260,-120"
-                 fill="url(#gBlade)" opacity="0.98" />
-        <polygon points="80,-26 420,-206 456,-175 120,12"
-                 fill="url(#gGloss)" opacity="0.95" style="mix-blend-mode:screen"/>
-        <polygon points="6,-36 120,-92 340,-154 420,-180 116,-6"
-                 fill="url(#gDark)" opacity="0.62"/>
+                 fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.9" filter="url(#dropGlow)"/>
+
+        <!-- inner join triangular piece -->
+        <polygon points="16,-38 160,-150 260,-112 94,10"
+                 fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.7"/>
+
+        <!-- lower blade facet -->
+        <polygon points="120,18 430,-210 468,-178 130,26"
+                 fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.9"/>
+
+        <!-- lower blade tip blue triangle -->
+        <polygon points="300,-150 468,-178 420,-162 260,-120"
+                 fill="url(#gBlade)" />
+
+        <!-- short dark slit for separation -->
+        <polygon points="118,-8 340,-154 420,-180 120,6"
+                 fill="url(#gDark)" opacity="0.76"/>
+
+        <!-- tiny glossy ridge -->
         <polygon points="36,-22 116,-86 140,-74 60,-18"
-                 fill="url(#gRidge)" opacity="0.95"/>
+                 fill="url(#gGloss)" opacity="0.92" style="mix-blend-mode:screen"/>
       </g>
+
     </g>
   </svg>
 
@@ -215,6 +250,7 @@ tailwind.config = {
 <section class="py-16 text-center px-6 z-10 relative">
   <p class="text-[#9CA3AF] mb-4">Trusted by traders in 40+ countries</p>
   <div class="flex justify-center -space-x-3 animate-floatSlow">
+    <!-- Hand-picked RandomUser images (diverse mix) -->
     <img src="https://randomuser.me/api/portraits/men/12.jpg" alt="avatar 1" class="w-8 h-8 rounded-full border border-black/40" loading="lazy">
     <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="avatar 2" class="w-8 h-8 rounded-full border border-black/40" loading="lazy">
     <img src="https://randomuser.me/api/portraits/men/85.jpg" alt="avatar 3" class="w-8 h-8 rounded-full border border-black/40" loading="lazy">
@@ -281,7 +317,7 @@ tailwind.config = {
 <script>
 lucide.createIcons();
 
-/* PARTICLES (unchanged) */
+/* PARTICLES */
 const c = document.getElementById("particles-bg");
 const x = c.getContext("2d");
 const p = [];
@@ -289,7 +325,6 @@ function resizeCanvas(){ c.width = innerWidth; c.height = innerHeight; }
 window.onresize = resizeCanvas; resizeCanvas();
 for(let i=0;i<120;i++){ p.push({x:Math.random()*c.width, y:Math.random()*c.height, r:Math.random()*1.5+.5, dx:(Math.random()-.5)*.2, dy:(Math.random()-.5)*.2}); }
 
-/* particle animator stored so we can let it run normally but reduce its visual impact while scrolling */
 let particleRaf = null;
 function animParticles(){
   x.clearRect(0,0,c.width,c.height);
@@ -306,7 +341,7 @@ function animParticles(){
 }
 animParticles();
 
-/* COUNTDOWN + LOGO ANIM (unchanged) */
+/* COUNTDOWN + LOGO ANIM */
 const countdown = {days:1,hours:14,minutes:22,seconds:8};
 const ctaMain = document.getElementById("cta-main");
 const heroLogo = document.getElementById("hero-logo");
@@ -324,7 +359,7 @@ function renderCountdown(){
 renderCountdown();
 setInterval(()=>{updateCountdown(); renderCountdown();},1000);
 
-/* HOVER TILT (unchanged) */
+/* HOVER TILT */
 activeLogoElements.forEach(el=>{
   if(!el) return;
   el.addEventListener("mousemove", e=>{
@@ -336,7 +371,7 @@ activeLogoElements.forEach(el=>{
   el.addEventListener("mouseleave", ()=>{ el.style.transform = "rotateX(0) rotateY(0)"; });
 });
 
-/* MOBILE GYRO (unchanged) */
+/* MOBILE GYRO */
 if(window.DeviceOrientationEvent){
   window.addEventListener("deviceorientation", e=>{
     const rx = e.beta/4 || 0;
@@ -345,23 +380,16 @@ if(window.DeviceOrientationEvent){
   }, true);
 }
 
-/* --- NEW: Debounced scroll handler to temporarily reduce heavy effects while scrolling --- */
+/* Debounced scroll handler to temporarily reduce heavy effects while scrolling */
 let reduceTimer = null;
 function onScrollStart(){
-  // add class immediately when scroll starts
   document.documentElement.classList.add('reduce-motion');
-
-  // clear any previous timer
   if(reduceTimer) clearTimeout(reduceTimer);
-
-  // after 250ms of no scroll, remove the reduced-motion state
   reduceTimer = setTimeout(()=>{
     document.documentElement.classList.remove('reduce-motion');
     reduceTimer = null;
   }, 250);
 }
-
-// Use passive listener for better scrolling performance
 window.addEventListener('scroll', onScrollStart, { passive: true });
 
 </script>
