@@ -64,17 +64,9 @@ tailwind.config = {
   /* GPU hints to reduce repaint flicker */
   #hero-logo, #particles-bg, #gradient-bg { will-change: transform, opacity; transform: translateZ(0); backface-visibility: hidden; -webkit-backface-visibility: hidden; }
 
-  /* reduce-motion state while scrolling (temporarily disables heavy effects) */
-  .reduce-motion .svg-glow,
-  .reduce-motion .svg-3d {
-    animation: none !important;
-    filter: none !important;
-    transition: none !important;
-  }
-  .reduce-motion #particles-bg { opacity: 0.22 !important; pointer-events: none; }
-  .reduce-motion #gradient-bg { opacity: 0.18 !important; }
-
-  /* accessibility preference: respect prefers-reduced-motion too */
+  /* keep animations visible during scroll — but provide a reduced-motion CSS hook (not used to kill glow) */
+  .reduce-motion #particles-bg { opacity: 0.6 !important; } /* gentle reduction only */
+  /* respect user's OS preference */
   @media (prefers-reduced-motion: reduce) {
     .svg-glow, .svg-3d { animation: none !important; filter: none !important; }
     #particles-bg { opacity: 0.2 !important; }
@@ -314,24 +306,58 @@ const x = c.getContext("2d");
 const p = [];
 function resizeCanvas(){ c.width = innerWidth; c.height = innerHeight; }
 window.onresize = resizeCanvas; resizeCanvas();
-for(let i=0;i<120;i++){ p.push({x:Math.random()*c.width, y:Math.random()*c.height, r:Math.random()*1.5+.5, dx:(Math.random()-.5)*.2, dy:(Math.random()-.5)*.2}); }
-
-/* particle animator stored so we can pause/resume during scrolling */
-let particleRaf = null;
-let particlesPaused = false;
-function animParticles(){
-  if(particlesPaused){ particleRaf = null; return; }
-  x.clearRect(0,0,c.width,c.height);
-  p.forEach(e=>{
-    x.beginPath();
-    x.arc(e.x,e.y,e.r,0,7);
-    x.fillStyle="rgba(255,255,255,.7)";
-    x.fill();
-    e.x+=e.dx; e.y+=e.dy;
-    if(e.x<0||e.x>c.width)e.x=Math.random()*c.width;
-    if(e.y<0||e.y>c.height)e.y=Math.random()*c.height;
+for(let i=0;i<120;i++){
+  p.push({
+    x:Math.random()*c.width,
+    y:Math.random()*c.height,
+    r:Math.random()*1.5+.5,
+    dx:(Math.random()-.5)*.2,
+    dy:(Math.random()-.5)*.2
   });
+}
+
+/* particle animator stored so we can throttle gracefully instead of killing animations */
+let particleRaf = null;
+let particlesPaused = false; // not used to disable animations; we throttle instead
+let reduced = false;         // reduced mode while scrolling (draw fewer particles)
+let particleFps = 60;        // nominal FPS
+let lastParticleTime = performance.now();
+
+function animParticles(now){
   particleRaf = requestAnimationFrame(animParticles);
+  const current = now || performance.now();
+  const elapsed = current - lastParticleTime;
+  const interval = 1000 / particleFps;
+  if(elapsed < interval) return; // throttle by FPS
+  lastParticleTime = current - (elapsed % interval);
+
+  // draw
+  x.clearRect(0,0,c.width,c.height);
+  // when reduced, draw only half the particles to cut work
+  if(reduced){
+    for(let i=0;i<p.length;i++){
+      if((i & 1) === 1) continue; // skip half of particles
+      const e = p[i];
+      x.beginPath();
+      x.arc(e.x,e.y,e.r,0,Math.PI*2);
+      x.fillStyle="rgba(255,255,255,.7)";
+      x.fill();
+      e.x += e.dx; e.y += e.dy;
+      if(e.x<0||e.x>c.width) e.x = Math.random()*c.width;
+      if(e.y<0||e.y>c.height) e.y = Math.random()*c.height;
+    }
+  } else {
+    for(let i=0;i<p.length;i++){
+      const e = p[i];
+      x.beginPath();
+      x.arc(e.x,e.y,e.r,0,Math.PI*2);
+      x.fillStyle="rgba(255,255,255,.7)";
+      x.fill();
+      e.x += e.dx; e.y += e.dy;
+      if(e.x<0||e.x>c.width) e.x = Math.random()*c.width;
+      if(e.y<0||e.y>c.height) e.y = Math.random()*c.height;
+    }
+  }
 }
 animParticles();
 
@@ -379,93 +405,38 @@ if(window.DeviceOrientationEvent){
 }
 
 /* --------------------------
-   Scroll performance handler
-   - pauses particles RAF during scroll
-   - removes heavy SVG filter attributes during scroll
-   - restores everything shortly after scroll ends
+   Smooth-scrolling strategy (keeps animations)
+   - Throttle canvas particle work while scrolling instead of turning off SVG animations
+   - Draw fewer particles while scrolling (cheap)
+   - Keep FPS high normally, drop FPS during scroll
    -------------------------- */
 
-// collect all elements that use a 'filter' attribute so we can remove/restore them
-const elementsWithFilter = Array.from(document.querySelectorAll('[filter]'));
-const filterBackup = new Map();
-elementsWithFilter.forEach(el => {
-  const f = el.getAttribute('filter');
-  if(f) filterBackup.set(el, f);
-});
-
-// helpers to remove/restore filter attributes
-function removeSvgFilters(){
-  elementsWithFilter.forEach(el => {
-    if(el.hasAttribute('filter')) {
-      el.setAttribute('data-orig-filter', el.getAttribute('filter'));
-      el.removeAttribute('filter');
-    }
-  });
-}
-function restoreSvgFilters(){
-  elementsWithFilter.forEach(el => {
-    const orig = el.getAttribute('data-orig-filter') || filterBackup.get(el);
-    if(orig) {
-      el.setAttribute('filter', orig);
-      el.removeAttribute('data-orig-filter');
-    } else {
-      // nothing to restore
-    }
-  });
-}
-
-// debounced scroll start/stop
 let reduceTimer = null;
-let scrolling = false;
-
-// start reduced mode immediately
-function startReducedMode(){
-  if(scrolling) return;
-  scrolling = true;
-
-  // add class which disables animations via CSS
-  document.documentElement.classList.add('reduce-motion');
-
-  // pause particles RAF
-  particlesPaused = true;
-  if(particleRaf) { cancelAnimationFrame(particleRaf); particleRaf = null; }
-
-  // remove heavy SVG filters (drop glows)
-  removeSvgFilters();
+function startScrollReduce(){
+  // don't change SVG classes/filters — keep logo look intact
+  reduced = true;          // draw fewer particles
+  particleFps = 20;        // throttle to ~20 fps while scrolling
+  document.documentElement.classList.add('reduce-motion'); // mild visual hint only
 }
-
-// end reduced mode (restore)
-function endReducedMode(){
-  if(!scrolling) return;
-  scrolling = false;
-
-  // restore filters
-  restoreSvgFilters();
-
-  // resume particles RAF after a tiny delay so the browser can settle
-  setTimeout(()=>{
-    particlesPaused = false;
-    if(!particleRaf) animParticles();
-  }, 80);
-
-  // remove class
+function endScrollReduce(){
+  reduced = false;
+  particleFps = 60;        // go back to full smoothness
   document.documentElement.classList.remove('reduce-motion');
 }
 
-// unified scroll handler (passive for performance)
 function onScrollActivity(){
-  // start reduced mode immediately
-  startReducedMode();
+  // start reduced mode immediately (fast reaction)
+  startScrollReduce();
 
-  // debounce the end
+  // debounce end
   if(reduceTimer) clearTimeout(reduceTimer);
   reduceTimer = setTimeout(()=>{
-    endReducedMode();
+    endScrollReduce();
     reduceTimer = null;
-  }, 250);
+  }, 200); // 200ms after last scroll event, return to full rendering
 }
 
-// attach both scroll and touchmove/start so mobile is responsive
+// Use passive listeners for best scrolling performance
 window.addEventListener('scroll', onScrollActivity, { passive: true });
 window.addEventListener('touchstart', onScrollActivity, { passive: true });
 window.addEventListener('touchmove', onScrollActivity, { passive: true });
