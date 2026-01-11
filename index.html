@@ -43,7 +43,7 @@ main{position:relative; padding:14px 18px 28px;}
 /* background: two canvas layers */
 .bg-wrap{ position:absolute; inset:0; z-index:0; overflow:hidden; }
 #washCanvas{ position:absolute; top:0; left:0; width:100%; height:100%; display:block; filter: saturate(120%); transform:scale(1.02); }
-#numsCanvas{ position:absolute; top:0; left:0; width:100%; height:100%; display:block; filter: blur(9px) contrast(120%) brightness(120%); transform:scale(1.03); mix-blend-mode:screen; opacity:0.95; }
+#numsCanvas{ position:absolute; top:0; left:0; width:100%; height:100%; display:block; filter: blur(14px) contrast(120%) brightness(120%); transform:scale(1.03); mix-blend-mode:screen; opacity:0.95; }
 .bg-overlay{ position:absolute; inset:0; z-index:1; pointer-events:none; background:linear-gradient(180deg, rgba(6,30,60,0.08), rgba(3,8,18,0.6)); }
 
 /* bokeh glows */
@@ -185,7 +185,7 @@ svg text{ font-family:Orbitron, monospace; font-weight:900; fill:#ffffff; paint-
               </div>
             </div>
 
-            <div class="meta">Percentages estimated by the model — window: <span id="metaTF">M1</span> — <span id="metaTs" aria-live="polite">Last update: —</span></div>
+            <div class="meta">Percentages estimated by the model — window: <span id="metaTF">M1</span> — <span id="metaTs">Last update: —</span></div>
 
             <div class="pills" role="toolbar">
               <div class="pill green" id="btnReport">OPEN REPORT</div>
@@ -205,7 +205,7 @@ svg text{ font-family:Orbitron, monospace; font-weight:900; fill:#ffffff; paint-
     <div class="modal-backdrop">
       <div class="modal" role="document" aria-labelledby="premiumTitle">
         <h2 id="premiumTitle">Premium required</h2>
-        <p id="premiumCopy"><strong>Why this is premium:</strong> Detailed percentage readouts, downloadable reports and broker integration depend on our real-time model and protected reporting. Subscribing keeps signal integrity and gives priority access to sharp signals.</p>
+        <p><strong>Why this is premium:</strong> Detailed percentage readouts, downloadable reports and broker integration depend on our real-time model and protected reporting. Subscribing keeps signal integrity and gives priority access to sharp signals.</p>
         <p style="margin-top:6px;color:var(--muted)">Subscribe to unlock:<br>• Real-time confidence percentages<br>• Downloadable reports & sheets<br>• Broker integration and priority alerts</p>
         <div class="actions">
           <button class="btn ghost" id="modalLater">Maybe later</button>
@@ -233,7 +233,7 @@ svg text{ font-family:Orbitron, monospace; font-weight:900; fill:#ffffff; paint-
   </div>
 
 <script>
-/* Finalized script with patches applied */
+/* Finalized script with accessibility, keyboard nav, focus trap, background, dropdowns, telegram */
 
 /* state */
 let isSubscribed = false;
@@ -259,8 +259,6 @@ const metaTF = document.getElementById('metaTF');
 const metaTs = document.getElementById('metaTs');
 
 const premiumModal = document.getElementById('premiumModal');
-const premiumTitle = document.getElementById('premiumTitle');
-const premiumCopy = document.getElementById('premiumCopy');
 const modalSubscribe = document.getElementById('modalSubscribe');
 const modalLater = document.getElementById('modalLater');
 
@@ -315,7 +313,6 @@ function createDropdownShell(){
   box.style.borderRadius='10px';
   box.style.boxShadow='0 10px 40px rgba(0,0,0,0.6)';
   box.style.zIndex=9999;
-  box.cleanR = null;
 
   const search = document.createElement('input');
   search.className='dd-search';
@@ -331,7 +328,7 @@ function createDropdownShell(){
   list.style.maxHeight='260px'; list.style.overflow='auto'; list.style.webkitOverflowScrolling='touch';
   box.appendChild(list);
 
-  box.close = ()=> { if(box.parentNode) box.parentNode.removeChild(box); if(typeof box.cleanR === 'function') box.cleanR(); };
+  box.close = ()=> { if(box.parentNode) box.parentNode.removeChild(box); };
   return box;
 }
 
@@ -382,7 +379,8 @@ function buildDropdownContents(box, items, onSelect){
       e.preventDefault();
       const options = Array.from(list.querySelectorAll('[role="option"]'));
       if(options.length===0) return;
-      options[0].focus();
+      const idx = 0;
+      options[idx].focus();
     }
   });
 
@@ -398,7 +396,7 @@ function buildDropdownContents(box, items, onSelect){
   render('');
 }
 
-/* open Dropdowns under control with autofocus & reposition on scroll/resize */
+/* open Dropdowns under control */
 function openPairsDropdown(){
   dropdowns.innerHTML='';
   const box = createDropdownShell();
@@ -409,16 +407,6 @@ function openPairsDropdown(){
   box.style.top  = Math.round(rect.bottom - cardRect.top + 8) + 'px';
   dropdowns.appendChild(box);
   pairSelect.setAttribute('aria-expanded','true');
-  box.querySelector('.dd-search')?.focus();
-
-  function handleScroll(){
-    const r = pairSelect.getBoundingClientRect();
-    box.style.left = Math.round(r.left - cardRect.left) + 'px';
-    box.style.top  = Math.round(r.bottom - cardRect.top + 8) + 'px';
-  }
-  window.addEventListener('scroll', handleScroll, {passive:true});
-  window.addEventListener('resize', handleScroll);
-  box.cleanR = ()=>{ window.removeEventListener('scroll', handleScroll); window.removeEventListener('resize', handleScroll); };
 }
 function openTFDropdown(){
   dropdowns.innerHTML='';
@@ -430,38 +418,21 @@ function openTFDropdown(){
   box.style.top  = Math.round(rect.bottom - cardRect.top + 8) + 'px';
   dropdowns.appendChild(box);
   tfSelect.setAttribute('aria-expanded','true');
-  box.querySelector('.dd-search')?.focus();
-
-  function handleScroll(){
-    const r = tfSelect.getBoundingClientRect();
-    box.style.left = Math.round(r.left - cardRect.left) + 'px';
-    box.style.top  = Math.round(r.bottom - cardRect.top + 8) + 'px';
-  }
-  window.addEventListener('scroll', handleScroll, {passive:true});
-  window.addEventListener('resize', handleScroll);
-  box.cleanR = ()=>{ window.removeEventListener('scroll', handleScroll); window.removeEventListener('resize', handleScroll); };
 }
 pairSelect.addEventListener('click', openPairsDropdown);
 tfSelect.addEventListener('click', openTFDropdown);
 
-/* close on outside & esc — ensure we call box.close() to cleanup listeners */
+/* close on outside & esc */
 document.addEventListener('click', (e)=>{
   const inside = e.target.closest('.select') || e.target.closest('#dropdowns') || e.target.closest('.dd-box');
-  if(!inside){
-    const box = dropdowns.querySelector('.dd-box');
-    if(box && typeof box.close === 'function') box.close();
-    dropdowns.innerHTML='';
-    pairSelect.setAttribute('aria-expanded','false');
-    tfSelect.setAttribute('aria-expanded','false');
-  }
+  if(!inside){ dropdowns.innerHTML=''; pairSelect.setAttribute('aria-expanded','false'); tfSelect.setAttribute('aria-expanded','false'); }
 });
-document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ const box = dropdowns.querySelector('.dd-box'); if(box && typeof box.close === 'function') box.close(); dropdowns.innerHTML=''; pairSelect.setAttribute('aria-expanded','false'); tfSelect.setAttribute('aria-expanded','false'); hidePremiumModal(); hideSupportModal(); } });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ dropdowns.innerHTML=''; pairSelect.setAttribute('aria-expanded','false'); tfSelect.setAttribute('aria-expanded','false'); hidePremiumModal(); hideSupportModal(); } });
 
 /* selection handlers */
 function selectedPair(val){
   pairValue.textContent = val;
-  const box = dropdowns.querySelector('.dd-box');
-  if(box && typeof box.close === 'function') box.close();
+  dropdowns.innerHTML='';
   pairSelect.setAttribute('aria-expanded','false');
   const up = +(Math.random()*70 + 8).toFixed(2);
   setTriangles(up, +(100-up).toFixed(2));
@@ -470,8 +441,7 @@ function selectedPair(val){
 }
 function selectedTF(val){
   tfValue.textContent = val;
-  const box = dropdowns.querySelector('.dd-box');
-  if(box && typeof box.close === 'function') box.close();
+  dropdowns.innerHTML='';
   tfSelect.setAttribute('aria-expanded','false');
   const up = +(Math.random()*70 + 8).toFixed(2);
   setTriangles(up, +(100-up).toFixed(2));
@@ -479,7 +449,7 @@ function selectedTF(val){
   if(window.onPairTimeframeUpdate) window.onPairTimeframeUpdate({pair:pairValue.textContent, timeframe:val, up, down:100-up});
 }
 
-/* Background: two canvases (wash + numbers) with pause/resume on visibilitychange */
+/* Background: two canvases (wash + numbers) */
 (function dualCanvasBackground(){
   const wash = document.getElementById('washCanvas');
   const nums = document.getElementById('numsCanvas');
@@ -489,7 +459,6 @@ function selectedTF(val){
   const DPR = window.devicePixelRatio || 1;
 
   let w=0,h=0, cols=0, columns=[];
-  let last = performance.now();
 
   function resize(){
     const rect = wash.getBoundingClientRect();
@@ -503,9 +472,6 @@ function selectedTF(val){
     wash.style.height = nums.style.height = h + 'px';
     ctxW.setTransform(DPR,0,0,DPR,0,0);
     ctxN.setTransform(DPR,0,0,DPR,0,0);
-
-    ctxN.textAlign = 'center';
-    ctxN.textBaseline = 'middle';
 
     cols = Math.max(28, Math.floor(w / 28));
     columns = Array.from({length:cols}, (_,i)=>({
@@ -522,10 +488,7 @@ function selectedTF(val){
 
   const glyphs = '0123456789';
   let raf;
-  let isDrawing = true;
-
   function draw(now){
-    last = now;
     ctxW.clearRect(0,0,w,h);
     // wash gradient
     const g = ctxW.createLinearGradient(0,0,0,h);
@@ -576,15 +539,6 @@ function selectedTF(val){
   }
   raf = requestAnimationFrame(draw);
 
-  function handleVisibility(){
-    if(document.hidden){
-      if(isDrawing){ cancelAnimationFrame(raf); isDrawing = false; }
-    } else {
-      if(!isDrawing){ last = performance.now(); raf = requestAnimationFrame(draw); isDrawing = true; }
-    }
-  }
-  document.addEventListener('visibilitychange', handleVisibility);
-
   // small bokeh micro-movement
   const b1 = document.getElementById('b1'), b2 = document.getElementById('b2'), b3 = document.getElementById('b3');
   let t=0;
@@ -600,7 +554,6 @@ function selectedTF(val){
   // cleanup on unload
   window.addEventListener('beforeunload', ()=>{
     cancelAnimationFrame(raf);
-    document.removeEventListener('visibilitychange', handleVisibility);
   });
 })();
 
@@ -646,31 +599,11 @@ function buildTelegramShareURL(message){
 }
 btnTelegram?.addEventListener('click', ()=> { window.open(buildTelegramShareURL(buildPrefillMessage()), '_blank', 'noopener'); });
 
-/* tailored premium modal messaging to drive conversions */
-function showPremiumModalFor(action){
-  const key = String(action || '').toUpperCase();
-  if(key.includes('REPORT')) {
-    premiumTitle.textContent = 'Reports locked — preview available';
-    premiumCopy.innerHTML = '<strong>Unlock detailed reports:</strong> subscribe to download full reports, see historic performance and export CSV. Try a short demo to evaluate the signal quality.';
-  } else if(key.includes('BROKER')) {
-    premiumTitle.textContent = 'Broker integration';
-    premiumCopy.innerHTML = '<strong>Why integrate?</strong> Auto-sync trades, lower latency, and one-click execution with supported brokers. Subscribe to enable broker APIs and priority setup.';
-  } else if(key.includes('DOWNLOAD')) {
-    premiumTitle.textContent = 'Export access';
-    premiumCopy.innerHTML = '<strong>Export & audit-ready sheets:</strong> downloadable reports contain full meta and confidence scores—ideal for audits. Subscribe to enable CSV exports.';
-  } else {
-    premiumTitle.textContent = 'Premium required';
-    premiumCopy.innerHTML = '<strong>Why this is premium:</strong> Detailed readouts and integrations depend on our real-time model. Subscribe to unlock priority signals and export.';
-  }
-  showPremiumModal();
-}
-
 /* buttons: blocked if not subscribed */
 [btnReport, btnBroker, btnDownload, btnLogout].forEach(btn => {
   btn.addEventListener('click', (e)=>{
     if(!isSubscribed){
-      // tailored persuasion per button
-      showPremiumModalFor(btn.textContent.trim());
+      showPremiumModal();
       e.preventDefault();
       return;
     }
@@ -697,7 +630,7 @@ let autoUpdate = setInterval(()=>{
   const up = +(Math.random()*70 + 8).toFixed(2);
   setTriangles(up, +(100-up).toFixed(2));
 }, 5200);
-window.addEventListener('beforeunload', ()=> { clearInterval(autoUpdate); });
+window.addEventListener('beforeunload', ()=> clearInterval(autoUpdate));
 </script>
 </body>
 </html>
