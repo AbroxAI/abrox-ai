@@ -42,12 +42,15 @@ main{position:relative; padding:14px 18px 28px;}
 
 /* background: two canvas layers */
 .bg-wrap{ position:absolute; inset:0; z-index:0; overflow:hidden; }
-#washCanvas{ position:absolute; top:0; left:0; width:100%; height:100%; display:block; filter: saturate(118%); transform:scale(1.02); }
-#numsCanvas{ position:absolute; top:0; left:0; width:100%; height:100%; display:block; filter: blur(10px) contrast(125%) brightness(115%); transform:scale(1.03); mix-blend-mode:screen; opacity:0.95; }
-.bg-overlay{ position:absolute; inset:0; z-index:1; pointer-events:none; background:linear-gradient(180deg, rgba(6,30,60,0.08), rgba(3,8,18,0.6)); }
+#washCanvas{ position:absolute; top:0; left:0; width:100%; height:100%; display:block; filter: saturate(122%); transform:scale(1.02); }
+#numsCanvas{ position:absolute; top:0; left:0; width:100%; height:100%; display:block; filter: blur(16px) contrast(125%) brightness(110%); transform:scale(1.03); mix-blend-mode:screen; opacity:0.92; }
+.bg-overlay{ position:absolute; inset:0; z-index:1; pointer-events:none; background:linear-gradient(180deg, rgba(6,30,60,0.06), rgba(2,6,12,0.7)); }
+
+/* subtle vignette to push edges darker — stronger and slightly blurred for camera-like feel */
+.bg-vignette{ position:absolute; inset:0; z-index:2; pointer-events:none; background: radial-gradient(ellipse at center, rgba(0,0,0,0) 40%, rgba(0,0,0,0.9) 100%); mix-blend-mode:multiply; opacity:0.9; filter: blur(6px); }
 
 /* bokeh glows */
-.bokeh { position:absolute; border-radius:50%; filter: blur(18px) saturate(160%); opacity:0.75; mix-blend-mode:screen; z-index:0; pointer-events:none; }
+.bokeh { position:absolute; border-radius:50%; filter: blur(18px) saturate(170%); opacity:0.8; mix-blend-mode:screen; z-index:0; pointer-events:none; }
 
 /* center above background */
 .center{ position:relative; z-index:12; display:flex; align-items:center; flex-direction:column; gap:18px; padding:32px 10px; }
@@ -141,10 +144,11 @@ svg text{ font-family:Orbitron, monospace; font-weight:900; fill:#ffffff; paint-
             <canvas id="washCanvas"></canvas>
             <canvas id="numsCanvas"></canvas>
             <div class="bg-overlay" aria-hidden="true"></div>
+            <div class="bg-vignette" aria-hidden="true"></div>
 
-            <div id="b1" class="bokeh" style="width:260px;height:260px;background:radial-gradient(circle at center, rgba(180,235,255,0.95), rgba(180,235,255,0.04)); left:6%; top:10%; opacity:0.48;"></div>
-            <div id="b2" class="bokeh" style="width:220px;height:220px;background:radial-gradient(circle at center, rgba(210,245,255,0.95), rgba(210,245,255,0.04)); right:8%; top:18%; opacity:0.26;"></div>
-            <div id="b3" class="bokeh" style="width:160px;height:160px;background:radial-gradient(circle at center, rgba(200,230,255,0.95), rgba(200,230,255,0.06)); left:42%; bottom:20%; opacity:0.34;"></div>
+            <div id="b1" class="bokeh" style="width:260px;height:260px;background:radial-gradient(circle at center, rgba(97,245,153,0.95), rgba(97,245,153,0.02)); left:6%; top:10%; opacity:0.5;"></div>
+            <div id="b2" class="bokeh" style="width:220px;height:220px;background:radial-gradient(circle at center, rgba(120,250,200,0.95), rgba(120,250,200,0.03)); right:8%; top:18%; opacity:0.32;"></div>
+            <div id="b3" class="bokeh" style="width:160px;height:160px;background:radial-gradient(circle at center, rgba(90,220,160,0.95), rgba(90,220,160,0.04)); left:42%; bottom:20%; opacity:0.36;"></div>
           </div>
 
           <div id="dropdowns" style="position:absolute; top:84px; right:22px; z-index:200;"></div>
@@ -233,7 +237,7 @@ svg text{ font-family:Orbitron, monospace; font-weight:900; fill:#ffffff; paint-
   </div>
 
 <script>
-/* Finalized script with background balanced and integrated */
+/* Finalized script with background tuned strongly to match screenshot */
 
 /* state */
 let isSubscribed = false;
@@ -479,7 +483,12 @@ function selectedTF(val){
   if(window.onPairTimeframeUpdate) window.onPairTimeframeUpdate({pair:pairValue.textContent, timeframe:val, up, down:100-up});
 }
 
-/* Balanced Background: dual-canvas (wash + numbers) */
+/* Final dualCanvasBackground() with all 4 tweaks applied:
+   1) #numsCanvas blur increased to 16px (in CSS)
+   2) greener/brighter radial glows
+   3) denser/chunkier blurred blocks (cols divisor reduced)
+   4) stronger vignette opacity + blur
+*/
 (function dualCanvasBackground(){
   const wash = document.getElementById('washCanvas');
   const nums = document.getElementById('numsCanvas');
@@ -489,33 +498,26 @@ function selectedTF(val){
   if(!ctxW || !ctxN) return;
 
   const DPR = Math.max(1, window.devicePixelRatio || 1);
-
-  // state
-  let w = 0, h = 0;
-  let columns = [];
-  let rafDraw = null;
-  let rafBokeh = null;
-  let isRunning = false;
-  let t = 0;
-
-  // configure visual params
+  let w=0,h=0,columns=[];
+  let rafDraw=null, rafBokeh=null, isRunning=false;
   const glyphs = '0123456789';
   const MIN_W = 640, MIN_H = 420;
 
   function makeColumns(width, height){
-    const cols = Math.max(28, Math.floor(width / 28));
-    columns = Array.from({length: cols}, (_, i) => ({
-      x: Math.round((i + 0.5) * (width / cols)),
-      y: Math.random() * -height,
-      speed: 0.45 + Math.random() * 1.6,
-      size: Math.round(40 + Math.random() * 68),
-      phase: Math.random() * Math.PI * 2,
-      glyphSeed: Math.floor(Math.random() * 10),
-      rectOffsetX: (Math.random() - 0.5) * 10,
-      rectOffsetY: Math.round(Math.random() * 40) - 20,
-      rectW: Math.round(36 + Math.random() * 64),
-      rectH: Math.round(28 + Math.random() * 80),
-      rectAlpha: 0.055 + Math.random() * 0.11
+    // denser columns: smaller divisor -> more, but we keep a min to avoid insane counts
+    const cols = Math.max(20, Math.floor(width / 36)); // denser than previous
+    columns = Array.from({length: cols}, (_,i)=>({
+      x: Math.round((i + 0.5) * (width/cols)),
+      y: Math.random()*-height,
+      speed: 0.35 + Math.random()*1.1,
+      size: Math.round(44 + Math.random()*78),
+      phase: Math.random()*Math.PI*2,
+      glyphSeed: Math.floor(Math.random()*10),
+      rectW: Math.round(80 + Math.random()*140),
+      rectH: Math.round(48 + Math.random()*140),
+      rectOx: (Math.random()-0.5)*28,
+      rectOy: Math.round(Math.random()*80)-40,
+      rectAlpha: 0.06 + Math.random()*0.14
     }));
   }
 
@@ -546,7 +548,7 @@ function selectedTF(val){
   }
 
   function roundRect(ctx, x, y, width, height, r){
-    if (r === undefined) r = Math.min(12, Math.min(width, height) * 0.15);
+    if (r === undefined) r = Math.min(30, Math.min(width, height) * 0.18);
     ctx.beginPath();
     ctx.moveTo(x + r, y);
     ctx.arcTo(x + width, y, x + width, y + height, r);
@@ -558,102 +560,92 @@ function selectedTF(val){
 
   function draw(now){
     if (!now) now = performance.now();
-    t = now / 1000;
 
-    // WASH LAYER
+    // WASH: deeper teal-blue base gradient (slightly greener/brighter top)
     ctxW.clearRect(0, 0, w, h);
-
     const g = ctxW.createLinearGradient(0, 0, 0, h);
-    g.addColorStop(0, 'rgba(24,106,165,0.16)');
-    g.addColorStop(0.45, 'rgba(10,70,120,0.12)');
-    g.addColorStop(1, 'rgba(6,18,36,0.7)');
-    ctxW.fillStyle = g;
-    ctxW.fillRect(0, 0, w, h);
+    g.addColorStop(0, 'rgba(10,110,160,0.26)');   // greener/brighter top
+    g.addColorStop(0.45, 'rgba(8,92,140,0.16)');
+    g.addColorStop(0.8, 'rgba(14,72,110,0.12)');
+    g.addColorStop(1, 'rgba(4,10,20,0.72)');
+    ctxW.fillStyle = g; ctxW.fillRect(0,0,w,h);
 
-    // drifting radial glows
-    for (let i = 0; i < 3; i++){
-      const cx = w * (0.12 + i * 0.33) + Math.sin(now / (600 + i*120)) * w * 0.02;
-      const cy = h * (0.18 + i * 0.26) + Math.cos(now / (700 + i*90)) * h * 0.02;
-      const r = Math.max(w, h) * (0.4 + i*0.15);
-      const rg = ctxW.createRadialGradient(cx, cy, 30, cx, cy, r);
-      const alpha = 0.07 + i * 0.02;
-      rg.addColorStop(0, `rgba(160,230,255,${alpha})`);
-      rg.addColorStop(0.6, `rgba(100,170,210,${alpha*0.36})`);
-      rg.addColorStop(1, 'rgba(10,18,28,0)');
+    // greener, stronger radial glows
+    for(let i=0;i<3;i++){
+      const cx = w*(0.14 + i*0.30) + Math.sin(now/(680 + i*100))*w*0.02;
+      const cy = h*(0.18 + i*0.24) + Math.cos(now/(660 + i*90))*h*0.02;
+      const rad = Math.max(w,h)*(0.36 + i*0.16);
+      const rg = ctxW.createRadialGradient(cx, cy, 20, cx, cy, rad);
+      const alpha = 0.12 + i*0.04; // stronger
+      rg.addColorStop(0, `rgba(90,250,150,${alpha})`);
+      rg.addColorStop(0.45, `rgba(60,210,150,${alpha*0.46})`);
+      rg.addColorStop(1, 'rgba(6,18,28,0)');
       ctxW.globalCompositeOperation = 'lighter';
       ctxW.fillStyle = rg;
-      ctxW.fillRect(0, 0, w, h);
+      ctxW.fillRect(0,0,w,h);
       ctxW.globalCompositeOperation = 'source-over';
     }
 
-    // blurred rectangular "blocks"
-    for (let i = 0; i < columns.length; i += 3) {
+    // chunky blurred blocks (denser)
+    for(let i=0;i<columns.length;i++){
       const c = columns[i];
-      const rx = c.x + c.rectOffsetX + Math.sin(now/1200 + c.phase) * 6;
-      const ry = ((c.y + c.rectOffsetY) % (h + 200)) - 100;
-      const rw = c.rectW;
-      const rh = c.rectH;
+      const rx = c.x + c.rectOx + Math.sin(now/(1300) + c.phase)*8;
+      c.y += c.speed*0.6 + Math.sin(now/900 + c.phase)*0.4;
+      const ry = ((c.y + c.rectOy) % (h + 400)) - 200;
       ctxW.globalAlpha = c.rectAlpha;
-      ctxW.fillStyle = `rgba(200,240,255,1)`;
-      roundRect(ctxW, rx - rw*0.5, ry - rh*0.5, rw, rh, Math.min(20, rw*0.2));
+      ctxW.fillStyle = `rgba(230,245,255,1)`;
+      roundRect(ctxW, rx - c.rectW*0.5, ry - c.rectH*0.5, c.rectW, c.rectH, Math.min(36, c.rectW*0.12));
       ctxW.fill();
-      ctxW.globalAlpha = 1;
-    }
-
-    // subtle vertical streaks
-    for (let i = 0; i < 6; i++){
-      ctxW.globalAlpha = 0.02 + Math.abs(Math.sin(now / 1500 + i * 0.6)) * 0.02;
-      ctxW.fillStyle = 'rgba(255,255,255,0.02)';
-      const x = (i / 6) * w + Math.sin(now / (500 + i*30)) * 24;
-      ctxW.fillRect(x, 0, Math.max(28, w/24), h);
     }
     ctxW.globalAlpha = 1;
 
-    // NUMBERS LAYER
-    ctxN.clearRect(0, 0, w, h);
+    // faint vertical streaks
+    for(let i=0;i<5;i++){
+      ctxW.globalAlpha = 0.02 + Math.abs(Math.sin(now/(1400) + i*0.9))*0.02;
+      ctxW.fillStyle = 'rgba(255,255,255,0.02)';
+      const x = (i/5)*w + Math.sin(now/(700 + i*30))*26;
+      ctxW.fillRect(x,0,Math.max(36, w/20), h);
+    }
+    ctxW.globalAlpha = 1;
+
+    // NUMBERS: larger glyphs, will become smeared blobs due to blur(16px)
+    ctxN.clearRect(0,0,w,h);
     ctxN.globalCompositeOperation = 'lighter';
-
-    for (let i = 0; i < columns.length; i++){
+    for(let i=0;i<columns.length;i++){
       const c = columns[i];
-      c.y += c.speed + Math.sin((now/800) + c.phase) * 0.6;
-      if (c.y > h + c.size) {
-        c.y = - (Math.random() * 200 + c.size);
-      }
-      const glyph = glyphs.charAt((Math.floor(now / 300 + i + c.glyphSeed)) % glyphs.length);
-      const x = c.x + Math.sin(now / 1200 + i) * 8;
+      c.y += c.speed*0.45 + Math.sin(now/1100 + c.phase)*0.3;
+      if(c.y > h + c.size) c.y = - (Math.random()*300 + c.size);
+      const glyph = glyphs.charAt((Math.floor(now/300 + i + c.glyphSeed)) % glyphs.length);
+      const x = c.x + Math.sin(now/1400 + i)*6;
       const y = c.y;
-
-      ctxN.font = `${Math.round(c.size * 0.72)}px monospace`;
+      ctxN.font = `${Math.round(c.size*0.6)}px monospace`;
       ctxN.fillStyle = 'rgba(255,255,255,0.06)';
       ctxN.fillText(glyph, x, y);
-
       ctxN.font = `${c.size}px monospace`;
-      ctxN.fillStyle = 'rgba(255,255,255,0.86)';
+      ctxN.fillStyle = 'rgba(255,255,255,0.82)';
       ctxN.fillText(glyph, x, y);
-
-      ctxN.lineWidth = Math.max(1, Math.round(c.size * 0.03));
-      ctxN.strokeStyle = 'rgba(120,220,255,0.12)';
+      ctxN.lineWidth = Math.max(1, Math.round(c.size*0.025));
+      ctxN.strokeStyle = 'rgba(130,220,255,0.12)';
       ctxN.strokeText(glyph, x, y);
     }
-
     ctxN.globalCompositeOperation = 'source-over';
 
     rafDraw = requestAnimationFrame(draw);
   }
 
-  // bokeh micro-motion
+  // DOM bokeh micro motion
   const b1 = document.getElementById('b1'), b2 = document.getElementById('b2'), b3 = document.getElementById('b3');
   let tb = 0;
   function bokehLoop(){
-    tb += 0.012;
-    if (b1) { b1.style.left = (6 + Math.sin(tb * 0.9) * 1.6) + '%'; b1.style.top = (10 + Math.cos(tb * 0.7) * 1.8) + '%'; }
-    if (b2) { b2.style.right = (8 + Math.cos(tb * 0.6) * 1.6) + '%'; b2.style.top = (18 + Math.sin(tb * 0.5) * 1.6) + '%'; }
-    if (b3) { b3.style.left = (42 + Math.sin(tb * 0.4) * 2.3) + '%'; b3.style.bottom = (20 + Math.cos(tb * 0.8) * 1.6) + '%'; }
+    tb += 0.01;
+    if(b1) { b1.style.left = (6 + Math.sin(tb*0.86)*1.6) + '%'; b1.style.top = (10 + Math.cos(tb*0.72)*1.8) + '%'; }
+    if(b2) { b2.style.right = (8 + Math.cos(tb*0.62)*1.6) + '%'; b2.style.top = (18 + Math.sin(tb*0.52)*1.6) + '%'; }
+    if(b3) { b3.style.left = (42 + Math.sin(tb*0.38)*2.3) + '%'; b3.style.bottom = (20 + Math.cos(tb*0.82)*1.6) + '%'; }
     rafBokeh = requestAnimationFrame(bokehLoop);
   }
 
   function start(){
-    if (isRunning) return;
+    if(isRunning) return;
     isRunning = true;
     resize();
     if(rafDraw) cancelAnimationFrame(rafDraw);
@@ -661,18 +653,14 @@ function selectedTF(val){
     if(rafBokeh) cancelAnimationFrame(rafBokeh);
     rafBokeh = requestAnimationFrame(bokehLoop);
   }
-
   function stop(){
-    if (!isRunning) return;
+    if(!isRunning) return;
     isRunning = false;
-    if (rafDraw) { cancelAnimationFrame(rafDraw); rafDraw = null; }
-    if (rafBokeh) { cancelAnimationFrame(rafBokeh); rafBokeh = null; }
+    if(rafDraw){ cancelAnimationFrame(rafDraw); rafDraw = null; }
+    if(rafBokeh){ cancelAnimationFrame(rafBokeh); rafBokeh = null; }
   }
 
-  function onVisibility(){
-    if (document.hidden) stop();
-    else start();
-  }
+  function onVisibility(){ if(document.hidden) stop(); else start(); }
 
   window.addEventListener('resize', () => {
     clearTimeout(window.__astron_resize_timeout);
