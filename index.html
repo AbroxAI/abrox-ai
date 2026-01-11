@@ -1,467 +1,775 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>ABROX — AI-Powered Market Intelligence</title>
-<!-- SEO -->
-<meta name="description" content="AI-Powered Market Intelligence delivered directly via Telegram for serious traders. Real-time signals. Structured entries." />
-<meta name="keywords" content="trading signals, AI trading, telegram signals, crypto trading, forex signals" />
-<meta name="author" content="Abrox" />
-<!-- OpenGraph -->
-<meta property="og:title" content="ABROX — AI-Powered Market Intelligence" />
-<meta property="og:description" content="Real-time signals. Structured entries. Built for serious traders." />
-<meta property="og:type" content="website" />
-<meta property="og:image" content="./og-image.jpg" />
-<!-- Twitter -->
-<meta name="twitter:card" content="summary_large_image" />
-<!-- Google font to approximate the original wordmark -->
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;900&display=swap" rel="stylesheet">
-<!-- Tailwind CSS -->
-<script src="https://cdn.tailwindcss.com"></script>
-<!-- Tailwind config -->
-<script>
-tailwind.config = {
-  theme: {
-    extend: {
-      animation: {
-        fadeUp: "fadeUp .9s cubic-bezier(.22,1,.36,1) both",
-        fadeUpDelay: "fadeUp 1s .25s both",
-        pulseSlow: "pulse 2.8s infinite",
-        floatSlow: "float 7s ease-in-out infinite",
-        glowPulse: "glowPulse 1s infinite alternate"
-      },
-      keyframes: {
-        fadeUp: { from:{opacity:0, transform:"translateY(16px) scale(.98)"}, to:{opacity:1, transform:"translateY(0) scale(1)"} },
-        float:{ "0%,100%":{transform:"translateY(0)"}, "50%":{transform:"translateY(-4px)"} },
-        glowPulse: { "0%": {boxShadow:"0 0 15px rgba(34,197,94,0.3)"}, "100%": {boxShadow:"0 0 40px rgba(34,197,94,0.7)"} }
-      }
-    }
-  }
-}
-</script>
-<!-- Lucide Icons -->
-<script src="https://unpkg.com/lucide@latest"></script>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>ASTRONBOT.MAX — Deep Clone (tuned)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-  /* Smooth scrolling & touch/native scroll optimizations */
-  html, body {
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-    touch-action: pan-y;
-  }
+:root{
+  --neon-green:#00ff33;
+  --neon-green-2:#17d24a;
+  --neo-red:#e33b3b;
+  --muted:#cbd5e1;
+  --glass: rgba(255,255,255,0.04);
+  --max-width:1100px;
+}
 
-  body { background: #05060A; perspective: 1000px; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
-  #gradient-bg{ position: fixed; inset:0; z-index:-2; background: linear-gradient(135deg,#7C3AED,#EC4899,#3B82F6); opacity:.35; }
-  .glass{ background: rgba(255,255,255,.06); backdrop-filter: blur(18px); border:1px solid rgba(255,255,255,.12); box-shadow:0 20px 60px rgba(0,0,0,.45);}
-  .svg-glow { animation: glowPulse 2s infinite ease-in-out; }
-  .svg-3d { animation: logo3D 6s infinite ease-in-out; transform-origin: center; display:block; margin:auto; }
+/* reset */
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;background:#000;}
+.wrap{ min-height:100vh; display:flex; align-items:center; justify-content:center; padding:18px; }
 
-  /* thin glossy edge for facets */
-  .chev-edge { fill: rgba(0,0,0,0.14); opacity: 0.66; }
+/* card */
+.card{
+  width:100%;
+  max-width:var(--max-width);
+  border-radius:14px;
+  overflow:visible;
+  position:relative;
+  background:linear-gradient(180deg, rgba(1,6,10,0.9), rgba(2,8,12,0.98));
+  border:1px solid var(--glass);
+  box-shadow:0 18px 60px rgba(0,0,0,0.75);
+}
 
-  @keyframes glowPulse { 0%,100% { filter: drop-shadow(0 0 10px #ff5fd2) drop-shadow(0 0 20px #8b5cf6) drop-shadow(0 0 30px #3b82f6); } 50% { filter: drop-shadow(0 0 25px #ff5fd2) drop-shadow(0 0 40px #8b5cf6) drop-shadow(0 0 55px #3b82f6); } }
-  @keyframes logo3D { 0% { transform: rotateY(0deg) rotateX(0deg) scale(1); } 50% { transform: rotateY(10deg) rotateX(6deg) scale(1.02); } 100% { transform: rotateY(0deg) rotateX(0deg) scale(1); } }
+/* ---------- HEADER: exact tuning ----------
+   - min-height and explicit padding to match screenshot spacing
+   - brand size tuned
+------------------------------------------------*/
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  /* tuned: explicit top/bottom/padding in px */
+  padding:14px 18px 22px; /* top 14, right/left 18, bottom 22 */
+  min-height:96px; /* explicit header height to control top spacing */
+  z-index:60;
+  position:relative;
+  background:linear-gradient(180deg, rgba(2,6,10,0.85), rgba(2,6,10,0.5));
+}
+.left-header{display:flex; align-items:center; gap:12px; min-width:0;}
+.logo-mark{width:46px;height:46px; background:linear-gradient(180deg,var(--neon-green),var(--neon-green-2)); clip-path:polygon(50% 0%,100% 100%,0% 100%); box-shadow:0 0 22px rgba(0,255,51,0.95);}
+.brand{display:flex;flex-direction:column;min-width:0;}
+.brand-top{display:flex;align-items:center;gap:12px}
+.brand-text{
+  font-family:Orbitron, sans-serif;
+  color:var(--neon-green);
+  font-weight:900;
+  /* tuned: exact px behavior with clamp fallback */
+  font-size:40px;
+  line-height:40px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  text-shadow:0 0 10px rgba(0,255,51,0.85),0 12px 36px rgba(0,0,0,0.6);
+}
+.subtitle{
+  font-family:Orbitron, sans-serif;
+  font-size:12px;
+  color:var(--neon-green-2);
+  letter-spacing:2px;
+  margin-left:2px;
+  font-weight:800;
+  text-transform:uppercase;
+  text-shadow:0 0 10px rgba(0,255,51,0.18);
+}
 
-  /* hero SVG sizing and balance */
-  #hero-logo { width: clamp(300px, 52vw, 980px); height: auto; }
+/* ---------- CONTROLS (pair + timeframe) ----------
+   - positioned with exact px offsets from the card/top to match screenshot
+   - dropdowns open under the controls (JS positions them exactly)
+---------------------------------------------------------------*/
+.controls {
+  display:flex;
+  gap:12px;
+  align-items:center;
+  z-index:70;
+  position:absolute;
+  /* tuned offsets: right and top in px */
+  right:18px;
+  top:96px;      /* exact top offset to align under header */
+  pointer-events:auto;
+}
 
-  /* tighter ABROX style */
-  .abrox-text { font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, Arial; font-weight:900; letter-spacing:6px; }
+.select{
+  background:linear-gradient(180deg,#132733,#0e1a28);
+  padding:8px 14px;
+  border-radius:8px;
+  border:1px solid var(--glass);
+  min-width:132px; /* a bit wider so list matches screenshot chip */
+  color:#e8fbff;
+  cursor:pointer;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.5) inset;
+}
+.select .label{font-size:11px;color:var(--muted); display:block; margin-bottom:2px;}
+.select .value{font-weight:800; font-size:14px;}
 
-  /* GPU hints to reduce repaint flicker */
-  #hero-logo, #particles-bg, #gradient-bg { will-change: transform, opacity; transform: translateZ(0); backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+/* ---------- MAIN area ---------- */
+main{position:relative; padding:14px 18px;}
+.main-inner{
+  position:relative;
+  border-radius:12px;
+  overflow:hidden;
+  background:linear-gradient(180deg, rgba(0,0,0,0.36), rgba(0,0,0,0.45));
+  min-height:760px; /* taller like screenshot */
+}
 
-  /* keep animations visible during scroll — but provide a reduced-motion CSS hook (not used to kill glow) */
-  .reduce-motion #particles-bg { opacity: 0.6 !important; } /* gentle reduction only */
-  /* respect user's OS preference */
-  @media (prefers-reduced-motion: reduce) {
-    .svg-glow, .svg-3d { animation: none !important; filter: none !important; }
-    #particles-bg { opacity: 0.2 !important; }
-  }
+/* background canvas + overlay */
+.bg-wrap{ position:absolute; inset:0; z-index:0; overflow:hidden; }
+#algoCanvas{ position:absolute; top:0; left:0; width:100%; height:100%; display:block; object-fit:cover; filter: blur(6px) saturate(150%); transform:scale(1.03); }
+.bg-overlay{ position:absolute; inset:0; z-index:1; background:linear-gradient(180deg, rgba(2,6,10,0.18), rgba(2,6,10,0.6)); }
 
-  /* Ensure the canvas doesn't intercept pointer events (avoids expensive hit testing while scrolling) */
-  #particles-bg { pointer-events: none; }
+/* subtle bokeh */
+.bokeh { position:absolute; border-radius:50%; filter: blur(18px) saturate(160%); opacity:0.75; mix-blend-mode:screen; z-index:0; pointer-events:none; }
+
+/* center column above background */
+.center{ position:relative; z-index:12; display:flex; align-items:center; flex-direction:column; gap:18px; padding:32px 10px; }
+
+/* ---------- TRIANGLE AREA - exact size & spacing ----------
+   - explicit px tops for single-pixel control
+   - svg widths/heights tuned
+-----------------------------------------------------------*/
+.triangle-area{
+  width:100%;
+  max-width:680px;
+  height:460px; /* tuned to match screenshot vertical room */
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+}
+
+/* absolute positions (pixels) rather than % for fine control */
+.up-tri, .down-tri { position:absolute; left:50%; transform-origin:center; transition: transform .45s cubic-bezier(.22,.98,.33,1), opacity .25s ease; }
+
+/* tuned exact px positions */
+.up-tri{
+  top:112px;                /* precise px offset from top of triangle-area/card */
+  transform:translateX(-50%) scale(0.98);
+  z-index:8;
+}
+.up-tri svg{ width:220px; height:220px; display:block; }
+
+/* connector between triangles */
+.connector { position:absolute; top:248px; left:50%; transform:translate(-50%,-2px); width:240px; height:6px; border-radius:6px; z-index:6; background:linear-gradient(90deg, rgba(0,255,51,0.12), rgba(255,255,255,0.03), rgba(227,59,59,0.06)); box-shadow:0 10px 30px rgba(0,0,0,0.6); }
+
+/* lower triangle (bigger and lower) */
+.down-tri{
+  top:248px;               /* vertical spacing between triangles controlled here */
+  transform:translateX(-50%) scale(1);
+  z-index:10;
+}
+.down-tri svg{ width:320px; height:320px; display:block; }
+
+/* tiny glow under down triangle */
+.down-glow{ position:absolute; width:92px;height:48px;border-radius:50%; background:radial-gradient(circle at center, rgba(0,255,51,0.98) 0%, rgba(0,255,51,0.28) 25%, rgba(0,0,0,0) 65%); bottom:38px; left:50%; transform:translateX(-50%); filter:blur(6px); z-index:7; }
+
+/* SVG text style */
+svg text{
+  font-family:Orbitron, monospace;
+  font-weight:900;
+  fill:#ffffff;
+  paint-order:stroke fill;
+  stroke: rgba(0,0,0,0.65);
+  stroke-width:2px;
+  filter: drop-shadow(0 6px 8px rgba(0,0,0,0.55));
+  dominant-baseline:middle;
+  letter-spacing:0.6px;
+}
+
+/* rec badge exactly placed and styled */
+.rec-badge{
+  position:absolute;
+  left:22px;             /* exact left offset requested */
+  bottom:26px;           /* exact bottom offset requested */
+  z-index:14;
+  background:linear-gradient(180deg, rgba(3,6,10,0.72), rgba(7,9,12,0.6));
+  padding:8px 14px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,0.04);
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+.rec-badge .rec{
+  padding:8px 12px;
+  border-radius:8px;
+  font-weight:900;
+  text-transform:uppercase;
+  font-family:Orbitron, sans-serif;
+  color:var(--neon-green);
+  background:transparent;
+  cursor:pointer;
+  transition:transform .12s ease, box-shadow .12s ease;
+}
+.rec-badge .rec.clickable{ background:linear-gradient(180deg,var(--neon-green-2),var(--neon-green)); color:#071012; box-shadow:0 10px 30px rgba(0,255,51,0.18); }
+.rec-badge .rec:active{ transform:translateY(1px) }
+.rec-badge .small{ font-size:12px; color:var(--muted); }
+
+/* ---------- PILLS (stacking & radii tuned) ----------
+   - gap & border-radius tuned for exact look
+----------------------------------------------------*/
+.pills{
+  margin-top:18px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;              /* tuned vertical gap (px) */
+  align-items:center;
+  z-index:14;
+}
+
+/* pill sizing & radius tuned to screenshot */
+.pill{
+  width:240px;           /* tuned width */
+  padding:12px;
+  border-radius:28px;    /* tuned radius */
+  font-weight:800;
+  font-size:13px;
+  text-transform:uppercase;
+  cursor:pointer;
+  border:1px solid rgba(255,255,255,0.04);
+  box-shadow:0 10px 30px rgba(0,0,0,0.5);
+  text-align:center;
+}
+.pill.green{ background:linear-gradient(180deg,var(--neon-green-2),var(--neon-green)); color:#071012; }
+.pill.orange{ background:linear-gradient(180deg,#fbbf24,#f59e0b); color:#071012; width:150px; }
+
+/* modal + spinner unchanged but kept */
+.modal-backdrop{ position:fixed; inset:0; z-index:1200; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.6); }
+.modal{ width:92%; max-width:520px; background:linear-gradient(180deg,#081018,#061016); border-radius:12px; padding:20px; box-shadow:0 24px 80px rgba(0,0,0,0.8); border:1px solid rgba(255,255,255,0.03); color:#eaf6ff; }
+.modal h2{ margin:0 0 8px 0; font-family:Orbitron, sans-serif; color:var(--neon-green); letter-spacing:1px; font-size:20px; }
+.modal p{ color:var(--muted); margin:0 0 16px 0; line-height:1.35; }
+.modal .actions{ display:flex; gap:10px; justify-content:flex-end; margin-top:14px; }
+.btn{ padding:10px 14px; border-radius:10px; font-weight:800; cursor:pointer; border:0; }
+.btn.ghost{ background:transparent; color:var(--muted); border:1px solid rgba(255,255,255,0.04); }
+.btn.primary{ background:linear-gradient(180deg,var(--neon-green-2),var(--neon-green)); color:#071012; }
+
+/* responsiveness (small screens) */
+@media (max-width:760px){
+  .wrap{ padding:0; }
+  .card{ border-radius:0; max-width:100%; min-height:100vh; box-shadow:none; }
+  header{ padding:14px 14px 58px; }
+  .main-inner{ min-height:calc(100vh - 140px); }
+  .controls{ right:12px; top:140px; }
+  .triangle-area{ height:360px; }
+  .up-tri{ top:92px; }
+  .down-tri{ top:210px; }
+}
+
+/* spinner */
+@keyframes spin { to { transform: rotate(360deg);} }
+.spinner { width:44px; height:44px; border-radius:50%; border:4px solid rgba(255,255,255,0.12); border-top-color:var(--neon-green); animation:spin 0.9s linear infinite; }
+
 </style>
 </head>
-<body class="text-[#E5E7EB] overflow-x-hidden relative">
-<!-- Gradient Background -->
-<div id="gradient-bg"></div>
-<!-- Particles Background -->
-<canvas id="particles-bg" class="fixed inset-0 -z-10"></canvas>
-<!-- HERO -->
-<section class="min-h-screen flex flex-col justify-center items-center text-center px-6 relative z-10">
+<body>
+  <div class="wrap">
+    <div class="card" role="application" aria-label="ASTRONBOT.MAX final clone">
+      <header>
+        <div class="left-header">
+          <div class="logo-mark" aria-hidden="true"></div>
+          <div class="brand">
+            <div class="brand-top">
+              <div class="brand-text">ASTRONBOT.MAX</div>
+            </div>
+            <div class="subtitle">TRADING A.I.</div>
+          </div>
+        </div>
 
-  <!-- FINAL MATCH SVG: polygons, slivers, and color stops tuned for 1:1 likeness -->
-  <svg id="hero-logo" viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg" class="svg-glow svg-3d" role="img" aria-label="ABROX logo" preserveAspectRatio="xMidYMid meet" >
-    <defs>
-      <!-- main gradient tuned to match the reference tone and abrupt transitions -->
-      <linearGradient id="gMain" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%"  stop-color="#ff33ad"/>
-        <stop offset="14%" stop-color="#ff57c8"/>
-        <stop offset="33%" stop-color="#ff7fe0"/>
-        <stop offset="48%" stop-color="#c86aff"/>
-        <stop offset="66%" stop-color="#7a57ff"/>
-        <stop offset="84%" stop-color="#4aa7ff"/>
-        <stop offset="100%" stop-color="#2d7ef6"/>
-      </linearGradient>
-      <!-- small cold-blue emphasis for blade tip -->
-      <linearGradient id="gBlade" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stop-color="#8fb7ff"/>
-        <stop offset="50%" stop-color="#5fb5ff"/>
-        <stop offset="100%" stop-color="#1f7fff"/>
-      </linearGradient>
-      <!-- glossy highlight sliver -->
-      <linearGradient id="gGloss" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stop-color="#fff9fc" stop-opacity="0.95"/>
-        <stop offset="40%" stop-color="#ffdaf7" stop-opacity="0.78"/>
-        <stop offset="100%" stop-color="#dff0ff" stop-opacity="0.45"/>
-      </linearGradient>
-      <!-- thin bright micro-edge -->
-      <linearGradient id="gRidge" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stop-color="#fff" stop-opacity="0.96"/>
-        <stop offset="100%" stop-color="#fff" stop-opacity="0.03"/>
-      </linearGradient>
-      <!-- dark separator sliver -->
-      <linearGradient id="gDark" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stop-color="#000" stop-opacity="0.62"/>
-        <stop offset="100%" stop-color="#000" stop-opacity="0.22"/>
-      </linearGradient>
-      <!-- subtle drop glow used on primary facets -->
-      <filter id="dropGlow" x="-60%" y="-60%" width="220%" height="220%">
-        <feDropShadow dx="0" dy="10" stdDeviation="18" flood-color="#8b5cf6" flood-opacity="0.14"/>
-        <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#ff5fd2" flood-opacity="0.06"/>
-      </filter>
-      <!-- sharpen mask to help crisp edges -->
-      <mask id="hardMask">
-        <rect width="100%" height="100%" fill="#fff"/>
-      </mask>
-    </defs>
-    <!-- center the mark -->
-    <g transform="translate(600,440)">
-      <!-- TOP CHEVRON BLOCK (sliver + main + blade) -->
-      <g transform="translate(0,-205)">
-        <!-- tiny upper slab (top-most) -->
-        <path d="M-210,-32 L-125,-108 L-28,-82 L-110,-12 Z"
-              fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.9" filter="url(#dropGlow)"/>
-        <!-- main center slab (broad, magenta-to-purple) -->
-        <path d="M-190,-8 L 52,-150 L 180,-120 L 22,-6 Z"
-              fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.9" filter="url(#dropGlow)"/>
-        <!-- long right blade (base), uses gBlade at tip for strong blue -->
-        <path d="M22,-6 L 420,-200 L 462,-170 L 120,22 Z"
-              fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.9" filter="url(#dropGlow)"/>
-        <!-- top glossy sliver across the blade -->
-        <path d="M72,-24 L 420,-196 L 458,-170 L 110,8 Z"
-              fill="url(#gGloss)" opacity="0.96" style="mix-blend-mode:screen"/>
-        <!-- accent blade tip (small) to tilt strongly blue at the end -->
-        <path d="M320,-150 L 462,-170 L 420,-160 L 280,-120 Z" fill="url(#gBlade)" opacity="0.98" />
-        <!-- thin dark separation sliver between main slab and blade to emulate layered cut -->
-        <path d="M20,-4 L 120,-86 L 340,-154 L 420,-180 L 118,-10 Z"
-              fill="url(#gDark)" opacity="0.62"/>
-        <!-- tiny bright ridge near the join -->
-        <path d="M40,-22 L120,-86 L142,-74 L60,-18 Z"
-              fill="url(#gRidge)" opacity="0.94"/>
-        <!-- highlight strip on left main slab -->
-        <path d="M-170,-2 L-82,-86 L-36,-56 L-118,12 Z"
-              fill="url(#gGloss)" opacity="0.70"/>
-        <!-- bevel inner shadow at center join -->
-        <path d="M-8,-22 L34,-58 L120,-18 L82,-2 L24,-32 Z"
-              class="chev-edge" opacity="0.7"/>
-      </g>
-      <!-- WORDMARK centered -->
-      <g transform="translate(0,34)">
-        <text x="0" y="48" text-anchor="middle"
-              class="abrox-text"
-              font-size="144"
-              fill="url(#gMain)"
-              style="paint-order:stroke; stroke: rgba(0,0,0,0.08); stroke-width:1.6;">
-          ABROX
-        </text>
-      </g>
-      <!-- BOTTOM CHEVRON — mirrored, pulled up slightly for compact spacing -->
-      <g transform="translate(0,235) scale(1,-1)">
-        <!-- small bottom slab -->
-        <path d="M-210,-32 L-125,-108 L-28,-82 L-110,-12 Z"
-              fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.9" filter="url(#dropGlow)"/>
-        <!-- bottom main slab -->
-        <path d="M-190,-8 L 52,-150 L 180,-120 L 22,-6 Z"
-              fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.9" filter="url(#dropGlow)"/>
-        <!-- bottom blade -->
-        <path d="M22,-6 L 420,-200 L 462,-170 L 120,22 Z"
-              fill="url(#gMain)" stroke="rgba(0,0,0,0.06)" stroke-width="0.9" filter="url(#dropGlow)"/>
-        <!-- glossy sliver mirrored -->
-        <path d="M72,-24 L 420,-196 L 458,-170 L 110,8 Z"
-              fill="url(#gGloss)" opacity="0.96" style="mix-blend-mode:screen"/>
-        <!-- blade blue tip -->
-        <path d="M320,-150 L 462,-170 L 420,-160 L 280,-120 Z" fill="url(#gBlade)" opacity="0.98" />
-        <!-- dark separator mirrored -->
-        <path d="M20,-4 L 120,-86 L 340,-154 L 420,-180 L 118,-10 Z"
-              fill="url(#gDark)" opacity="0.62"/>
-        <!-- tiny ridge mirrored -->
-        <path d="M40,-22 L120,-86 L142,-74 L60,-18 Z"
-              fill="url(#gRidge)" opacity="0.94"/>
-        <!-- inner bevel mirrored -->
-        <path d="M-8,-22 L34,-58 L120,-18 L82,-2 L24,-32 Z"
-              class="chev-edge" opacity="0.7"/>
-      </g>
-    </g>
-  </svg>
+        <div class="controls" aria-hidden="false">
+          <div class="select" id="pairSelect" tabindex="0" aria-haspopup="listbox" aria-expanded="false" role="button" aria-label="Choose pair">
+            <div class="label">PAIR</div>
+            <div class="value" id="pairValue">NZDCAD</div>
+          </div>
 
-  <p class="mt-6 text-base sm:text-lg animate-fadeUpDelay">AI-Powered Market Intelligence</p>
-  <p class="text-base sm:text-lg animate-fadeUpDelay">Delivered Directly via Telegram for Serious Traders</p>
+          <div class="select" id="tfSelect" tabindex="0" aria-haspopup="listbox" aria-expanded="false" role="button" aria-label="Choose timeframe">
+            <div class="label">TIMEFRAME</div>
+            <div class="value" id="tfValue">M1</div>
+          </div>
+        </div>
+      </header>
 
-  <p class="mt-6 text-sm sm:text-base text-[#9CA3AF] animate-fadeUpDelay">
-    Real-time signals. Structured entries.<br>
-    Built for serious traders.
-  </p>
+      <main>
+        <div class="main-inner">
+          <!-- background -->
+          <div class="bg-wrap" aria-hidden="true">
+            <canvas id="algoCanvas"></canvas>
+            <div class="bg-overlay" aria-hidden="true"></div>
 
-  <a id="cta-main"
-     href="https://t.me/+_Pi6MntFFss2ODU0"
-     class="mt-8 px-8 py-4 rounded-2xl font-semibold text-black bg-[#22C55E] shadow-[0_0_40px_rgba(34,197,94,.45)] animate-pulseSlow">
-    JOIN TELEGRAM — FREE ACCESS
-  </a>
+            <!-- bokeh glows -->
+            <div id="b1" class="bokeh" style="width:220px;height:220px;background:radial-gradient(circle at center, rgba(0,255,51,0.9), rgba(0,255,51,0.12)); left:6%; top:10%; opacity:0.34;"></div>
+            <div id="b2" class="bokeh" style="width:200px;height:200px;background:radial-gradient(circle at center, rgba(20,200,255,0.85), rgba(20,200,255,0.06)); right:8%; top:18%; opacity:0.12;"></div>
+            <div id="b3" class="bokeh" style="width:140px;height:140px;background:radial-gradient(circle at center, rgba(0,255,51,0.95), rgba(0,255,51,0.12)); left:42%; bottom:20%; opacity:0.28;"></div>
+          </div>
 
-  <!-- SOCIAL PROOF -->
-  <div class="mt-8 flex flex-col items-center gap-2 text-sm text-[#9CA3AF]">
-    <div class="flex gap-[2px]">
-      <i data-lucide="star" class="w-[15px] h-[15px] fill-yellow-400 text-yellow-400"></i>
-      <i data-lucide="star" class="w-[15px] h-[15px] fill-yellow-400 text-yellow-400"></i>
-      <i data-lucide="star" class="w-[15px] h-[15px] fill-yellow-400 text-yellow-400"></i>
-      <i data-lucide="star" class="w-[15px] h-[15px] fill-yellow-400 text-yellow-400"></i>
-      <i data-lucide="star" class="w-[15px] h-[15px] fill-yellow-400 text-yellow-400"></i>
-    </div>
-    <div>4.9/5 • 3,000+ members</div>
-    <div class="flex items-center gap-2">
-      <span class="relative flex h-[7px] w-[7px]">
-        <span class="absolute inset-0 rounded-full bg-green-400 opacity-75 animate-ping"></span>
-        <span class="relative h-[7px] w-[7px] rounded-full bg-green-500"></span>
-      </span>
-      2,418 traders active now
+          <!-- dropdowns container -->
+          <div id="dropdowns" style="position:absolute; top:84px; right:22px; z-index:200;"></div>
+
+          <div class="center">
+            <div class="triangle-area" aria-hidden="false">
+              <div class="up-tri" id="upTri">
+                <svg viewBox="0 0 100 100" aria-hidden="true">
+                  <defs>
+                    <filter id="gA"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                    <linearGradient id="upPanel" x1="0" x2="0" y1="0" y2="1">
+                      <stop offset="0%" stop-color="rgba(255,255,255,0.06)" />
+                      <stop offset="100%" stop-color="rgba(0,0,0,0.18)" />
+                    </linearGradient>
+                  </defs>
+                  <polygon id="upPoly" points="50,6 95,86 5,86" fill="#00d64a" filter="url(#gA)"></polygon>
+                  <rect x="18" y="40" width="64" height="26" rx="8" fill="url(#upPanel)"></rect>
+                  <text id="upText" x="50" y="53" text-anchor="middle" font-size="16" fill="#fff" style="font-family:Orbitron, sans-serif; pointer-events:none"></text>
+                </svg>
+              </div>
+
+              <div class="connector" aria-hidden="true"></div>
+
+              <div class="down-tri" id="downTri">
+                <svg viewBox="0 0 100 100" aria-hidden="true">
+                  <defs>
+                    <filter id="gB"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                    <linearGradient id="downPanel" x1="0" x2="0" y1="0" y2="1">
+                      <stop offset="0%" stop-color="rgba(255,255,255,0.06)" />
+                      <stop offset="100%" stop-color="rgba(0,0,0,0.22)" />
+                    </linearGradient>
+                  </defs>
+                  <polygon id="downPoly" points="50,95 95,15 5,15" fill="#ef4444" filter="url(#gB)"></polygon>
+                  <rect x="18" y="42" width="64" height="30" rx="8" fill="url(#downPanel)"></rect>
+                  <text id="downText" x="50" y="56" text-anchor="middle" font-size="20" fill="#fff" style="font-family:Orbitron, sans-serif; pointer-events:none"></text>
+                </svg>
+              </div>
+
+              <div class="down-glow" aria-hidden="true"></div>
+
+              <div class="rec-badge" id="recBadge" aria-hidden="false">
+                <div class="rec clickable" id="rec">START</div>
+                <div class="small" id="recSmall">Contact support to activate</div>
+              </div>
+            </div>
+
+            <div class="meta">Percentages estimated by the model — window: <span id="metaTF">M1</span> — <span id="metaTs">Last update: —</span></div>
+
+            <div class="pills" role="toolbar">
+              <div class="pill green" id="btnReport">ABRIR RELATÓRIO</div>
+              <div class="pill green" id="btnBroker">MUDAR CORRETORA</div>
+              <div class="pill green" id="btnDownload">BAIXAR PLANILHA</div>
+              <div class="pill green" id="btnTelegram">TELEGRAM SUPPORT</div>
+              <div class="pill orange" id="btnLogout">DESLOGAR</div>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
   </div>
-</section>
 
-<!-- TRUST -->
-<section class="py-16 text-center px-6 z-10 relative">
-  <p class="text-[#9CA3AF] mb-4">Trusted by traders in 40+ countries</p>
-  <div class="flex justify-center -space-x-3 animate-floatSlow">
-    <!-- Hand-picked RandomUser images (diverse mix) -->
-    <img src="https://randomuser.me/api/portraits/men/12.jpg" alt="avatar 1" class="w-8 h-8 rounded-full border border-black/40" loading="lazy">
-    <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="avatar 2" class="w-8 h-8 rounded-full border border-black/40" loading="lazy">
-    <img src="https://randomuser.me/api/portraits/men/85.jpg" alt="avatar 3" class="w-8 h-8 rounded-full border border-black/40" loading="lazy">
-    <img src="https://randomuser.me/api/portraits/women/25.jpg" alt="avatar 4" class="w-8 h-8 rounded-full border border-black/40" loading="lazy">
-  </div>
-  <div class="mt-2 text-xs text-[#9CA3AF]">Live activity indicator ●●●</div>
-</section>
-
-<!-- PRIVATE ACCESS -->
-<section class="px-6 py-16 flex justify-center z-10 relative">
-  <div class="glass rounded-2xl p-6 max-w-md w-full text-center">
-    <p class="text-sm text-[#9CA3AF] mb-4">PRIVATE ACCESS WINDOW</p>
-    <div class="flex justify-center gap-6 font-mono text-lg" id="countdown">
-      <div><div id="days">01</div><div class="text-xs text-[#9CA3AF]">Days</div></div>
-      <div><div id="hours">14</div><div class="text-xs text-[#9CA3AF]">Hours</div></div>
-      <div><div id="minutes">22</div><div class="text-xs text-[#9CA3AF]">Minutes</div></div>
-      <div><div id="seconds">08</div><div class="text-xs text-[#9CA3AF]">Seconds</div></div>
+  <!-- Premium modal -->
+  <div id="premiumModal" style="display:none;" role="dialog" aria-modal="true">
+    <div class="modal-backdrop">
+      <div class="modal" role="document">
+        <h2>Premium required</h2>
+        <p><strong>Why this is premium:</strong> The detailed percentage readouts, downloadable reports and change-broker actions depend on our real-time model and protected reporting — we lock them to keep signal integrity and provide a premium experience. Subscribing unlocks precise percentages, real-time alerts, export and priority support.</p>
+        <p style="margin-top:6px;color:var(--muted)">Subscribe to unlock:<br>• Real-time percentages and buying/selling confidence<br>• Downloadable reports & sheets<br>• Broker integration and premium analytics</p>
+        <div class="actions">
+          <button class="btn ghost" id="modalLater">Maybe later</button>
+          <button class="btn primary" id="modalSubscribe">Subscribe (demo)</button>
+        </div>
+      </div>
     </div>
-    <p class="mt-4 text-sm text-red-400">Only 17 spots remaining today</p>
   </div>
-</section>
 
-<!-- WHY -->
-<section class="max-w-5xl mx-auto px-6 py-20 grid grid-cols-1 md:grid-cols-2 gap-6 z-10 relative">
-  <div class="glass rounded-2xl p-6 flex gap-3"><i data-lucide="brain-circuit"></i> AI Market Scanning</div>
-  <div class="glass rounded-2xl p-6 flex gap-3"><i data-lucide="zap"></i> Instant Telegram Alerts</div>
-  <div class="glass rounded-2xl p-6 flex gap-3"><i data-lucide="line-chart"></i> Structured Trade Signals</div>
-  <div class="glass rounded-2xl p-6 flex gap-3"><i data-lucide="shield-check"></i> Risk-Managed Entries</div>
-</section>
+  <!-- SUPPORT modal -->
+  <div id="supportModal" style="display:none;" role="dialog" aria-modal="true">
+    <div class="modal-backdrop">
+      <div class="modal" role="document">
+        <h2>Activation required — Contact Support</h2>
+        <p class="support-strong">To start the live signal you must activate your account. Our team verifies each activation to protect model integrity and ensure high-quality signals.</p>
+        <p style="color:var(--muted)">Contact our support team and they will guide you through activation quickly. Activation unlocks the START signal, detailed percentages and premium features with priority assistance.</p>
 
-<!-- TESTIMONIALS -->
-<section class="max-w-6xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 py-20 z-10 relative">
-  <div class="glass rounded-2xl p-6">
-    <div class="mb-2">⭐⭐⭐⭐⭐</div>
-    <p class="text-sm">“I was skeptical at first, but results came fast.”</p>
-    <div class="mt-4 text-xs text-[#9CA3AF]">— M.R. 🇬🇧</div>
+        <div class="support-contact">
+          <a class="btn primary" id="contactSupport" href="mailto:support@astronbot.max?subject=Activation%20Request%20(ASTRONBOT.MAX)">Contact Support</a>
+          <a class="btn ghost" id="contactTelegramModal" href="#" target="_blank" rel="noopener">Contact via Telegram</a>
+          <button class="btn ghost" id="supportLater">Maybe later</button>
+        </div>
+
+        <div style="margin-top:14px;color:var(--muted);font-size:13px">Pro tip: include your account email and preferred pair/timeframe for faster activation.</div>
+      </div>
+    </div>
   </div>
-  <div class="glass rounded-2xl p-6">
-    <div class="mb-2">⭐⭐⭐⭐⭐</div>
-    <p class="text-sm">“Lost my job last year — this helped me recover.”</p>
-    <div class="mt-4 text-xs text-[#9CA3AF]">— S.K. 🇺🇸</div>
-  </div>
-  <div class="glass rounded-2xl p-6">
-    <div class="mb-2">⭐⭐⭐⭐☆</div>
-    <p class="text-sm">“Not perfect, had one loss, but overall very solid.”</p>
-    <div class="mt-4 text-xs text-[#9CA3AF]">— D.M. 🇨🇦</div>
-  </div>
-</section>
-
-<!-- FINAL CTA -->
-<section class="text-center px-6 pb-24 z-10 relative">
-  <h2 class="text-2xl sm:text-3xl font-semibold">You’re Either In — Or Missing Out</h2>
-  <p class="mt-2 text-[#9CA3AF]">Access closing soon</p>
-  <a href="https://t.me/+_Pi6MntFFss2ODU0" id="cta-final"
-     class="mt-6 inline-block px-8 py-4 rounded-2xl font-semibold text-black bg-[#22C55E] shadow-[0_0_40px_rgba(34,197,94,.45)] animate-pulseSlow">
-    JOIN TELEGRAM NOW
-  </a>
-</section>
-
-<footer class="text-center text-xs text-[#9CA3AF] pb-10 z-10 relative">
-  © 2026 Abrox<br>Privacy • Terms • Disclaimer<br>Telegram • X
-</footer>
 
 <script>
-lucide.createIcons();
-/* PARTICLES */
-const c = document.getElementById("particles-bg");
-const x = c.getContext("2d");
-const p = [];
-function resizeCanvas(){ c.width = innerWidth; c.height = innerHeight; }
-window.onresize = resizeCanvas; resizeCanvas();
-for(let i=0;i<120;i++){
-  p.push({
-    x:Math.random()*c.width,
-    y:Math.random()*c.height,
-    r:Math.random()*1.5+.5,
-    dx:(Math.random()-.5)*.2,
-    dy:(Math.random()-.5)*.2
-  });
+/* ======= Script (dropdowns, triangles, background + telegram) ======= */
+
+/* demo subscription flag */
+let isSubscribed = false;
+
+const pairs = ['NZDCAD','EURUSD','GBPUSD','USDJPY','AUDUSD','USDCAD','EURJPY','BTCUSD','ETHUSD','XAUUSD'];
+const timeframes = ['M1','M5','M15','M30','H1','H4','D1'];
+
+/* refs */
+const pairSelect = document.getElementById('pairSelect');
+const tfSelect = document.getElementById('tfSelect');
+const pairValue = document.getElementById('pairValue');
+const tfValue = document.getElementById('tfValue');
+const dropdowns = document.getElementById('dropdowns');
+
+const upText = document.getElementById('upText');
+const downText = document.getElementById('downText');
+const upTri = document.getElementById('upTri');
+const downTri = document.getElementById('downTri');
+const recEl = document.getElementById('rec');
+const recSmall = document.getElementById('recSmall');
+const metaTF = document.getElementById('metaTF');
+const metaTs = document.getElementById('metaTs');
+
+const premiumModal = document.getElementById('premiumModal');
+const modalSubscribe = document.getElementById('modalSubscribe');
+const modalLater = document.getElementById('modalLater');
+
+const supportModal = document.getElementById('supportModal');
+const contactSupport = document.getElementById('contactSupport');
+const contactTelegramModal = document.getElementById('contactTelegramModal');
+const supportLater = document.getElementById('supportLater');
+
+const btnReport = document.getElementById('btnReport');
+const btnBroker = document.getElementById('btnBroker');
+const btnDownload = document.getElementById('btnDownload');
+const btnTelegram = document.getElementById('btnTelegram');
+const btnLogout = document.getElementById('btnLogout');
+
+/* helper */
+function formatPct(n){
+  return Number(n).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2}) + '%';
 }
 
-/* particle animator stored so we can throttle gracefully instead of killing animations */
-let particleRaf = null;
-let particlesPaused = false; // not used to disable animations; we throttle instead
-let reduced = false;         // reduced mode while scrolling (draw fewer particles)
-let particleFps = 60;        // nominal FPS
-let lastParticleTime = performance.now();
+/* triangles sizing/visuals function */
+function setTriangles(up, down){
+  up = Math.max(0, Math.min(100, up));
+  down = Math.max(0, Math.min(100, down));
 
-function animParticles(now){
-  particleRaf = requestAnimationFrame(animParticles);
-  const current = now || performance.now();
-  const elapsed = current - lastParticleTime;
-  const interval = 1000 / particleFps;
-  if(elapsed < interval) return; // throttle by FPS
-  lastParticleTime = current - (elapsed % interval);
+  if(isSubscribed){
+    upText.textContent = formatPct(up);
+    downText.textContent = formatPct(down);
+  } else {
+    upText.textContent = '';
+    downText.textContent = '';
+  }
 
-  // draw
-  x.clearRect(0,0,c.width,c.height);
-  // when reduced, draw only half the particles to cut work
-  if(reduced){
-    for(let i=0;i<p.length;i++){
-      if((i & 1) === 1) continue; // skip half of particles
-      const e = p[i];
-      x.beginPath();
-      x.arc(e.x,e.y,e.r,0,Math.PI*2);
-      x.fillStyle="rgba(255,255,255,.7)";
-      x.fill();
-      e.x += e.dx; e.y += e.dy;
-      if(e.x<0||e.x>c.width) e.x = Math.random()*c.width;
-      if(e.y<0||e.y>c.height) e.y = Math.random()*c.height;
+  // visual scale mapping (kept tuned)
+  const minScale = 0.86;
+  const maxExtra = 0.36;
+  const upScale = minScale + (up/100) * maxExtra;
+  const downScale = minScale + (down/100) * maxExtra;
+
+  // vertical offsets (px) tuned for spacing
+  const upOffsetPx = - Math.min(34, Math.round((up/100)*36));
+  const downOffsetPx = Math.min(20, Math.round((down/100)*32));
+
+  // apply transforms relative to our px-tuned top values
+  upTri.style.transform = `translateX(-50%) translateY(${upOffsetPx}px) scale(${upScale})`;
+  downTri.style.transform = `translateX(-50%) translateY(${downOffsetPx}px) scale(${downScale})`;
+
+  if(isSubscribed){
+    if(down > up){
+      recEl.textContent = 'SELL';
+      recEl.style.color = getComputedStyle(document.documentElement).getPropertyValue('--neo-red') || '#e33b3b';
+      recEl.classList.remove('clickable');
+      recSmall.textContent = 'Confidence';
+    } else {
+      recEl.textContent = 'BUY';
+      recEl.style.color = getComputedStyle(document.documentElement).getPropertyValue('--neon-green') || '#00ff33';
+      recEl.classList.remove('clickable');
+      recSmall.textContent = 'Confidence';
     }
   } else {
-    for(let i=0;i<p.length;i++){
-      const e = p[i];
-      x.beginPath();
-      x.arc(e.x,e.y,e.r,0,Math.PI*2);
-      x.fillStyle="rgba(255,255,255,.7)";
-      x.fill();
-      e.x += e.dx; e.y += e.dy;
-      if(e.x<0||e.x>c.width) e.x = Math.random()*c.width;
-      if(e.y<0||e.y>c.height) e.y = Math.random()*c.height;
-    }
+    recEl.textContent = 'START';
+    recEl.style.color = getComputedStyle(document.documentElement).getPropertyValue('--neon-green') || '#00ff33';
+    recEl.classList.add('clickable');
+    recSmall.textContent = 'Contact support to activate';
   }
+
+  metaTs.textContent = 'Last update: ' + new Date().toLocaleTimeString('en-US');
 }
-animParticles();
 
-/* COUNTDOWN + LOGO ANIM */
-const countdown = {days:1,hours:14,minutes:22,seconds:8};
-const ctaMain = document.getElementById("cta-main");
-const heroLogo = document.getElementById("hero-logo");
-const activeLogoElements = [heroLogo];
+/* initial numbers */
+setTriangles(16.45,83.55);
 
-function updateCountdown(){ const sec = --countdown.seconds; if(sec<0){ countdown.seconds=59; countdown.minutes--; if(countdown.minutes<0){ countdown.minutes=59; countdown.hours--; if(countdown.hours<0){ countdown.hours=23; countdown.days--;}}}}
-function renderCountdown(){
-  const daysEl = document.getElementById("days");
-  const hoursEl = document.getElementById("hours");
-  const minsEl = document.getElementById("minutes");
-  const secsEl = document.getElementById("seconds");
-  if(daysEl) daysEl.innerText = String(countdown.days).padStart(2,"0");
-  if(hoursEl) hoursEl.innerText = String(countdown.hours).padStart(2,"0");
-  if(minsEl) minsEl.innerText = String(countdown.minutes).padStart(2,"0");
-  if(secsEl) secsEl.innerText = String(countdown.seconds).padStart(2,"0");
-  if(ctaMain) ctaMain.style.animation = countdown.seconds<=5?"glowPulse 1s infinite alternate":"pulseSlow 2.8s infinite";
-  activeLogoElements.forEach(el => { if(el) el.style.animation = `glowPulse ${1.5 + countdown.seconds/10}s infinite`; });
+/* Dropdown helpers - they position the dropdown under the clicked control precisely */
+function createDropdownShell(){
+  const box = document.createElement('div');
+  box.className = 'dd-box';
+  box.style.position = 'absolute';
+  box.style.minWidth = '220px';
+  box.style.pointerEvents = 'auto';
+  box.style.background = 'linear-gradient(180deg,#071627,#03121a)';
+  box.style.border = '1px solid rgba(255,255,255,0.04)';
+  box.style.padding = '8px';
+  box.style.borderRadius = '10px';
+  box.style.boxShadow = '0 10px 40px rgba(0,0,0,0.6)';
+  box.style.zIndex = 9999;
+
+  const search = document.createElement('input');
+  search.className = 'dd-search';
+  search.placeholder = 'Search...';
+  search.style.width='100%'; search.style.marginBottom='8px'; search.style.padding='8px'; search.style.borderRadius='8px';
+  search.style.border='1px solid rgba(255,255,255,0.03)'; search.style.background='rgba(255,255,255,0.02)'; search.style.color='#eaf6ff';
+  box.appendChild(search);
+
+  const list = document.createElement('div');
+  list.className = 'dd-list';
+  list.style.maxHeight='260px'; list.style.overflow='auto'; list.style.webkitOverflowScrolling='touch';
+  box.appendChild(list);
+
+  box.close = ()=> { if(box.parentNode) box.parentNode.removeChild(box); };
+  return box;
 }
-renderCountdown();
-setInterval(()=>{updateCountdown(); renderCountdown();},1000);
 
-/* HOVER TILT */
-activeLogoElements.forEach(el=>{
-  if(!el) return;
-  el.addEventListener("mousemove", e=>{
-    const rect = el.getBoundingClientRect();
-    const mx = ((e.clientX-rect.left)/rect.width - .5) * 18;
-    const my = ((e.clientY-rect.top)/rect.height - .5) * 12;
-    el.style.transform = `rotateX(${-my}deg) rotateY(${mx}deg)`;
+function buildDropdownContents(box, items, onSelect){
+  if(!box) return;
+  const search = box.querySelector('.dd-search');
+  const list = box.querySelector('.dd-list');
+  if(!search || !list) return;
+  list.innerHTML = '';
+  items.forEach(it => {
+    const item = document.createElement('div');
+    item.className = 'dd-item';
+    item.tabIndex = 0;
+    item.textContent = it;
+    item.style.padding = '8px 10px';
+    item.style.borderRadius = '8px';
+    item.style.marginBottom = '6px';
+    item.style.color = '#e6eef6';
+    item.style.cursor = 'pointer';
+    item.addEventListener('click', ()=> onSelect(it));
+    item.addEventListener('keydown', (e)=> { if(e.key==='Enter') onSelect(it); });
+    list.appendChild(item);
   });
-  el.addEventListener("mouseleave", ()=>{ el.style.transform = "rotateX(0) rotateY(0)"; });
+  search.addEventListener('input', ()=>{
+    const q = search.value.trim().toLowerCase();
+    const children = Array.from(list.children);
+    children.forEach(c => { c.style.display = c.textContent.toLowerCase().includes(q) ? '' : 'none'; });
+    const first = children.find(c => c.style.display !== 'none');
+    if(first) first.focus();
+  });
+  list.querySelector('.dd-item')?.focus();
+}
+
+/* position dropdown under control clicked */
+function openPairsDropdown(){
+  dropdowns.innerHTML = '';
+  const box = createDropdownShell();
+  buildDropdownContents(box, pairs, selectedPair);
+  const rect = pairSelect.getBoundingClientRect();
+  const cardRect = document.querySelector('.card').getBoundingClientRect();
+  box.style.left = Math.round(rect.left - cardRect.left) + 'px';
+  box.style.top  = Math.round(rect.bottom - cardRect.top + 8) + 'px';
+  dropdowns.appendChild(box);
+  pairSelect.setAttribute('aria-expanded','true');
+}
+
+function openTFDropdown(){
+  dropdowns.innerHTML = '';
+  const box = createDropdownShell();
+  buildDropdownContents(box, timeframes, selectedTF);
+  const rect = tfSelect.getBoundingClientRect();
+  const cardRect = document.querySelector('.card').getBoundingClientRect();
+  box.style.left = Math.round(rect.left - cardRect.left) + 'px';
+  box.style.top  = Math.round(rect.bottom - cardRect.top + 8) + 'px';
+  dropdowns.appendChild(box);
+  tfSelect.setAttribute('aria-expanded','true');
+}
+
+pairSelect.addEventListener('click', openPairsDropdown);
+tfSelect.addEventListener('click', openTFDropdown);
+
+/* close dropdowns on outside click / ESC - also resets aria */
+document.addEventListener('click', (e)=>{
+  const inside = e.target.closest('.select') || e.target.closest('#dropdowns') || e.target.closest('.dd-box');
+  if(!inside){
+    dropdowns.innerHTML = '';
+    pairSelect.setAttribute('aria-expanded','false');
+    tfSelect.setAttribute('aria-expanded','false');
+  }
+});
+document.addEventListener('keydown', (e)=>{ if(e.key==='Escape'){ dropdowns.innerHTML=''; pairSelect.setAttribute('aria-expanded','false'); tfSelect.setAttribute('aria-expanded','false'); hidePremiumModal(); hideSupportModal(); } });
+
+/* selection handlers */
+function selectedPair(val){
+  pairValue.textContent = val;
+  dropdowns.innerHTML = '';
+  pairSelect.setAttribute('aria-expanded','false');
+  // simulate update
+  const up = +(Math.random()*70 + 8).toFixed(2);
+  setTriangles(up, +(100-up).toFixed(2));
+  metaTF.textContent = tfValue.textContent;
+  if(window.onPairTimeframeUpdate) window.onPairTimeframeUpdate({pair:val, timeframe:tfValue.textContent, up, down:100-up});
+}
+function selectedTF(val){
+  tfValue.textContent = val;
+  dropdowns.innerHTML = '';
+  tfSelect.setAttribute('aria-expanded','false');
+  const up = +(Math.random()*70 + 8).toFixed(2);
+  setTriangles(up, +(100-up).toFixed(2));
+  metaTF.textContent = val;
+  if(window.onPairTimeframeUpdate) window.onPairTimeframeUpdate({pair:pairValue.textContent, timeframe:val, up, down:100-up});
+}
+
+/* background: matrix-like animated digits + bokeh motion (kept and tuned) */
+(function backgroundCanvas(){
+  const canvas = document.getElementById('algoCanvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d', { alpha:true });
+  let w=0,h=0, cols=0, colW=12, drops=[];
+
+  const small = ()=> window.matchMedia('(max-width:560px)').matches;
+
+  function resize(){
+    const rect = canvas.getBoundingClientRect();
+    w = Math.max(480, Math.floor(rect.width));
+    h = Math.max(320, Math.floor(rect.height));
+    canvas.width = Math.floor(w * devicePixelRatio);
+    canvas.height = Math.floor(h * devicePixelRatio);
+    canvas.style.width = w + 'px';
+    canvas.style.height = h + 'px';
+    ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+    colW = small() ? 18 : 12;
+    cols = Math.floor(w / colW);
+    drops = Array.from({length:cols}, ()=> Math.random() * h * -1);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const glyphs = '0123456789';
+  let raf, last = performance.now();
+
+  function frame(now){
+    last = last || now;
+    ctx.clearRect(0,0,w,h);
+
+    // soft wash background (bluish) + blur impression (canvas is blurred by CSS)
+    ctx.fillStyle = 'rgba(10,30,60,0.22)';
+    ctx.fillRect(0,0,w,h);
+
+    // moving streaks
+    for(let i=0;i<5;i++){
+      ctx.globalAlpha = 0.02 + i*0.006;
+      ctx.fillStyle = `rgba(20,140,180,${0.02 + i*0.02})`;
+      const x = (i / 5) * w + (Math.sin(now/700 + i) * 18);
+      ctx.fillRect(x, 0, Math.max(36, w/16), h);
+    }
+    ctx.globalAlpha = 1;
+
+    ctx.textAlign = 'center';
+    ctx.font = (small()? '10px':'12px') + ' monospace';
+
+    for(let i=0;i<cols;i++){
+      const x = i*colW + (Math.random()*4 - 2);
+      let y = drops[i] || (Math.random()*-150);
+      // faint trailing
+      ctx.fillStyle = 'rgba(220,240,255,0.04)';
+      for(let t=0;t<3;t++){
+        ctx.fillText(glyphs.charAt(Math.floor(Math.random()*glyphs.length)), x, y - t*10);
+      }
+      // bright head
+      ctx.fillStyle = 'rgba(0,255,140,0.75)';
+      ctx.fillText(glyphs.charAt(Math.floor(Math.random()*glyphs.length)), x, y);
+      drops[i] = y + (2 + Math.random()*8) * (small()? 0.6:1.0);
+      if(drops[i] > h + 80) drops[i] = Math.random()*-150;
+    }
+
+    raf = requestAnimationFrame(frame);
+  }
+
+  raf = requestAnimationFrame(frame);
+
+  // gentle bokeh motion
+  const b1 = document.getElementById('b1'), b2 = document.getElementById('b2'), b3 = document.getElementById('b3');
+  let t=0;
+  function bokehLoop(){
+    t += 0.01;
+    if(b1){ b1.style.left = (6 + Math.sin(t*0.9)*1.6) + '%'; b1.style.top = (10 + Math.cos(t*0.7)*1.8) + '%'; }
+    if(b2){ b2.style.right = (8 + Math.cos(t*0.6)*1.6) + '%'; b2.style.top = (18 + Math.sin(t*0.5)*1.6) + '%'; }
+    if(b3){ b3.style.left = (42 + Math.sin(t*0.4)*2.3) + '%'; b3.style.bottom = (20 + Math.cos(t*0.8)*1.6) + '%'; }
+    requestAnimationFrame(bokehLoop);
+  }
+  bokehLoop();
+
+})();
+
+/* Premium & Support modal flows */
+function showPremiumModal(){ premiumModal.style.display = 'block'; document.body.style.overflow = 'hidden'; }
+function hidePremiumModal(){ premiumModal.style.display = 'none'; document.body.style.overflow = ''; }
+modalLater?.addEventListener('click', ()=> hidePremiumModal());
+modalSubscribe?.addEventListener('click', ()=> {
+  isSubscribed = true;
+  hidePremiumModal();
+  setTriangles( +(Math.random()*70 + 8).toFixed(2), +(100 - (Math.random()*70 + 8)).toFixed(2) );
 });
 
-/* MOBILE GYRO */
-if(window.DeviceOrientationEvent){
-  window.addEventListener("deviceorientation", e=>{
-    const rx = e.beta/4 || 0;
-    const ry = e.gamma/4 || 0;
-    activeLogoElements.forEach(el => { if(el) el.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`; });
-  }, true);
+/* support modal: prepare telegram link (prefill) */
+function buildPrefillMessage(){
+  const pair = pairValue?.textContent || '—';
+  const tf   = tfValue?.textContent || '—';
+  return `Activation / Balance Request (ASTRONBOT.MAX)\nPair: ${pair}\nTimeframe: ${tf}\nPlease verify activation and account balance. Account email: [your email here]`;
+}
+function buildTelegramShareURL(message){
+  const base = 'https://t.me/share/url';
+  const params = new URLSearchParams({ url:'', text: message });
+  return base + '?' + params.toString();
 }
 
-/* --------------------------
-   Smooth-scrolling strategy (keeps animations)
-   - Throttle canvas particle work while scrolling instead of turning off SVG animations
-   - Draw fewer particles while scrolling (cheap)
-   - Keep FPS high normally, drop FPS during scroll
-   - Batch DOM changes with requestAnimationFrame to avoid layout thrash
-   -------------------------- */
-
-let reduceTimer = null;
-function startScrollReduce(){
-  // don't change SVG classes/filters — keep logo look intact
-  reduced = true;          // draw fewer particles
-  particleFps = 20;        // throttle to ~20 fps while scrolling
-  document.documentElement.classList.add('reduce-motion'); // mild visual hint only
+function showSupportModal(){
+  contactTelegramModal.href = buildTelegramShareURL(buildPrefillMessage());
+  supportModal.style.display = 'block';
+  document.body.style.overflow = 'hidden';
 }
-function endScrollReduce(){
-  reduced = false;
-  particleFps = 60;        // go back to full smoothness
-  document.documentElement.classList.remove('reduce-motion');
-}
+function hideSupportModal(){ supportModal.style.display = 'none'; document.body.style.overflow = ''; }
+supportLater?.addEventListener('click', ()=> hideSupportModal());
 
-function onScrollActivity(){
-  // start reduced mode, but batch DOM changes for smoother scrolling
-  // If a start is already scheduled, we don't schedule again (avoids repeated rAF calls)
-  if(!reduceTimer){
-    // immediate visual reaction but executed inside rAF to reduce layout thrash
-    requestAnimationFrame(() => startScrollReduce());
-  } else {
-    // still ensure reduced mode is active quickly
-    requestAnimationFrame(() => { reduced = true; particleFps = 20; });
+/* rec badge click opens support modal when not subscribed */
+recEl?.addEventListener('click', (e)=>{
+  if(!isSubscribed){
+    showSupportModal();
+    e.preventDefault();
+    return;
   }
+  // else do nothing / or custom action for subscribed users
+});
 
-  // debounce end
-  if(reduceTimer) clearTimeout(reduceTimer);
-  reduceTimer = setTimeout(()=>{
-    // end in rAF to batch DOM changes
-    requestAnimationFrame(()=>{
-      endScrollReduce();
-      reduceTimer = null;
-    });
-  }, 200); // 200ms after last scroll event, return to full rendering
-}
+/* telegram main button */
+btnTelegram?.addEventListener('click', ()=>{
+  const url = buildTelegramShareURL(buildPrefillMessage());
+  window.open(url, '_blank', 'noopener');
+});
 
-// Use passive listeners for best scrolling performance
-window.addEventListener('scroll', onScrollActivity, { passive: true });
-window.addEventListener('touchstart', onScrollActivity, { passive: true });
-window.addEventListener('touchmove', onScrollActivity, { passive: true });
+/* block action buttons if not subscribed (balanced modal persuasion) */
+[btnReport, btnBroker, btnDownload, btnLogout].forEach(btn => {
+  btn.addEventListener('click', (e)=>{
+    if(!isSubscribed){
+      // Balanced persuasion content: short value-first statement
+      // We'll show the premium modal which explains benefits concisely (value, features)
+      showPremiumModal();
+      e.preventDefault();
+      return;
+    }
+    if(btn === btnDownload){
+      const csv = 'pair,timeframe,up,down\n' + pairValue.textContent + ',' + tfValue.textContent + ',' + (upText.textContent || '') + ',' + (downText.textContent || '');
+      const blob = new Blob([csv], {type:'text/csv'});
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='sheet.csv'; document.body.appendChild(a); a.click(); a.remove();
+    } else {
+      alert('Feature: ' + btn.textContent + ' (real app should implement).');
+    }
+  });
+});
 
+/* keyboard open (accessibility) */
+pairSelect.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') { e.preventDefault(); openPairsDropdown(); }});
+tfSelect.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') { e.preventDefault(); openTFDropdown(); }});
+
+/* backend hook */
+window.onPairTimeframeUpdate = window.onPairTimeframeUpdate || null;
+window.feedLive = function(msg){
+  if(!msg || typeof msg.up !== 'number') return;
+  setTriangles(msg.up, msg.down);
+};
 </script>
 </body>
 </html>
