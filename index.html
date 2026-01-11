@@ -42,8 +42,8 @@ main{position:relative; padding:14px 18px 28px;}
 
 /* background: two canvas layers */
 .bg-wrap{ position:absolute; inset:0; z-index:0; overflow:hidden; }
-#washCanvas{ position:absolute; top:0; left:0; width:100%; height:100%; display:block; filter: saturate(120%); transform:scale(1.02); }
-#numsCanvas{ position:absolute; top:0; left:0; width:100%; height:100%; display:block; filter: blur(9px) contrast(120%) brightness(120%); transform:scale(1.03); mix-blend-mode:screen; opacity:0.95; }
+#washCanvas{ position:absolute; top:0; left:0; width:100%; height:100%; display:block; filter: saturate(118%); transform:scale(1.02); }
+#numsCanvas{ position:absolute; top:0; left:0; width:100%; height:100%; display:block; filter: blur(10px) contrast(125%) brightness(115%); transform:scale(1.03); mix-blend-mode:screen; opacity:0.95; }
 .bg-overlay{ position:absolute; inset:0; z-index:1; pointer-events:none; background:linear-gradient(180deg, rgba(6,30,60,0.08), rgba(3,8,18,0.6)); }
 
 /* bokeh glows */
@@ -142,9 +142,9 @@ svg text{ font-family:Orbitron, monospace; font-weight:900; fill:#ffffff; paint-
             <canvas id="numsCanvas"></canvas>
             <div class="bg-overlay" aria-hidden="true"></div>
 
-            <div id="b1" class="bokeh" style="width:260px;height:260px;background:radial-gradient(circle at center, rgba(180,235,255,0.95), rgba(180,235,255,0.04)); left:6%; top:10%; opacity:0.5;"></div>
-            <div id="b2" class="bokeh" style="width:220px;height:220px;background:radial-gradient(circle at center, rgba(210,245,255,0.95), rgba(210,245,255,0.04)); right:8%; top:18%; opacity:0.28;"></div>
-            <div id="b3" class="bokeh" style="width:160px;height:160px;background:radial-gradient(circle at center, rgba(200,230,255,0.95), rgba(200,230,255,0.06)); left:42%; bottom:20%; opacity:0.36;"></div>
+            <div id="b1" class="bokeh" style="width:260px;height:260px;background:radial-gradient(circle at center, rgba(180,235,255,0.95), rgba(180,235,255,0.04)); left:6%; top:10%; opacity:0.48;"></div>
+            <div id="b2" class="bokeh" style="width:220px;height:220px;background:radial-gradient(circle at center, rgba(210,245,255,0.95), rgba(210,245,255,0.04)); right:8%; top:18%; opacity:0.26;"></div>
+            <div id="b3" class="bokeh" style="width:160px;height:160px;background:radial-gradient(circle at center, rgba(200,230,255,0.95), rgba(200,230,255,0.06)); left:42%; bottom:20%; opacity:0.34;"></div>
           </div>
 
           <div id="dropdowns" style="position:absolute; top:84px; right:22px; z-index:200;"></div>
@@ -233,7 +233,7 @@ svg text{ font-family:Orbitron, monospace; font-weight:900; fill:#ffffff; paint-
   </div>
 
 <script>
-/* Finalized script with patches applied */
+/* Finalized script with background balanced and integrated */
 
 /* state */
 let isSubscribed = false;
@@ -479,129 +479,218 @@ function selectedTF(val){
   if(window.onPairTimeframeUpdate) window.onPairTimeframeUpdate({pair:pairValue.textContent, timeframe:val, up, down:100-up});
 }
 
-/* Background: two canvases (wash + numbers) with pause/resume on visibilitychange */
+/* Balanced Background: dual-canvas (wash + numbers) */
 (function dualCanvasBackground(){
   const wash = document.getElementById('washCanvas');
   const nums = document.getElementById('numsCanvas');
   if(!wash || !nums) return;
   const ctxW = wash.getContext('2d');
   const ctxN = nums.getContext('2d');
-  const DPR = window.devicePixelRatio || 1;
+  if(!ctxW || !ctxN) return;
 
-  let w=0,h=0, cols=0, columns=[];
-  let last = performance.now();
+  const DPR = Math.max(1, window.devicePixelRatio || 1);
+
+  // state
+  let w = 0, h = 0;
+  let columns = [];
+  let rafDraw = null;
+  let rafBokeh = null;
+  let isRunning = false;
+  let t = 0;
+
+  // configure visual params
+  const glyphs = '0123456789';
+  const MIN_W = 640, MIN_H = 420;
+
+  function makeColumns(width, height){
+    const cols = Math.max(28, Math.floor(width / 28));
+    columns = Array.from({length: cols}, (_, i) => ({
+      x: Math.round((i + 0.5) * (width / cols)),
+      y: Math.random() * -height,
+      speed: 0.45 + Math.random() * 1.6,
+      size: Math.round(40 + Math.random() * 68),
+      phase: Math.random() * Math.PI * 2,
+      glyphSeed: Math.floor(Math.random() * 10),
+      rectOffsetX: (Math.random() - 0.5) * 10,
+      rectOffsetY: Math.round(Math.random() * 40) - 20,
+      rectW: Math.round(36 + Math.random() * 64),
+      rectH: Math.round(28 + Math.random() * 80),
+      rectAlpha: 0.055 + Math.random() * 0.11
+    }));
+  }
 
   function resize(){
     const rect = wash.getBoundingClientRect();
-    w = Math.max(640, Math.floor(rect.width));
-    h = Math.max(420, Math.floor(rect.height));
+    w = Math.max(MIN_W, Math.floor(rect.width || MIN_W));
+    h = Math.max(MIN_H, Math.floor(rect.height || MIN_H));
+
     wash.width = Math.floor(w * DPR);
     wash.height = Math.floor(h * DPR);
     nums.width = Math.floor(w * DPR);
     nums.height = Math.floor(h * DPR);
-    wash.style.width = nums.style.width = w + 'px';
-    wash.style.height = nums.style.height = h + 'px';
-    ctxW.setTransform(DPR,0,0,DPR,0,0);
-    ctxN.setTransform(DPR,0,0,DPR,0,0);
+
+    wash.style.width = w + 'px';
+    wash.style.height = h + 'px';
+    nums.style.width = w + 'px';
+    nums.style.height = h + 'px';
+
+    ctxW.setTransform(1,0,0,1,0,0);
+    ctxN.setTransform(1,0,0,1,0,0);
+    ctxW.scale(DPR, DPR);
+    ctxN.scale(DPR, DPR);
 
     ctxN.textAlign = 'center';
     ctxN.textBaseline = 'middle';
 
-    cols = Math.max(28, Math.floor(w / 28));
-    columns = Array.from({length:cols}, (_,i)=>({
-      x: Math.round((i + 0.5) * (w/cols)),
-      y: Math.random()*-h,
-      speed: 0.5 + Math.random()*1.6,
-      size: Math.round(48 + Math.random()*72),
-      phase: Math.random()*Math.PI*2,
-      glyphSeed: Math.floor(Math.random()*10)
-    }));
+    makeColumns(w, h);
   }
-  resize();
-  window.addEventListener('resize', resize);
 
-  const glyphs = '0123456789';
-  let raf;
-  let isDrawing = true;
+  function roundRect(ctx, x, y, width, height, r){
+    if (r === undefined) r = Math.min(12, Math.min(width, height) * 0.15);
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + width, y, x + width, y + height, r);
+    ctx.arcTo(x + width, y + height, x, y + height, r);
+    ctx.arcTo(x, y + height, x, y, r);
+    ctx.arcTo(x, y, x + width, y, r);
+    ctx.closePath();
+  }
 
   function draw(now){
-    last = now;
-    ctxW.clearRect(0,0,w,h);
-    // wash gradient
-    const g = ctxW.createLinearGradient(0,0,0,h);
-    g.addColorStop(0, 'rgba(42,110,170,0.12)');
-    g.addColorStop(0.4, 'rgba(24,92,150,0.12)');
-    g.addColorStop(1, 'rgba(6,18,36,0.6)');
-    ctxW.fillStyle = g; ctxW.fillRect(0,0,w,h);
+    if (!now) now = performance.now();
+    t = now / 1000;
 
-    // floating washes
-    for(let i=0;i<3;i++){
-      const cx = (i/3)*w + Math.sin(now/600 + i)*w*0.02;
-      const cy = h*0.25 + i*h*0.18 + Math.cos(now/700 + i)*h*0.02;
-      const rg = ctxW.createRadialGradient(cx,cy,40, cx,cy, h*0.6);
-      rg.addColorStop(0, `rgba(200,230,255,${0.08 + i*0.02})`);
-      rg.addColorStop(1, 'rgba(10,24,40,0)');
-      ctxW.fillStyle = rg; ctxW.fillRect(0,0,w,h);
+    // WASH LAYER
+    ctxW.clearRect(0, 0, w, h);
+
+    const g = ctxW.createLinearGradient(0, 0, 0, h);
+    g.addColorStop(0, 'rgba(24,106,165,0.16)');
+    g.addColorStop(0.45, 'rgba(10,70,120,0.12)');
+    g.addColorStop(1, 'rgba(6,18,36,0.7)');
+    ctxW.fillStyle = g;
+    ctxW.fillRect(0, 0, w, h);
+
+    // drifting radial glows
+    for (let i = 0; i < 3; i++){
+      const cx = w * (0.12 + i * 0.33) + Math.sin(now / (600 + i*120)) * w * 0.02;
+      const cy = h * (0.18 + i * 0.26) + Math.cos(now / (700 + i*90)) * h * 0.02;
+      const r = Math.max(w, h) * (0.4 + i*0.15);
+      const rg = ctxW.createRadialGradient(cx, cy, 30, cx, cy, r);
+      const alpha = 0.07 + i * 0.02;
+      rg.addColorStop(0, `rgba(160,230,255,${alpha})`);
+      rg.addColorStop(0.6, `rgba(100,170,210,${alpha*0.36})`);
+      rg.addColorStop(1, 'rgba(10,18,28,0)');
+      ctxW.globalCompositeOperation = 'lighter';
+      ctxW.fillStyle = rg;
+      ctxW.fillRect(0, 0, w, h);
+      ctxW.globalCompositeOperation = 'source-over';
     }
 
-    // vertical streaks
-    for(let i=0;i<5;i++){
-      ctxW.globalAlpha = 0.02 + Math.abs(Math.sin(now/1500 + i))*0.02;
-      ctxW.fillStyle = `rgba(255,255,255,0.02)`;
-      const x = (i/5)*w + Math.sin(now/600 + i)*30;
-      ctxW.fillRect(x,0,Math.max(40,w/22),h);
+    // blurred rectangular "blocks"
+    for (let i = 0; i < columns.length; i += 3) {
+      const c = columns[i];
+      const rx = c.x + c.rectOffsetX + Math.sin(now/1200 + c.phase) * 6;
+      const ry = ((c.y + c.rectOffsetY) % (h + 200)) - 100;
+      const rw = c.rectW;
+      const rh = c.rectH;
+      ctxW.globalAlpha = c.rectAlpha;
+      ctxW.fillStyle = `rgba(200,240,255,1)`;
+      roundRect(ctxW, rx - rw*0.5, ry - rh*0.5, rw, rh, Math.min(20, rw*0.2));
+      ctxW.fill();
+      ctxW.globalAlpha = 1;
+    }
+
+    // subtle vertical streaks
+    for (let i = 0; i < 6; i++){
+      ctxW.globalAlpha = 0.02 + Math.abs(Math.sin(now / 1500 + i * 0.6)) * 0.02;
+      ctxW.fillStyle = 'rgba(255,255,255,0.02)';
+      const x = (i / 6) * w + Math.sin(now / (500 + i*30)) * 24;
+      ctxW.fillRect(x, 0, Math.max(28, w/24), h);
     }
     ctxW.globalAlpha = 1;
 
-    // numbers layer
-    ctxN.clearRect(0,0,w,h);
+    // NUMBERS LAYER
+    ctxN.clearRect(0, 0, w, h);
     ctxN.globalCompositeOperation = 'lighter';
-    for(let i=0;i<columns.length;i++){
+
+    for (let i = 0; i < columns.length; i++){
       const c = columns[i];
-      c.y += c.speed + Math.sin((now/800)+c.phase)*0.6;
-      if(c.y > h + c.size) c.y = - (Math.random()*200 + c.size);
-      const glyph = glyphs.charAt((Math.floor(now/300 + i + c.glyphSeed)) % glyphs.length);
-      const x = c.x + Math.sin(now/1200 + i)*8;
+      c.y += c.speed + Math.sin((now/800) + c.phase) * 0.6;
+      if (c.y > h + c.size) {
+        c.y = - (Math.random() * 200 + c.size);
+      }
+      const glyph = glyphs.charAt((Math.floor(now / 300 + i + c.glyphSeed)) % glyphs.length);
+      const x = c.x + Math.sin(now / 1200 + i) * 8;
       const y = c.y;
-      // faint shadow
-      ctxN.font = `${Math.round(c.size*0.7)}px monospace`;
-      ctxN.fillStyle = 'rgba(255,255,255,0.07)'; ctxN.fillText(glyph, x, y);
-      // main
+
+      ctxN.font = `${Math.round(c.size * 0.72)}px monospace`;
+      ctxN.fillStyle = 'rgba(255,255,255,0.06)';
+      ctxN.fillText(glyph, x, y);
+
       ctxN.font = `${c.size}px monospace`;
-      ctxN.fillStyle = 'rgba(255,255,255,0.92)'; ctxN.fillText(glyph, x, y);
-      ctxN.lineWidth = Math.max(1, c.size*0.03); ctxN.strokeStyle = 'rgba(135,230,255,0.18)'; ctxN.strokeText(glyph, x, y);
+      ctxN.fillStyle = 'rgba(255,255,255,0.86)';
+      ctxN.fillText(glyph, x, y);
+
+      ctxN.lineWidth = Math.max(1, Math.round(c.size * 0.03));
+      ctxN.strokeStyle = 'rgba(120,220,255,0.12)';
+      ctxN.strokeText(glyph, x, y);
     }
+
     ctxN.globalCompositeOperation = 'source-over';
-    raf = requestAnimationFrame(draw);
-  }
-  raf = requestAnimationFrame(draw);
 
-  function handleVisibility(){
-    if(document.hidden){
-      if(isDrawing){ cancelAnimationFrame(raf); isDrawing = false; }
-    } else {
-      if(!isDrawing){ last = performance.now(); raf = requestAnimationFrame(draw); isDrawing = true; }
-    }
+    rafDraw = requestAnimationFrame(draw);
   }
-  document.addEventListener('visibilitychange', handleVisibility);
 
-  // small bokeh micro-movement
+  // bokeh micro-motion
   const b1 = document.getElementById('b1'), b2 = document.getElementById('b2'), b3 = document.getElementById('b3');
-  let t=0;
-  function bokeh(){
-    t += 0.01;
-    if(b1){ b1.style.left = (6 + Math.sin(t*0.9)*1.6) + '%'; b1.style.top = (10 + Math.cos(t*0.7)*1.8) + '%'; }
-    if(b2){ b2.style.right = (8 + Math.cos(t*0.6)*1.6) + '%'; b2.style.top = (18 + Math.sin(t*0.5)*1.6) + '%'; }
-    if(b3){ b3.style.left = (42 + Math.sin(t*0.4)*2.3) + '%'; b3.style.bottom = (20 + Math.cos(t*0.8)*1.6) + '%'; }
-    requestAnimationFrame(bokeh);
+  let tb = 0;
+  function bokehLoop(){
+    tb += 0.012;
+    if (b1) { b1.style.left = (6 + Math.sin(tb * 0.9) * 1.6) + '%'; b1.style.top = (10 + Math.cos(tb * 0.7) * 1.8) + '%'; }
+    if (b2) { b2.style.right = (8 + Math.cos(tb * 0.6) * 1.6) + '%'; b2.style.top = (18 + Math.sin(tb * 0.5) * 1.6) + '%'; }
+    if (b3) { b3.style.left = (42 + Math.sin(tb * 0.4) * 2.3) + '%'; b3.style.bottom = (20 + Math.cos(tb * 0.8) * 1.6) + '%'; }
+    rafBokeh = requestAnimationFrame(bokehLoop);
   }
-  bokeh();
 
-  // cleanup on unload
-  window.addEventListener('beforeunload', ()=>{
-    cancelAnimationFrame(raf);
-    document.removeEventListener('visibilitychange', handleVisibility);
+  function start(){
+    if (isRunning) return;
+    isRunning = true;
+    resize();
+    if(rafDraw) cancelAnimationFrame(rafDraw);
+    rafDraw = requestAnimationFrame(draw);
+    if(rafBokeh) cancelAnimationFrame(rafBokeh);
+    rafBokeh = requestAnimationFrame(bokehLoop);
+  }
+
+  function stop(){
+    if (!isRunning) return;
+    isRunning = false;
+    if (rafDraw) { cancelAnimationFrame(rafDraw); rafDraw = null; }
+    if (rafBokeh) { cancelAnimationFrame(rafBokeh); rafBokeh = null; }
+  }
+
+  function onVisibility(){
+    if (document.hidden) stop();
+    else start();
+  }
+
+  window.addEventListener('resize', () => {
+    clearTimeout(window.__astron_resize_timeout);
+    window.__astron_resize_timeout = setTimeout(() => { resize(); }, 80);
+  }, { passive: true });
+
+  document.addEventListener('visibilitychange', onVisibility);
+
+  window.addEventListener('beforeunload', () => {
+    stop();
+    document.removeEventListener('visibilitychange', onVisibility);
   });
+
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    setTimeout(start, 30);
+  } else {
+    window.addEventListener('load', () => setTimeout(start, 30));
+  }
 })();
 
 /* Modal helpers with focus trap */
