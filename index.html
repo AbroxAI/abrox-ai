@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>ASTRONBOT.MAX — Deep Clone (tuned)</title>
+<title>ASTRONBOT.MAX — Deep Clone (tuned bg + spacing + dropdown add)</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -32,17 +32,13 @@ html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial
   box-shadow:0 18px 60px rgba(0,0,0,0.75);
 }
 
-/* ---------- HEADER: exact tuning ----------
-   - min-height and explicit padding to match screenshot spacing
-   - brand size tuned
-------------------------------------------------*/
+/* header tuned */
 header{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  /* tuned: explicit top/bottom/padding in px */
-  padding:14px 18px 22px; /* top 14, right/left 18, bottom 22 */
-  min-height:96px; /* explicit header height to control top spacing */
+  padding:14px 18px 22px;
+  min-height:96px;
   z-index:60;
   position:relative;
   background:linear-gradient(180deg, rgba(2,6,10,0.85), rgba(2,6,10,0.5));
@@ -55,7 +51,6 @@ header{
   font-family:Orbitron, sans-serif;
   color:var(--neon-green);
   font-weight:900;
-  /* tuned: exact px behavior with clamp fallback */
   font-size:40px;
   line-height:40px;
   letter-spacing:1px;
@@ -73,19 +68,15 @@ header{
   text-shadow:0 0 10px rgba(0,255,51,0.18);
 }
 
-/* ---------- CONTROLS (pair + timeframe) ----------
-   - positioned with exact px offsets from the card/top to match screenshot
-   - dropdowns open under the controls (JS positions them exactly)
----------------------------------------------------------------*/
+/* CONTROLS spacing increased */
 .controls {
   display:flex;
-  gap:12px;
+  gap:24px;             /* increased gap for better balance */
   align-items:center;
   z-index:70;
   position:absolute;
-  /* tuned offsets: right and top in px */
   right:18px;
-  top:96px;      /* exact top offset to align under header */
+  top:112px;            /* nudged lower to visually match screenshot */
   pointer-events:auto;
 }
 
@@ -94,7 +85,7 @@ header{
   padding:8px 14px;
   border-radius:8px;
   border:1px solid var(--glass);
-  min-width:132px; /* a bit wider so list matches screenshot chip */
+  min-width:150px;      /* wider chip */
   color:#e8fbff;
   cursor:pointer;
   -webkit-tap-highlight-color: transparent;
@@ -103,67 +94,48 @@ header{
 .select .label{font-size:11px;color:var(--muted); display:block; margin-bottom:2px;}
 .select .value{font-weight:800; font-size:14px;}
 
-/* ---------- MAIN area ---------- */
+/* main */
 main{position:relative; padding:14px 18px;}
 .main-inner{
   position:relative;
   border-radius:12px;
   overflow:hidden;
   background:linear-gradient(180deg, rgba(0,0,0,0.36), rgba(0,0,0,0.45));
-  min-height:760px; /* taller like screenshot */
+  min-height:760px;
 }
 
-/* background canvas + overlay */
+/* background */
 .bg-wrap{ position:absolute; inset:0; z-index:0; overflow:hidden; }
-#algoCanvas{ position:absolute; top:0; left:0; width:100%; height:100%; display:block; object-fit:cover; filter: blur(6px) saturate(150%); transform:scale(1.03); }
-.bg-overlay{ position:absolute; inset:0; z-index:1; background:linear-gradient(180deg, rgba(2,6,10,0.18), rgba(2,6,10,0.6)); }
+#algoCanvas{ position:absolute; top:0; left:0; width:100%; height:100%; display:block; object-fit:cover; filter: blur(6px) saturate(135%); transform:scale(1.03); }
+.bg-overlay{ position:absolute; inset:0; z-index:1; background:linear-gradient(180deg, rgba(24,60,100,0.18), rgba(2,12,24,0.6)); }
 
 /* subtle bokeh */
 .bokeh { position:absolute; border-radius:50%; filter: blur(18px) saturate(160%); opacity:0.75; mix-blend-mode:screen; z-index:0; pointer-events:none; }
 
-/* center column above background */
+/* center */
 .center{ position:relative; z-index:12; display:flex; align-items:center; flex-direction:column; gap:18px; padding:32px 10px; }
 
-/* ---------- TRIANGLE AREA - exact size & spacing ----------
-   - explicit px tops for single-pixel control
-   - svg widths/heights tuned
------------------------------------------------------------*/
+/* triangle area */
 .triangle-area{
   width:100%;
   max-width:680px;
-  height:460px; /* tuned to match screenshot vertical room */
+  height:460px;
   display:flex;
   align-items:center;
   justify-content:center;
   position:relative;
 }
 
-/* absolute positions (pixels) rather than % for fine control */
+/* triangles absolute pixel positions */
 .up-tri, .down-tri { position:absolute; left:50%; transform-origin:center; transition: transform .45s cubic-bezier(.22,.98,.33,1), opacity .25s ease; }
-
-/* tuned exact px positions */
-.up-tri{
-  top:112px;                /* precise px offset from top of triangle-area/card */
-  transform:translateX(-50%) scale(0.98);
-  z-index:8;
-}
+.up-tri{ top:112px; transform:translateX(-50%) scale(0.98); z-index:8; }
 .up-tri svg{ width:220px; height:220px; display:block; }
-
-/* connector between triangles */
 .connector { position:absolute; top:248px; left:50%; transform:translate(-50%,-2px); width:240px; height:6px; border-radius:6px; z-index:6; background:linear-gradient(90deg, rgba(0,255,51,0.12), rgba(255,255,255,0.03), rgba(227,59,59,0.06)); box-shadow:0 10px 30px rgba(0,0,0,0.6); }
-
-/* lower triangle (bigger and lower) */
-.down-tri{
-  top:248px;               /* vertical spacing between triangles controlled here */
-  transform:translateX(-50%) scale(1);
-  z-index:10;
-}
+.down-tri{ top:248px; transform:translateX(-50%) scale(1); z-index:10; }
 .down-tri svg{ width:320px; height:320px; display:block; }
-
-/* tiny glow under down triangle */
 .down-glow{ position:absolute; width:92px;height:48px;border-radius:50%; background:radial-gradient(circle at center, rgba(0,255,51,0.98) 0%, rgba(0,255,51,0.28) 25%, rgba(0,0,0,0) 65%); bottom:38px; left:50%; transform:translateX(-50%); filter:blur(6px); z-index:7; }
 
-/* SVG text style */
+/* svg text */
 svg text{
   font-family:Orbitron, monospace;
   font-weight:900;
@@ -176,11 +148,11 @@ svg text{
   letter-spacing:0.6px;
 }
 
-/* rec badge exactly placed and styled */
+/* rec badge */
 .rec-badge{
   position:absolute;
-  left:22px;             /* exact left offset requested */
-  bottom:26px;           /* exact bottom offset requested */
+  left:22px;
+  bottom:26px;
   z-index:14;
   background:linear-gradient(180deg, rgba(3,6,10,0.72), rgba(7,9,12,0.6));
   padding:8px 14px;
@@ -190,50 +162,18 @@ svg text{
   gap:8px;
   align-items:center;
 }
-.rec-badge .rec{
-  padding:8px 12px;
-  border-radius:8px;
-  font-weight:900;
-  text-transform:uppercase;
-  font-family:Orbitron, sans-serif;
-  color:var(--neon-green);
-  background:transparent;
-  cursor:pointer;
-  transition:transform .12s ease, box-shadow .12s ease;
-}
+.rec-badge .rec{ padding:8px 12px; border-radius:8px; font-weight:900; text-transform:uppercase; font-family:Orbitron, sans-serif; color:var(--neon-green); background:transparent; cursor:pointer; transition:transform .12s ease, box-shadow .12s ease; }
 .rec-badge .rec.clickable{ background:linear-gradient(180deg,var(--neon-green-2),var(--neon-green)); color:#071012; box-shadow:0 10px 30px rgba(0,255,51,0.18); }
 .rec-badge .rec:active{ transform:translateY(1px) }
 .rec-badge .small{ font-size:12px; color:var(--muted); }
 
-/* ---------- PILLS (stacking & radii tuned) ----------
-   - gap & border-radius tuned for exact look
-----------------------------------------------------*/
-.pills{
-  margin-top:18px;
-  display:flex;
-  flex-direction:column;
-  gap:14px;              /* tuned vertical gap (px) */
-  align-items:center;
-  z-index:14;
-}
-
-/* pill sizing & radius tuned to screenshot */
-.pill{
-  width:240px;           /* tuned width */
-  padding:12px;
-  border-radius:28px;    /* tuned radius */
-  font-weight:800;
-  font-size:13px;
-  text-transform:uppercase;
-  cursor:pointer;
-  border:1px solid rgba(255,255,255,0.04);
-  box-shadow:0 10px 30px rgba(0,0,0,0.5);
-  text-align:center;
-}
+/* pills (stacking) */
+.pills{ margin-top:18px; display:flex; flex-direction:column; gap:14px; align-items:center; z-index:14; }
+.pill{ width:240px; padding:12px; border-radius:28px; font-weight:800; font-size:13px; text-transform:uppercase; cursor:pointer; border:1px solid rgba(255,255,255,0.04); box-shadow:0 10px 30px rgba(0,0,0,0.5); text-align:center; }
 .pill.green{ background:linear-gradient(180deg,var(--neon-green-2),var(--neon-green)); color:#071012; }
 .pill.orange{ background:linear-gradient(180deg,#fbbf24,#f59e0b); color:#071012; width:150px; }
 
-/* modal + spinner unchanged but kept */
+/* modal */
 .modal-backdrop{ position:fixed; inset:0; z-index:1200; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.6); }
 .modal{ width:92%; max-width:520px; background:linear-gradient(180deg,#081018,#061016); border-radius:12px; padding:20px; box-shadow:0 24px 80px rgba(0,0,0,0.8); border:1px solid rgba(255,255,255,0.03); color:#eaf6ff; }
 .modal h2{ margin:0 0 8px 0; font-family:Orbitron, sans-serif; color:var(--neon-green); letter-spacing:1px; font-size:20px; }
@@ -243,7 +183,7 @@ svg text{
 .btn.ghost{ background:transparent; color:var(--muted); border:1px solid rgba(255,255,255,0.04); }
 .btn.primary{ background:linear-gradient(180deg,var(--neon-green-2),var(--neon-green)); color:#071012; }
 
-/* responsiveness (small screens) */
+/* responsive */
 @media (max-width:760px){
   .wrap{ padding:0; }
   .card{ border-radius:0; max-width:100%; min-height:100vh; box-shadow:none; }
@@ -258,7 +198,6 @@ svg text{
 /* spinner */
 @keyframes spin { to { transform: rotate(360deg);} }
 .spinner { width:44px; height:44px; border-radius:50%; border:4px solid rgba(255,255,255,0.12); border-top-color:var(--neon-green); animation:spin 0.9s linear infinite; }
-
 </style>
 </head>
 <body>
@@ -295,10 +234,10 @@ svg text{
             <canvas id="algoCanvas"></canvas>
             <div class="bg-overlay" aria-hidden="true"></div>
 
-            <!-- bokeh glows -->
-            <div id="b1" class="bokeh" style="width:220px;height:220px;background:radial-gradient(circle at center, rgba(0,255,51,0.9), rgba(0,255,51,0.12)); left:6%; top:10%; opacity:0.34;"></div>
-            <div id="b2" class="bokeh" style="width:200px;height:200px;background:radial-gradient(circle at center, rgba(20,200,255,0.85), rgba(20,200,255,0.06)); right:8%; top:18%; opacity:0.12;"></div>
-            <div id="b3" class="bokeh" style="width:140px;height:140px;background:radial-gradient(circle at center, rgba(0,255,51,0.95), rgba(0,255,51,0.12)); left:42%; bottom:20%; opacity:0.28;"></div>
+            <!-- bokeh -->
+            <div id="b1" class="bokeh" style="width:260px;height:260px;background:radial-gradient(circle at center, rgba(200,230,255,0.9), rgba(200,230,255,0.06)); left:6%; top:10%; opacity:0.5;"></div>
+            <div id="b2" class="bokeh" style="width:220px;height:220px;background:radial-gradient(circle at center, rgba(220,245,255,0.9), rgba(220,245,255,0.06)); right:8%; top:18%; opacity:0.28;"></div>
+            <div id="b3" class="bokeh" style="width:160px;height:160px;background:radial-gradient(circle at center, rgba(200,230,255,0.95), rgba(200,230,255,0.12)); left:42%; bottom:20%; opacity:0.36;"></div>
           </div>
 
           <!-- dropdowns container -->
@@ -366,8 +305,8 @@ svg text{
     <div class="modal-backdrop">
       <div class="modal" role="document">
         <h2>Premium required</h2>
-        <p><strong>Why this is premium:</strong> The detailed percentage readouts, downloadable reports and change-broker actions depend on our real-time model and protected reporting — we lock them to keep signal integrity and provide a premium experience. Subscribing unlocks precise percentages, real-time alerts, export and priority support.</p>
-        <p style="margin-top:6px;color:var(--muted)">Subscribe to unlock:<br>• Real-time percentages and buying/selling confidence<br>• Downloadable reports & sheets<br>• Broker integration and premium analytics</p>
+        <p><strong>Why this is premium:</strong> The detailed percentage readouts, downloadable reports and broker actions depend on our real-time model and protected reporting — subscribing unlocks real-time percentages, downloads and broker integration.</p>
+        <p style="margin-top:6px;color:var(--muted)">Subscribe to unlock:<br>• Real-time confidence percentages<br>• Downloadable reports & sheets<br>• Broker integration and premium alerts</p>
         <div class="actions">
           <button class="btn ghost" id="modalLater">Maybe later</button>
           <button class="btn primary" id="modalSubscribe">Subscribe (demo)</button>
@@ -381,8 +320,8 @@ svg text{
     <div class="modal-backdrop">
       <div class="modal" role="document">
         <h2>Activation required — Contact Support</h2>
-        <p class="support-strong">To start the live signal you must activate your account. Our team verifies each activation to protect model integrity and ensure high-quality signals.</p>
-        <p style="color:var(--muted)">Contact our support team and they will guide you through activation quickly. Activation unlocks the START signal, detailed percentages and premium features with priority assistance.</p>
+        <p class="support-strong">To start the live signal you must activate your account. Our team verifies each activation to maintain model integrity and high-quality signals.</p>
+        <p style="color:var(--muted)">Contact our support team and they will guide you. Activation unlocks START, detailed percentages and premium features.</p>
 
         <div class="support-contact">
           <a class="btn primary" id="contactSupport" href="mailto:support@astronbot.max?subject=Activation%20Request%20(ASTRONBOT.MAX)">Contact Support</a>
@@ -396,15 +335,16 @@ svg text{
   </div>
 
 <script>
-/* ======= Script (dropdowns, triangles, background + telegram) ======= */
+/* ====== Script: dropdowns, triangles, background, telegram, custom-add ====== */
 
-/* demo subscription flag */
 let isSubscribed = false;
 
-const pairs = ['NZDCAD','EURUSD','GBPUSD','USDJPY','AUDUSD','USDCAD','EURJPY','BTCUSD','ETHUSD','XAUUSD'];
-const timeframes = ['M1','M5','M15','M30','H1','H4','D1'];
+const pairs = [
+  'NZDCAD','EURUSD','GBPUSD','USDJPY','AUDUSD','USDCAD','EURJPY','BTCUSD','ETHUSD','XAUUSD',
+  'USDSGD','USDCHF','NZDUSD','CADJPY','AUDJPY' /* additional spare pairs */
+];
+const timeframes = ['M1','M5','M15','M30','H1','H4','D1','W1','MN']; /* more options */
 
-/* refs */
 const pairSelect = document.getElementById('pairSelect');
 const tfSelect = document.getElementById('tfSelect');
 const pairValue = document.getElementById('pairValue');
@@ -435,12 +375,11 @@ const btnDownload = document.getElementById('btnDownload');
 const btnTelegram = document.getElementById('btnTelegram');
 const btnLogout = document.getElementById('btnLogout');
 
-/* helper */
 function formatPct(n){
   return Number(n).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2}) + '%';
 }
 
-/* triangles sizing/visuals function */
+/* triangles */
 function setTriangles(up, down){
   up = Math.max(0, Math.min(100, up));
   down = Math.max(0, Math.min(100, down));
@@ -453,17 +392,14 @@ function setTriangles(up, down){
     downText.textContent = '';
   }
 
-  // visual scale mapping (kept tuned)
   const minScale = 0.86;
   const maxExtra = 0.36;
   const upScale = minScale + (up/100) * maxExtra;
   const downScale = minScale + (down/100) * maxExtra;
 
-  // vertical offsets (px) tuned for spacing
   const upOffsetPx = - Math.min(34, Math.round((up/100)*36));
   const downOffsetPx = Math.min(20, Math.round((down/100)*32));
 
-  // apply transforms relative to our px-tuned top values
   upTri.style.transform = `translateX(-50%) translateY(${upOffsetPx}px) scale(${upScale})`;
   downTri.style.transform = `translateX(-50%) translateY(${downOffsetPx}px) scale(${downScale})`;
 
@@ -489,10 +425,9 @@ function setTriangles(up, down){
   metaTs.textContent = 'Last update: ' + new Date().toLocaleTimeString('en-US');
 }
 
-/* initial numbers */
-setTriangles(16.45,83.55);
+setTriangles(16.45, 83.55);
 
-/* Dropdown helpers - they position the dropdown under the clicked control precisely */
+/* Dropdown helpers with "Add custom" support */
 function createDropdownShell(){
   const box = document.createElement('div');
   box.className = 'dd-box';
@@ -518,6 +453,12 @@ function createDropdownShell(){
   list.style.maxHeight='260px'; list.style.overflow='auto'; list.style.webkitOverflowScrolling='touch';
   box.appendChild(list);
 
+  // area for add custom button when no results
+  const addWrap = document.createElement('div');
+  addWrap.className = 'dd-add';
+  addWrap.style.marginTop = '6px';
+  box.appendChild(addWrap);
+
   box.close = ()=> { if(box.parentNode) box.parentNode.removeChild(box); };
   return box;
 }
@@ -526,33 +467,54 @@ function buildDropdownContents(box, items, onSelect){
   if(!box) return;
   const search = box.querySelector('.dd-search');
   const list = box.querySelector('.dd-list');
+  const addWrap = box.querySelector('.dd-add');
   if(!search || !list) return;
-  list.innerHTML = '';
-  items.forEach(it => {
-    const item = document.createElement('div');
-    item.className = 'dd-item';
-    item.tabIndex = 0;
-    item.textContent = it;
-    item.style.padding = '8px 10px';
-    item.style.borderRadius = '8px';
-    item.style.marginBottom = '6px';
-    item.style.color = '#e6eef6';
-    item.style.cursor = 'pointer';
-    item.addEventListener('click', ()=> onSelect(it));
-    item.addEventListener('keydown', (e)=> { if(e.key==='Enter') onSelect(it); });
-    list.appendChild(item);
-  });
-  search.addEventListener('input', ()=>{
-    const q = search.value.trim().toLowerCase();
-    const children = Array.from(list.children);
-    children.forEach(c => { c.style.display = c.textContent.toLowerCase().includes(q) ? '' : 'none'; });
-    const first = children.find(c => c.style.display !== 'none');
-    if(first) first.focus();
-  });
-  list.querySelector('.dd-item')?.focus();
+  list.innerHTML = ''; addWrap.innerHTML = '';
+
+  function renderList(filter=''){
+    list.innerHTML = '';
+    const q = filter.trim().toLowerCase();
+    const filtered = items.filter(it => it.toLowerCase().includes(q));
+    filtered.forEach(it => {
+      const item = document.createElement('div');
+      item.className = 'dd-item';
+      item.tabIndex = 0;
+      item.textContent = it;
+      item.style.padding = '8px 10px';
+      item.style.borderRadius = '8px';
+      item.style.marginBottom = '6px';
+      item.style.color = '#e6eef6';
+      item.style.cursor = 'pointer';
+      item.addEventListener('click', ()=> onSelect(it));
+      item.addEventListener('keydown', (e)=> { if(e.key==='Enter') onSelect(it); });
+      list.appendChild(item);
+    });
+    if(filtered.length === 0 && q !== ''){
+      const addBtn = document.createElement('div');
+      addBtn.textContent = `Add "${filter}" as custom`;
+      addBtn.style.padding = '8px';
+      addBtn.style.borderRadius = '8px';
+      addBtn.style.background = 'rgba(255,255,255,0.02)';
+      addBtn.style.cursor = 'pointer';
+      addBtn.style.color = '#eaf6ff';
+      addBtn.addEventListener('click', ()=>{
+        // add to items array (persist for this session)
+        items.unshift(filter.toUpperCase());
+        onSelect(filter.toUpperCase());
+        box.close();
+      });
+      addWrap.appendChild(addBtn);
+    } else {
+      addWrap.innerHTML = '';
+    }
+    list.querySelector('.dd-item')?.focus();
+  }
+
+  search.addEventListener('input', ()=> renderList(search.value));
+  renderList('');
 }
 
-/* position dropdown under control clicked */
+/* open position under clicked control precisely */
 function openPairsDropdown(){
   dropdowns.innerHTML = '';
   const box = createDropdownShell();
@@ -580,7 +542,7 @@ function openTFDropdown(){
 pairSelect.addEventListener('click', openPairsDropdown);
 tfSelect.addEventListener('click', openTFDropdown);
 
-/* close dropdowns on outside click / ESC - also resets aria */
+/* close dropdowns on outside click / ESC */
 document.addEventListener('click', (e)=>{
   const inside = e.target.closest('.select') || e.target.closest('#dropdowns') || e.target.closest('.dd-box');
   if(!inside){
@@ -596,7 +558,6 @@ function selectedPair(val){
   pairValue.textContent = val;
   dropdowns.innerHTML = '';
   pairSelect.setAttribute('aria-expanded','false');
-  // simulate update
   const up = +(Math.random()*70 + 8).toFixed(2);
   setTriangles(up, +(100-up).toFixed(2));
   metaTF.textContent = tfValue.textContent;
@@ -612,12 +573,12 @@ function selectedTF(val){
   if(window.onPairTimeframeUpdate) window.onPairTimeframeUpdate({pair:pairValue.textContent, timeframe:val, up, down:100-up});
 }
 
-/* background: matrix-like animated digits + bokeh motion (kept and tuned) */
+/* Background: neon white numbers on blue/white wash */
 (function backgroundCanvas(){
   const canvas = document.getElementById('algoCanvas');
   if(!canvas) return;
   const ctx = canvas.getContext('2d', { alpha:true });
-  let w=0,h=0, cols=0, colW=12, drops=[];
+  let w=0,h=0, cols=0, colW=14, drops=[];
 
   const small = ()=> window.matchMedia('(max-width:560px)').matches;
 
@@ -630,7 +591,7 @@ function selectedTF(val){
     canvas.style.width = w + 'px';
     canvas.style.height = h + 'px';
     ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
-    colW = small() ? 18 : 12;
+    colW = small() ? 18 : 14;
     cols = Math.floor(w / colW);
     drops = Array.from({length:cols}, ()=> Math.random() * h * -1);
   }
@@ -638,40 +599,59 @@ function selectedTF(val){
   window.addEventListener('resize', resize);
 
   const glyphs = '0123456789';
-  let raf, last = performance.now();
+  let raf;
 
   function frame(now){
-    last = last || now;
+    // bluish wash base
     ctx.clearRect(0,0,w,h);
-
-    // soft wash background (bluish) + blur impression (canvas is blurred by CSS)
-    ctx.fillStyle = 'rgba(10,30,60,0.22)';
+    // soft radial background
+    const g = ctx.createLinearGradient(0,0,0,h);
+    g.addColorStop(0, 'rgba(50,120,190,0.12)');
+    g.addColorStop(1, 'rgba(10,30,60,0.48)');
+    ctx.fillStyle = g;
     ctx.fillRect(0,0,w,h);
 
-    // moving streaks
-    for(let i=0;i<5;i++){
-      ctx.globalAlpha = 0.02 + i*0.006;
-      ctx.fillStyle = `rgba(20,140,180,${0.02 + i*0.02})`;
-      const x = (i / 5) * w + (Math.sin(now/700 + i) * 18);
-      ctx.fillRect(x, 0, Math.max(36, w/16), h);
+    // faint cloud blur shapes for white/blue floaters
+    for(let i=0;i<3;i++){
+      const gx = ctx.createRadialGradient(w* (0.15 + i*0.28), h* (0.2 + i*0.25), 40, w* (0.15 + i*0.28), h* (0.2 + i*0.25), 220);
+      gx.addColorStop(0, `rgba(220,240,255,${0.06 + i*0.02})`);
+      gx.addColorStop(1, 'rgba(30,40,70,0)');
+      ctx.fillStyle = gx;
+      ctx.fillRect(0,0,w,h);
+    }
+
+    // vertical soft streaks
+    for(let i=0;i<4;i++){
+      ctx.globalAlpha = 0.02 + i*0.01;
+      ctx.fillStyle = `rgba(255,255,255,${0.005 + i*0.01})`;
+      const x = (i / 4) * w + (Math.sin(now/800 + i) * 20);
+      ctx.fillRect(x, 0, Math.max(30, w/16), h);
     }
     ctx.globalAlpha = 1;
 
+    // draw numeric columns with white/cyan heads
     ctx.textAlign = 'center';
-    ctx.font = (small()? '10px':'12px') + ' monospace';
 
     for(let i=0;i<cols;i++){
       const x = i*colW + (Math.random()*4 - 2);
-      let y = drops[i] || (Math.random()*-150);
+      let y = drops[i];
+      // draw 2-3 layered glyphs to create glow feeling (will be blurred by CSS filter)
+      const size = small() ? 12 : 18;
+      ctx.font = `${size}px monospace`;
       // faint trailing
-      ctx.fillStyle = 'rgba(220,240,255,0.04)';
+      ctx.fillStyle = 'rgba(255,255,255,0.06)';
       for(let t=0;t<3;t++){
-        ctx.fillText(glyphs.charAt(Math.floor(Math.random()*glyphs.length)), x, y - t*10);
+        ctx.fillText(glyphs.charAt(Math.floor(Math.random()*glyphs.length)), x, y - t*12);
       }
-      // bright head
-      ctx.fillStyle = 'rgba(0,255,140,0.75)';
+      // main head (white with slight cyan stroke)
+      ctx.fillStyle = 'rgba(255,255,255,0.9)';
       ctx.fillText(glyphs.charAt(Math.floor(Math.random()*glyphs.length)), x, y);
-      drops[i] = y + (2 + Math.random()*8) * (small()? 0.6:1.0);
+      // cyan glow stroke (subtle)
+      ctx.strokeStyle = 'rgba(160,230,255,0.18)';
+      ctx.lineWidth = 1;
+      ctx.strokeText(glyphs.charAt(Math.floor(Math.random()*glyphs.length)), x, y);
+
+      drops[i] = y + (2 + Math.random()*6) * (small()? 0.6:1.0);
       if(drops[i] > h + 80) drops[i] = Math.random()*-150;
     }
 
@@ -684,7 +664,7 @@ function selectedTF(val){
   const b1 = document.getElementById('b1'), b2 = document.getElementById('b2'), b3 = document.getElementById('b3');
   let t=0;
   function bokehLoop(){
-    t += 0.01;
+    t += 0.009;
     if(b1){ b1.style.left = (6 + Math.sin(t*0.9)*1.6) + '%'; b1.style.top = (10 + Math.cos(t*0.7)*1.8) + '%'; }
     if(b2){ b2.style.right = (8 + Math.cos(t*0.6)*1.6) + '%'; b2.style.top = (18 + Math.sin(t*0.5)*1.6) + '%'; }
     if(b3){ b3.style.left = (42 + Math.sin(t*0.4)*2.3) + '%'; b3.style.bottom = (20 + Math.cos(t*0.8)*1.6) + '%'; }
@@ -694,17 +674,12 @@ function selectedTF(val){
 
 })();
 
-/* Premium & Support modal flows */
+/* Modals and flows */
 function showPremiumModal(){ premiumModal.style.display = 'block'; document.body.style.overflow = 'hidden'; }
 function hidePremiumModal(){ premiumModal.style.display = 'none'; document.body.style.overflow = ''; }
 modalLater?.addEventListener('click', ()=> hidePremiumModal());
-modalSubscribe?.addEventListener('click', ()=> {
-  isSubscribed = true;
-  hidePremiumModal();
-  setTriangles( +(Math.random()*70 + 8).toFixed(2), +(100 - (Math.random()*70 + 8)).toFixed(2) );
-});
+modalSubscribe?.addEventListener('click', ()=> { isSubscribed = true; hidePremiumModal(); setTriangles( +(Math.random()*70 + 8).toFixed(2), +(100 - (Math.random()*70 + 8)).toFixed(2) ); });
 
-/* support modal: prepare telegram link (prefill) */
 function buildPrefillMessage(){
   const pair = pairValue?.textContent || '—';
   const tf   = tfValue?.textContent || '—';
@@ -724,28 +699,24 @@ function showSupportModal(){
 function hideSupportModal(){ supportModal.style.display = 'none'; document.body.style.overflow = ''; }
 supportLater?.addEventListener('click', ()=> hideSupportModal());
 
-/* rec badge click opens support modal when not subscribed */
 recEl?.addEventListener('click', (e)=>{
   if(!isSubscribed){
     showSupportModal();
     e.preventDefault();
     return;
   }
-  // else do nothing / or custom action for subscribed users
 });
 
-/* telegram main button */
+/* Telegram button behavior */
 btnTelegram?.addEventListener('click', ()=>{
   const url = buildTelegramShareURL(buildPrefillMessage());
   window.open(url, '_blank', 'noopener');
 });
 
-/* block action buttons if not subscribed (balanced modal persuasion) */
+/* Block action buttons if not subscribed */
 [btnReport, btnBroker, btnDownload, btnLogout].forEach(btn => {
   btn.addEventListener('click', (e)=>{
     if(!isSubscribed){
-      // Balanced persuasion content: short value-first statement
-      // We'll show the premium modal which explains benefits concisely (value, features)
       showPremiumModal();
       e.preventDefault();
       return;
@@ -760,7 +731,7 @@ btnTelegram?.addEventListener('click', ()=>{
   });
 });
 
-/* keyboard open (accessibility) */
+/* keyboard open */
 pairSelect.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') { e.preventDefault(); openPairsDropdown(); }});
 tfSelect.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') { e.preventDefault(); openTFDropdown(); }});
 
