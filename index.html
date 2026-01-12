@@ -1,780 +1,123 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>ASTRONBOT.MAX — Deep Clone (finalized)</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
-<style>
-:root{
-  --neon-green:#00ff33;
-  --neon-green-2:#17d24a;
-  --neo-red:#e33b3b;
-  --muted:#cbd5e1;
-  --glass: rgba(255,255,255,0.04);
-  --max-width:1100px;
-}
-*{box-sizing:border-box}
-html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;background:#000;color:#eaf6ff}
-.wrap{ min-height:100vh; display:flex; align-items:center; justify-content:center; padding:18px; }
-.card{ width:100%; max-width:var(--max-width); border-radius:14px; overflow:visible; position:relative; background:linear-gradient(180deg, rgba(1,6,10,0.9), rgba(2,8,12,0.98)); border:1px solid var(--glass); box-shadow:0 18px 60px rgba(0,0,0,0.75); }
-
-/* header tuned (explicit px values) */
-header{ display:flex; justify-content:space-between; align-items:center; padding:12px 18px 22px; z-index:60; position:relative; background:linear-gradient(180deg, rgba(2,6,10,0.85), rgba(2,6,10,0.5)); height:88px; }
-.left-header{display:flex; align-items:center; gap:12px; min-width:0;}
-.logo-mark{width:48px;height:48px; background:linear-gradient(180deg,var(--neon-green),var(--neon-green-2)); clip-path:polygon(50% 0%,100% 100%,0% 100%); box-shadow:0 0 22px rgba(0,255,51,0.95);}
-.brand{display:flex;flex-direction:column;min-width:0;}
-.brand-top{display:flex;align-items:center;gap:12px}
-.brand-text{ font-family:Orbitron, sans-serif; color:var(--neon-green); font-weight:900; font-size:40px; line-height:40px; letter-spacing:1px; text-transform:uppercase; text-shadow:0 0 12px rgba(0,255,51,0.92),0 12px 36px rgba(0,0,0,0.6); }
-.subtitle{ font-family:Orbitron, sans-serif; font-size:12px; color:var(--neon-green-2); letter-spacing:2px; margin-left:2px; font-weight:800; text-transform:uppercase; text-shadow:0 0 8px rgba(0,255,51,0.18); }
-
-/* Controls spacing & position */
-.controls { display:flex; gap:28px; align-items:center; z-index:70; position:absolute; right:18px; top:110px; pointer-events:auto; }
-
-/* select chips */
-.select{ background:linear-gradient(180deg,#132733,#0e1a28); padding:10px 14px; border-radius:10px; border:1px solid var(--glass); min-width:160px; color:#e8fbff; cursor:pointer; -webkit-tap-highlight-color: transparent; box-shadow: inset 0 -6px 14px rgba(0,0,0,0.3); }
-.select .label{font-size:11px;color:var(--muted); display:block; margin-bottom:2px}
-.select .value{font-weight:800; font-size:14px}
-
-/* main content */
-main{position:relative; padding:14px 18px 28px;}
-.main-inner{ position:relative; border-radius:12px; overflow:hidden; background:linear-gradient(180deg, rgba(0,0,0,0.36), rgba(0,0,0,0.45)); min-height:760px; }
-
-/* background: two canvas layers */
-.bg-wrap{ position:absolute; inset:0; z-index:0; overflow:hidden; }
-#washCanvas{ position:absolute; top:0; left:0; width:100%; height:100%; display:block; filter: saturate(122%); transform:scale(1.02); }
-#numsCanvas{ position:absolute; top:0; left:0; width:100%; height:100%; display:block; filter: blur(16px) contrast(125%) brightness(110%); transform:scale(1.03); mix-blend-mode:screen; opacity:0.92; }
-.bg-overlay{ position:absolute; inset:0; z-index:1; pointer-events:none; background:linear-gradient(180deg, rgba(6,30,60,0.06), rgba(2,6,12,0.7)); }
-
-/* subtle vignette to push edges darker — stronger and slightly blurred for camera-like feel */
-.bg-vignette{ position:absolute; inset:0; z-index:2; pointer-events:none; background: radial-gradient(ellipse at center, rgba(0,0,0,0) 40%, rgba(0,0,0,0.9) 100%); mix-blend-mode:multiply; opacity:0.9; filter: blur(6px); }
-
-/* bokeh glows */
-.bokeh { position:absolute; border-radius:50%; filter: blur(18px) saturate(170%); opacity:0.8; mix-blend-mode:screen; z-index:0; pointer-events:none; }
-
-/* center above background */
-.center{ position:relative; z-index:12; display:flex; align-items:center; flex-direction:column; gap:18px; padding:32px 10px; }
-
-/* triangle area tuned */
-.triangle-area{ width:100%; max-width:680px; height:460px; display:flex; align-items:center; justify-content:center; position:relative; }
-.up-tri, .down-tri { position:absolute; left:50%; transform-origin:center; transition: transform .36s cubic-bezier(.22,.98,.33,1), opacity .25s ease; }
-.up-tri{ top:120px; transform:translateX(-50%) scale(1); z-index:8; }
-.up-tri svg{ width:220px; height:220px; display:block; }
-.connector { position:absolute; top:256px; left:50%; transform:translate(-50%,-2px); width:260px; height:6px; border-radius:6px; z-index:6; background:linear-gradient(90deg, rgba(0,255,51,0.12), rgba(255,255,255,0.03), rgba(227,59,59,0.06)); box-shadow:0 10px 30px rgba(0,0,0,0.6); }
-.down-tri{ top:260px; transform:translateX(-50%) scale(1.08); z-index:10; }
-.down-tri svg{ width:320px; height:320px; display:block; }
-.down-glow{ position:absolute; width:96px;height:52px;border-radius:50%; background:radial-gradient(circle at center, rgba(0,255,51,0.98) 0%, rgba(0,255,51,0.28) 25%, rgba(0,0,0,0) 65%); bottom:34px; left:50%; transform:translateX(-50%); filter:blur(6px); z-index:7; }
-
-/* svg text */
-svg text{ font-family:Orbitron, monospace; font-weight:900; fill:#ffffff; paint-order:stroke fill; stroke: rgba(0,0,0,0.65); stroke-width:2px; filter: drop-shadow(0 6px 8px rgba(0,0,0,0.55)); dominant-baseline:middle; letter-spacing:0.6px; }
-
-/* rec badge */
-.rec-badge{ position:absolute; left:22px; bottom:26px; z-index:14; background:linear-gradient(180deg, rgba(3,6,10,0.72), rgba(7,9,12,0.6)); padding:8px 14px; border-radius:999px; border:1px solid rgba(255,255,255,0.04); display:flex; gap:8px; align-items:center; }
-.rec-badge .rec{ padding:8px 12px; border-radius:8px; font-weight:900; text-transform:uppercase; font-family:Orbitron, sans-serif; color:var(--neon-green); background:transparent; cursor:pointer; transition:transform .12s ease, box-shadow .12s ease; }
-.rec-badge .rec.clickable{ background:linear-gradient(180deg,var(--neon-green-2),var(--neon-green)); color:#071012; box-shadow:0 10px 30px rgba(0,255,51,0.18); }
-.rec-badge .rec:active{ transform:translateY(1px) }
-.rec-badge .small{ font-size:12px; color:var(--muted); }
-
-/* pills */
-.pills{ margin-top:18px; display:flex; flex-direction:column; gap:14px; align-items:center; z-index:14; }
-.pill{ width:240px; padding:12px; border-radius:26px; font-weight:800; font-size:13px; text-transform:uppercase; cursor:pointer; border:1px solid rgba(255,255,255,0.04); box-shadow:0 10px 30px rgba(0,0,0,0.5); text-align:center; }
-.pill.green{ background:linear-gradient(180deg,var(--neon-green-2),var(--neon-green)); color:#071012; }
-.pill.orange{ background:linear-gradient(180deg,#fbbf24,#f59e0b); color:#071012; width:160px; }
-
-/* modal */
-.modal-backdrop{ position:fixed; inset:0; z-index:1200; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.6); }
-.modal{ width:92%; max-width:520px; background:linear-gradient(180deg,#081018,#061016); border-radius:12px; padding:20px; box-shadow:0 24px 80px rgba(0,0,0,0.8); border:1px solid rgba(255,255,255,0.03); color:#eaf6ff; }
-.modal h2{ margin:0 0 8px 0; font-family:Orbitron, sans-serif; color:var(--neon-green); letter-spacing:1px; font-size:20px; }
-.modal p{ color:var(--muted); margin:0 0 12px 0; line-height:1.35; }
-.modal .actions{ display:flex; gap:10px; justify-content:flex-end; margin-top:14px; }
-.btn{ padding:10px 14px; border-radius:10px; font-weight:800; cursor:pointer; border:0; }
-.btn.ghost{ background:transparent; color:var(--muted); border:1px solid rgba(255,255,255,0.04); }
-.btn.primary{ background:linear-gradient(180deg,var(--neon-green-2),var(--neon-green)); color:#071012; }
-
-/* meta */
-.meta{ font-size:13px; color:var(--muted); margin-top:8px; }
-
-/* responsive */
-@media (max-width:760px){
-  .wrap{ padding:0; }
-  .card{ border-radius:0; max-width:100%; min-height:100vh; box-shadow:none; }
-  header{ padding:10px 12px 18px; height:84px; }
-  .controls{ right:12px; top:140px; gap:14px; }
-  .main-inner{ min-height:calc(100vh - 140px); }
-  .up-tri{ top:92px; }
-  .down-tri{ top:210px; transform:translateX(-50%) scale(0.95); }
-}
-
-/* spinner */
-@keyframes spin { to { transform: rotate(360deg);} }
-.spinner { width:44px; height:44px; border-radius:50%; border:4px solid rgba(255,255,255,0.12); border-top-color:var(--neon-green); animation:spin 0.9s linear infinite; }
-</style>
-</head>
-<body>
-  <div class="wrap">
-    <div class="card" role="application" aria-label="ASTRONBOT.MAX final clone">
-      <header>
-        <div class="left-header">
-          <div class="logo-mark" aria-hidden="true"></div>
-          <div class="brand">
-            <div class="brand-top">
-              <div class="brand-text">ASTRONBOT.MAX</div>
-            </div>
-            <div class="subtitle">TRADING A.I.</div>
-          </div>
-        </div>
-
-        <div class="controls" aria-hidden="false">
-          <div class="select" id="pairSelect" tabindex="0" aria-haspopup="listbox" aria-expanded="false" role="button" aria-label="Choose pair">
-            <div class="label">PAIR</div>
-            <div class="value" id="pairValue">NZDCAD</div>
-          </div>
-
-          <div class="select" id="tfSelect" tabindex="0" aria-haspopup="listbox" aria-expanded="false" role="button" aria-label="Choose timeframe">
-            <div class="label">TIMEFRAME</div>
-            <div class="value" id="tfValue">M1</div>
-          </div>
-        </div>
-      </header>
-
-      <main>
-        <div class="main-inner">
-          <!-- background -->
-          <div class="bg-wrap" aria-hidden="true">
-            <canvas id="washCanvas"></canvas>
-            <canvas id="numsCanvas"></canvas>
-            <div class="bg-overlay" aria-hidden="true"></div>
-            <div class="bg-vignette" aria-hidden="true"></div>
-
-            <div id="b1" class="bokeh" style="width:260px;height:260px;background:radial-gradient(circle at center, rgba(97,245,153,0.95), rgba(97,245,153,0.02)); left:6%; top:10%; opacity:0.5;"></div>
-            <div id="b2" class="bokeh" style="width:220px;height:220px;background:radial-gradient(circle at center, rgba(120,250,200,0.95), rgba(120,250,200,0.03)); right:8%; top:18%; opacity:0.32;"></div>
-            <div id="b3" class="bokeh" style="width:160px;height:160px;background:radial-gradient(circle at center, rgba(90,220,160,0.95), rgba(90,220,160,0.04)); left:42%; bottom:20%; opacity:0.36;"></div>
-          </div>
-
-          <div id="dropdowns" style="position:absolute; top:84px; right:22px; z-index:200;"></div>
-
-          <div class="center">
-            <div class="triangle-area" aria-hidden="false">
-              <div class="up-tri" id="upTri">
-                <svg viewBox="0 0 100 100" aria-hidden="true">
-                  <defs>
-                    <filter id="gA"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-                    <linearGradient id="upPanel" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="rgba(255,255,255,0.06)" /><stop offset="100%" stop-color="rgba(0,0,0,0.18)" /></linearGradient>
-                  </defs>
-                  <polygon id="upPoly" points="50,6 95,86 5,86" fill="#00d64a" filter="url(#gA)"></polygon>
-                  <rect x="18" y="40" width="64" height="26" rx="8" fill="url(#upPanel)"></rect>
-                  <text id="upText" x="50" y="53" text-anchor="middle" font-size="16" fill="#fff" style="font-family:Orbitron, sans-serif; pointer-events:none"></text>
-                </svg>
-              </div>
-
-              <div class="connector" aria-hidden="true"></div>
-
-              <div class="down-tri" id="downTri">
-                <svg viewBox="0 0 100 100" aria-hidden="true">
-                  <defs>
-                    <filter id="gB"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-                    <linearGradient id="downPanel" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="rgba(255,255,255,0.06)" /><stop offset="100%" stop-color="rgba(0,0,0,0.22)" /></linearGradient>
-                  </defs>
-                  <polygon id="downPoly" points="50,95 95,15 5,15" fill="#ef4444" filter="url(#gB)"></polygon>
-                  <rect x="18" y="42" width="64" height="30" rx="8" fill="url(#downPanel)"></rect>
-                  <text id="downText" x="50" y="56" text-anchor="middle" font-size="20" fill="#fff" style="font-family:Orbitron, sans-serif; pointer-events:none"></text>
-                </svg>
-              </div>
-
-              <div class="down-glow" aria-hidden="true"></div>
-
-              <div class="rec-badge" id="recBadge" aria-hidden="false">
-                <div class="rec clickable" id="rec">START</div>
-                <div class="small" id="recSmall">Contact support to activate</div>
-              </div>
-            </div>
-
-            <div class="meta">Percentages estimated by the model — window: <span id="metaTF">M1</span> — <span id="metaTs" aria-live="polite">Last update: —</span></div>
-
-            <div class="pills" role="toolbar">
-              <div class="pill green" id="btnReport">OPEN REPORT</div>
-              <div class="pill green" id="btnBroker">CHANGE BROKER</div>
-              <div class="pill green" id="btnDownload">DOWNLOAD SHEET</div>
-              <div class="pill green" id="btnTelegram">TELEGRAM SUPPORT</div>
-              <div class="pill orange" id="btnLogout">LOGOUT</div>
-            </div>
-          </div>
-        </div>
-      </main>
-    </div>
-  </div>
-
-  <!-- Premium modal -->
-  <div id="premiumModal" style="display:none;" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="modal-backdrop">
-      <div class="modal" role="document" aria-labelledby="premiumTitle">
-        <h2 id="premiumTitle">Premium required</h2>
-        <p id="premiumCopy"><strong>Why this is premium:</strong> Detailed percentage readouts, downloadable reports and broker integration depend on our real-time model and protected reporting. Subscribing keeps signal integrity and gives priority access to sharp signals.</p>
-        <p style="margin-top:6px;color:var(--muted)">Subscribe to unlock:<br>• Real-time confidence percentages<br>• Downloadable reports & sheets<br>• Broker integration and priority alerts</p>
-        <div class="actions">
-          <button class="btn ghost" id="modalLater">Maybe later</button>
-          <button class="btn primary" id="modalSubscribe">Subscribe (demo)</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Support modal -->
-  <div id="supportModal" style="display:none;" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="modal-backdrop">
-      <div class="modal" role="document" aria-labelledby="supportTitle">
-        <h2 id="supportTitle">Activation required — Contact Support</h2>
-        <p class="support-strong">To start the live signal you must activate your account. Our team verifies activations to preserve high-quality signals and reduce abuse.</p>
-        <p style="color:var(--muted)">Contact support and provide your account email, preferred pair and timeframe. Activation typically completes fast once verified.</p>
-        <div class="support-contact" style="display:flex;gap:12px;align-items:center;margin-top:12px">
-          <a class="btn primary" id="contactSupport" href="mailto:support@astronbot.max?subject=Activation%20Request%20(ASTRONBOT.MAX)">Contact Support</a>
-          <a class="btn ghost" id="contactTelegramModal" href="#" target="_blank" rel="noopener">Contact via Telegram</a>
-          <button class="btn ghost" id="supportLater">Maybe later</button>
-        </div>
-        <div style="margin-top:14px;color:var(--muted);font-size:13px">Pro tip: include your account email and preferred pair/timeframe for faster activation.</div>
-      </div>
-    </div>
-  </div>
-
-<script>
-/* Finalized script with background tuned strongly to match screenshot */
-
-/* state */
-let isSubscribed = false;
-
-/* options */
-const pairs = ['NZDCAD','EURUSD','GBPUSD','USDJPY','AUDUSD','USDCAD','EURJPY','BTCUSD','ETHUSD','XAUUSD','USDSGD','USDCHF','NZDUSD','CADJPY','AUDJPY'];
-const timeframes = ['M1','M5','M15','M30','H1','H4','D1','W1','MN'];
-
-/* DOM refs */
-const pairSelect = document.getElementById('pairSelect');
-const tfSelect = document.getElementById('tfSelect');
-const pairValue = document.getElementById('pairValue');
-const tfValue = document.getElementById('tfValue');
-const dropdowns = document.getElementById('dropdowns');
-
-const upText = document.getElementById('upText');
-const downText = document.getElementById('downText');
-const upTri = document.getElementById('upTri');
-const downTri = document.getElementById('downTri');
-const recEl = document.getElementById('rec');
-const recSmall = document.getElementById('recSmall');
-const metaTF = document.getElementById('metaTF');
-const metaTs = document.getElementById('metaTs');
-
-const premiumModal = document.getElementById('premiumModal');
-const premiumTitle = document.getElementById('premiumTitle');
-const premiumCopy = document.getElementById('premiumCopy');
-const modalSubscribe = document.getElementById('modalSubscribe');
-const modalLater = document.getElementById('modalLater');
-
-const supportModal = document.getElementById('supportModal');
-const contactSupport = document.getElementById('contactSupport');
-const contactTelegramModal = document.getElementById('contactTelegramModal');
-const supportLater = document.getElementById('supportLater');
-
-const btnReport = document.getElementById('btnReport');
-const btnBroker = document.getElementById('btnBroker');
-const btnDownload = document.getElementById('btnDownload');
-const btnTelegram = document.getElementById('btnTelegram');
-const btnLogout = document.getElementById('btnLogout');
-
-/* utils */
-function formatPct(n){ return Number(n).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2}) + '%'; }
-
-/* triangles */
-function setTriangles(up, down){
-  up = Math.max(0, Math.min(100, up));
-  down = Math.max(0, Math.min(100, down));
-  if(isSubscribed){ upText.textContent = formatPct(up); downText.textContent = formatPct(down); } else { upText.textContent=''; downText.textContent=''; }
-
-  const minScale = 0.86, maxExtra=0.36;
-  const upScale = (minScale + (up/100)*maxExtra).toFixed(4);
-  const downScale = (minScale + (down/100)*maxExtra).toFixed(4);
-  const upOffsetPx = - Math.min(34, Math.round((up/100)*36));
-  const downOffsetPx = Math.min(20, Math.round((down/100)*32));
-  upTri.style.transform = `translateX(-50%) translateY(${upOffsetPx}px) scale(${upScale})`;
-  downTri.style.transform = `translateX(-50%) translateY(${downOffsetPx}px) scale(${downScale})`;
-
-  if(isSubscribed){
-    if(down>up){ recEl.textContent='SELL'; recEl.style.color=getComputedStyle(document.documentElement).getPropertyValue('--neo-red')||'#e33b3b'; recEl.classList.remove('clickable'); recSmall.textContent='Confidence'; }
-    else { recEl.textContent='BUY'; recEl.style.color=getComputedStyle(document.documentElement).getPropertyValue('--neon-green')||'#00ff33'; recEl.classList.remove('clickable'); recSmall.textContent='Confidence'; }
-  } else {
-    recEl.textContent='START'; recEl.style.color=getComputedStyle(document.documentElement).getPropertyValue('--neon-green')||'#00ff33'; recEl.classList.add('clickable'); recSmall.textContent='Contact support to activate';
-  }
-  metaTs.textContent = 'Last update: ' + new Date().toLocaleTimeString('en-US');
-}
-setTriangles(16.45,83.55);
-
-/* Dropdowns: accessible listbox with search, arrow nav, enter, escape, custom add */
-function createDropdownShell(){
-  const box = document.createElement('div');
-  box.className='dd-box';
-  box.style.position='absolute';
-  box.style.minWidth='220px';
-  box.style.pointerEvents='auto';
-  box.style.background='linear-gradient(180deg,#071627,#03121a)';
-  box.style.border='1px solid rgba(255,255,255,0.04)';
-  box.style.padding='8px';
-  box.style.borderRadius='10px';
-  box.style.boxShadow='0 10px 40px rgba(0,0,0,0.6)';
-  box.style.zIndex=9999;
-  box.cleanR = null;
-
-  const search = document.createElement('input');
-  search.className='dd-search';
-  search.placeholder='Search...';
-  search.style.width='100%'; search.style.marginBottom='8px'; search.style.padding='8px'; search.style.borderRadius='8px';
-  search.style.border='1px solid rgba(255,255,255,0.03)'; search.style.background='rgba(255,255,255,0.02)'; search.style.color='#eaf6ff';
-  search.setAttribute('aria-label','Filter options');
-  box.appendChild(search);
-
-  const list = document.createElement('div');
-  list.className='dd-list';
-  list.setAttribute('role','listbox');
-  list.style.maxHeight='260px'; list.style.overflow='auto'; list.style.webkitOverflowScrolling='touch';
-  box.appendChild(list);
-
-  box.close = ()=> { if(box.parentNode) box.parentNode.removeChild(box); if(typeof box.cleanR === 'function') box.cleanR(); };
-  return box;
-}
-
-function buildDropdownContents(box, items, onSelect){
-  if(!box) return;
-  const search = box.querySelector('.dd-search');
-  const list = box.querySelector('.dd-list');
-
-  let currentIndex = 0;
-  function render(filter=''){
-    list.innerHTML = '';
-    const q = String(filter || '').trim().toLowerCase();
-    const filtered = items.filter(it => it.toLowerCase().includes(q));
-    filtered.forEach((it, idx)=>{
-      const item = document.createElement('div');
-      item.className='dd-item';
-      item.setAttribute('role','option');
-      item.setAttribute('aria-selected','false');
-      item.tabIndex=0;
-      item.textContent = it;
-      item.style.padding='8px 10px'; item.style.borderRadius='8px'; item.style.marginBottom='6px'; item.style.color='#e6eef6'; item.style.cursor='pointer';
-      item.addEventListener('click', ()=> { onSelect(it); box.close(); });
-      item.addEventListener('keydown', e=> { if(e.key==='Enter'){ onSelect(it); box.close(); }});
-      list.appendChild(item);
-    });
-
-    if(filtered.length===0 && q!==''){
-      const add = document.createElement('div');
-      add.textContent = `Add "${filter}"`;
-      add.style.padding='8px'; add.style.borderRadius='8px'; add.style.background='rgba(255,255,255,0.02)'; add.style.cursor='pointer'; add.style.color='#eaf6ff';
-      add.addEventListener('click', ()=>{
-        const k = filter.toUpperCase();
-        items.unshift(k);
-        onSelect(k);
-        box.close();
-      });
-      list.appendChild(add);
-    }
-    // set keyboard nav initial
-    const first = list.querySelector('[role="option"]');
-    if(first) first.focus();
-  }
-
-  search.addEventListener('input', ()=> render(search.value));
-  // keyboard nav (arrows) on search
-  search.addEventListener('keydown', (e)=>{
-    if(e.key==='ArrowDown' || e.key==='ArrowUp'){
-      e.preventDefault();
-      const options = Array.from(list.querySelectorAll('[role="option"]'));
-      if(options.length===0) return;
-      options[0].focus();
-    }
-  });
-
-  // arrow nav inside list
-  list.addEventListener('keydown', (e)=>{
-    const options = Array.from(list.querySelectorAll('[role="option"]'));
-    const idx = options.indexOf(document.activeElement);
-    if(e.key==='ArrowDown'){ e.preventDefault(); const next = options[Math.min(options.length-1, idx+1)]; if(next) next.focus(); }
-    if(e.key==='ArrowUp'){ e.preventDefault(); const prev = options[Math.max(0, idx-1)]; if(prev) prev.focus(); }
-    if(e.key==='Escape'){ dropdowns.innerHTML=''; pairSelect.setAttribute('aria-expanded','false'); tfSelect.setAttribute('aria-expanded','false'); }
-  });
-
-  render('');
-}
-
-/* open Dropdowns under control with autofocus & reposition on scroll/resize */
-function openPairsDropdown(){
-  dropdowns.innerHTML='';
-  const box = createDropdownShell();
-  buildDropdownContents(box, pairs, selectedPair);
-  const rect = pairSelect.getBoundingClientRect();
-  const cardRect = document.querySelector('.card').getBoundingClientRect();
-  box.style.left = Math.round(rect.left - cardRect.left) + 'px';
-  box.style.top  = Math.round(rect.bottom - cardRect.top + 8) + 'px';
-  dropdowns.appendChild(box);
-  pairSelect.setAttribute('aria-expanded','true');
-  box.querySelector('.dd-search')?.focus();
-
-  function handleScroll(){
-    const r = pairSelect.getBoundingClientRect();
-    box.style.left = Math.round(r.left - cardRect.left) + 'px';
-    box.style.top  = Math.round(r.bottom - cardRect.top + 8) + 'px';
-  }
-  window.addEventListener('scroll', handleScroll, {passive:true});
-  window.addEventListener('resize', handleScroll);
-  box.cleanR = ()=>{ window.removeEventListener('scroll', handleScroll); window.removeEventListener('resize', handleScroll); };
-}
-function openTFDropdown(){
-  dropdowns.innerHTML='';
-  const box = createDropdownShell();
-  buildDropdownContents(box, timeframes, selectedTF);
-  const rect = tfSelect.getBoundingClientRect();
-  const cardRect = document.querySelector('.card').getBoundingClientRect();
-  box.style.left = Math.round(rect.left - cardRect.left) + 'px';
-  box.style.top  = Math.round(rect.bottom - cardRect.top + 8) + 'px';
-  dropdowns.appendChild(box);
-  tfSelect.setAttribute('aria-expanded','true');
-  box.querySelector('.dd-search')?.focus();
-
-  function handleScroll(){
-    const r = tfSelect.getBoundingClientRect();
-    box.style.left = Math.round(r.left - cardRect.left) + 'px';
-    box.style.top  = Math.round(r.bottom - cardRect.top + 8) + 'px';
-  }
-  window.addEventListener('scroll', handleScroll, {passive:true});
-  window.addEventListener('resize', handleScroll);
-  box.cleanR = ()=>{ window.removeEventListener('scroll', handleScroll); window.removeEventListener('resize', handleScroll); };
-}
-pairSelect.addEventListener('click', openPairsDropdown);
-tfSelect.addEventListener('click', openTFDropdown);
-
-/* close on outside & esc — ensure we call box.close() to cleanup listeners */
-document.addEventListener('click', (e)=>{
-  const inside = e.target.closest('.select') || e.target.closest('#dropdowns') || e.target.closest('.dd-box');
-  if(!inside){
-    const box = dropdowns.querySelector('.dd-box');
-    if(box && typeof box.close === 'function') box.close();
-    dropdowns.innerHTML='';
-    pairSelect.setAttribute('aria-expanded','false');
-    tfSelect.setAttribute('aria-expanded','false');
-  }
-});
-document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ const box = dropdowns.querySelector('.dd-box'); if(box && typeof box.close === 'function') box.close(); dropdowns.innerHTML=''; pairSelect.setAttribute('aria-expanded','false'); tfSelect.setAttribute('aria-expanded','false'); hidePremiumModal(); hideSupportModal(); } });
-
-/* selection handlers */
-function selectedPair(val){
-  pairValue.textContent = val;
-  const box = dropdowns.querySelector('.dd-box');
-  if(box && typeof box.close === 'function') box.close();
-  pairSelect.setAttribute('aria-expanded','false');
-  const up = +(Math.random()*70 + 8).toFixed(2);
-  setTriangles(up, +(100-up).toFixed(2));
-  metaTF.textContent = tfValue.textContent;
-  if(window.onPairTimeframeUpdate) window.onPairTimeframeUpdate({pair:val, timeframe:tfValue.textContent, up, down:100-up});
-}
-function selectedTF(val){
-  tfValue.textContent = val;
-  const box = dropdowns.querySelector('.dd-box');
-  if(box && typeof box.close === 'function') box.close();
-  tfSelect.setAttribute('aria-expanded','false');
-  const up = +(Math.random()*70 + 8).toFixed(2);
-  setTriangles(up, +(100-up).toFixed(2));
-  metaTF.textContent = val;
-  if(window.onPairTimeframeUpdate) window.onPairTimeframeUpdate({pair:pairValue.textContent, timeframe:val, up, down:100-up});
-}
-
-/* Final dualCanvasBackground() with all 4 tweaks applied:
-   1) #numsCanvas blur increased to 16px (in CSS)
-   2) greener/brighter radial glows
-   3) denser/chunkier blurred blocks (cols divisor reduced)
-   4) stronger vignette opacity + blur
-*/
-(function dualCanvasBackground(){
-  const wash = document.getElementById('washCanvas');
-  const nums = document.getElementById('numsCanvas');
-  if(!wash || !nums) return;
-  const ctxW = wash.getContext('2d');
-  const ctxN = nums.getContext('2d');
-  if(!ctxW || !ctxN) return;
-
-  const DPR = Math.max(1, window.devicePixelRatio || 1);
-  let w=0,h=0,columns=[];
-  let rafDraw=null, rafBokeh=null, isRunning=false;
-  const glyphs = '0123456789';
-  const MIN_W = 640, MIN_H = 420;
-
-  function makeColumns(width, height){
-    // denser columns: smaller divisor -> more, but we keep a min to avoid insane counts
-    const cols = Math.max(20, Math.floor(width / 36)); // denser than previous
-    columns = Array.from({length: cols}, (_,i)=>({
-      x: Math.round((i + 0.5) * (width/cols)),
-      y: Math.random()*-height,
-      speed: 0.35 + Math.random()*1.1,
-      size: Math.round(44 + Math.random()*78),
-      phase: Math.random()*Math.PI*2,
-      glyphSeed: Math.floor(Math.random()*10),
-      rectW: Math.round(80 + Math.random()*140),
-      rectH: Math.round(48 + Math.random()*140),
-      rectOx: (Math.random()-0.5)*28,
-      rectOy: Math.round(Math.random()*80)-40,
-      rectAlpha: 0.06 + Math.random()*0.14
-    }));
-  }
-
-  function resize(){
-    const rect = wash.getBoundingClientRect();
-    w = Math.max(MIN_W, Math.floor(rect.width || MIN_W));
-    h = Math.max(MIN_H, Math.floor(rect.height || MIN_H));
-
-    wash.width = Math.floor(w * DPR);
-    wash.height = Math.floor(h * DPR);
-    nums.width = Math.floor(w * DPR);
-    nums.height = Math.floor(h * DPR);
-
-    wash.style.width = w + 'px';
-    wash.style.height = h + 'px';
-    nums.style.width = w + 'px';
-    nums.style.height = h + 'px';
-
-    ctxW.setTransform(1,0,0,1,0,0);
-    ctxN.setTransform(1,0,0,1,0,0);
-    ctxW.scale(DPR, DPR);
-    ctxN.scale(DPR, DPR);
-
-    ctxN.textAlign = 'center';
-    ctxN.textBaseline = 'middle';
-
-    makeColumns(w, h);
-  }
-
-  function roundRect(ctx, x, y, width, height, r){
-    if (r === undefined) r = Math.min(30, Math.min(width, height) * 0.18);
-    ctx.beginPath();
-    ctx.moveTo(x + r, y);
-    ctx.arcTo(x + width, y, x + width, y + height, r);
-    ctx.arcTo(x + width, y + height, x, y + height, r);
-    ctx.arcTo(x, y + height, x, y, r);
-    ctx.arcTo(x, y, x + width, y, r);
-    ctx.closePath();
-  }
-
-  function draw(now){
-    if (!now) now = performance.now();
-
-    // WASH: deeper teal-blue base gradient (slightly greener/brighter top)
-    ctxW.clearRect(0, 0, w, h);
-    const g = ctxW.createLinearGradient(0, 0, 0, h);
-    g.addColorStop(0, 'rgba(10,110,160,0.26)');   // greener/brighter top
-    g.addColorStop(0.45, 'rgba(8,92,140,0.16)');
-    g.addColorStop(0.8, 'rgba(14,72,110,0.12)');
-    g.addColorStop(1, 'rgba(4,10,20,0.72)');
-    ctxW.fillStyle = g; ctxW.fillRect(0,0,w,h);
-
-    // greener, stronger radial glows
-    for(let i=0;i<3;i++){
-      const cx = w*(0.14 + i*0.30) + Math.sin(now/(680 + i*100))*w*0.02;
-      const cy = h*(0.18 + i*0.24) + Math.cos(now/(660 + i*90))*h*0.02;
-      const rad = Math.max(w,h)*(0.36 + i*0.16);
-      const rg = ctxW.createRadialGradient(cx, cy, 20, cx, cy, rad);
-      const alpha = 0.12 + i*0.04; // stronger
-      rg.addColorStop(0, `rgba(90,250,150,${alpha})`);
-      rg.addColorStop(0.45, `rgba(60,210,150,${alpha*0.46})`);
-      rg.addColorStop(1, 'rgba(6,18,28,0)');
-      ctxW.globalCompositeOperation = 'lighter';
-      ctxW.fillStyle = rg;
-      ctxW.fillRect(0,0,w,h);
-      ctxW.globalCompositeOperation = 'source-over';
-    }
-
-    // chunky blurred blocks (denser)
-    for(let i=0;i<columns.length;i++){
-      const c = columns[i];
-      const rx = c.x + c.rectOx + Math.sin(now/(1300) + c.phase)*8;
-      c.y += c.speed*0.6 + Math.sin(now/900 + c.phase)*0.4;
-      const ry = ((c.y + c.rectOy) % (h + 400)) - 200;
-      ctxW.globalAlpha = c.rectAlpha;
-      ctxW.fillStyle = `rgba(230,245,255,1)`;
-      roundRect(ctxW, rx - c.rectW*0.5, ry - c.rectH*0.5, c.rectW, c.rectH, Math.min(36, c.rectW*0.12));
-      ctxW.fill();
-    }
-    ctxW.globalAlpha = 1;
-
-    // faint vertical streaks
-    for(let i=0;i<5;i++){
-      ctxW.globalAlpha = 0.02 + Math.abs(Math.sin(now/(1400) + i*0.9))*0.02;
-      ctxW.fillStyle = 'rgba(255,255,255,0.02)';
-      const x = (i/5)*w + Math.sin(now/(700 + i*30))*26;
-      ctxW.fillRect(x,0,Math.max(36, w/20), h);
-    }
-    ctxW.globalAlpha = 1;
-
-    // NUMBERS: larger glyphs, will become smeared blobs due to blur(16px)
-    ctxN.clearRect(0,0,w,h);
-    ctxN.globalCompositeOperation = 'lighter';
-    for(let i=0;i<columns.length;i++){
-      const c = columns[i];
-      c.y += c.speed*0.45 + Math.sin(now/1100 + c.phase)*0.3;
-      if(c.y > h + c.size) c.y = - (Math.random()*300 + c.size);
-      const glyph = glyphs.charAt((Math.floor(now/300 + i + c.glyphSeed)) % glyphs.length);
-      const x = c.x + Math.sin(now/1400 + i)*6;
-      const y = c.y;
-      ctxN.font = `${Math.round(c.size*0.6)}px monospace`;
-      ctxN.fillStyle = 'rgba(255,255,255,0.06)';
-      ctxN.fillText(glyph, x, y);
-      ctxN.font = `${c.size}px monospace`;
-      ctxN.fillStyle = 'rgba(255,255,255,0.82)';
-      ctxN.fillText(glyph, x, y);
-      ctxN.lineWidth = Math.max(1, Math.round(c.size*0.025));
-      ctxN.strokeStyle = 'rgba(130,220,255,0.12)';
-      ctxN.strokeText(glyph, x, y);
-    }
-    ctxN.globalCompositeOperation = 'source-over';
-
-    rafDraw = requestAnimationFrame(draw);
-  }
-
-  // DOM bokeh micro motion
-  const b1 = document.getElementById('b1'), b2 = document.getElementById('b2'), b3 = document.getElementById('b3');
-  let tb = 0;
-  function bokehLoop(){
-    tb += 0.01;
-    if(b1) { b1.style.left = (6 + Math.sin(tb*0.86)*1.6) + '%'; b1.style.top = (10 + Math.cos(tb*0.72)*1.8) + '%'; }
-    if(b2) { b2.style.right = (8 + Math.cos(tb*0.62)*1.6) + '%'; b2.style.top = (18 + Math.sin(tb*0.52)*1.6) + '%'; }
-    if(b3) { b3.style.left = (42 + Math.sin(tb*0.38)*2.3) + '%'; b3.style.bottom = (20 + Math.cos(tb*0.82)*1.6) + '%'; }
-    rafBokeh = requestAnimationFrame(bokehLoop);
-  }
-
-  function start(){
-    if(isRunning) return;
-    isRunning = true;
-    resize();
-    if(rafDraw) cancelAnimationFrame(rafDraw);
-    rafDraw = requestAnimationFrame(draw);
-    if(rafBokeh) cancelAnimationFrame(rafBokeh);
-    rafBokeh = requestAnimationFrame(bokehLoop);
-  }
-  function stop(){
-    if(!isRunning) return;
-    isRunning = false;
-    if(rafDraw){ cancelAnimationFrame(rafDraw); rafDraw = null; }
-    if(rafBokeh){ cancelAnimationFrame(rafBokeh); rafBokeh = null; }
-  }
-
-  function onVisibility(){ if(document.hidden) stop(); else start(); }
-
-  window.addEventListener('resize', () => {
-    clearTimeout(window.__astron_resize_timeout);
-    window.__astron_resize_timeout = setTimeout(() => { resize(); }, 80);
-  }, { passive: true });
-
-  document.addEventListener('visibilitychange', onVisibility);
-
-  window.addEventListener('beforeunload', () => {
-    stop();
-    document.removeEventListener('visibilitychange', onVisibility);
-  });
-
-  if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    setTimeout(start, 30);
-  } else {
-    window.addEventListener('load', () => setTimeout(start, 30));
-  }
-})();
-
-/* Modal helpers with focus trap */
-function trapFocus(modalRoot){
-  const focusable = modalRoot.querySelectorAll('a[href], button:not([disabled]), input, [tabindex]:not([tabindex="-1"])');
-  if(!focusable.length) return ()=>{};
-  const first = focusable[0], last = focusable[focusable.length-1];
-  first.focus();
-  function handleTab(e){
-    if(e.key !== 'Tab') return;
-    if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
-    else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
-  }
-  document.addEventListener('keydown', handleTab);
-  return ()=> document.removeEventListener('keydown', handleTab);
-}
-let untrap = null, previouslyFocused = null;
-function showPremiumModal(){ previouslyFocused = document.activeElement; premiumModal.style.display='block'; premiumModal.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; untrap = trapFocus(premiumModal); }
-function hidePremiumModal(){ premiumModal.style.display='none'; premiumModal.setAttribute('aria-hidden','true'); document.body.style.overflow=''; if(untrap) untrap(); if(previouslyFocused) previouslyFocused.focus(); }
-modalLater?.addEventListener('click', ()=> hidePremiumModal());
-modalSubscribe?.addEventListener('click', ()=> { isSubscribed = true; hidePremiumModal(); const up = +(Math.random()*70 + 8).toFixed(2); setTriangles(up, +(100-up).toFixed(2)); });
-
-function showSupportModal(){ previouslyFocused = document.activeElement; contactTelegramModal.href = buildTelegramShareURL(buildPrefillMessage()); supportModal.style.display='block'; supportModal.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; untrap = trapFocus(supportModal); }
-function hideSupportModal(){ supportModal.style.display='none'; supportModal.setAttribute('aria-hidden','true'); document.body.style.overflow=''; if(untrap) untrap(); if(previouslyFocused) previouslyFocused.focus(); }
-supportLater?.addEventListener('click', ()=> hideSupportModal());
-
-/* rec badge */
-recEl?.addEventListener('click', (e)=>{
-  if(!isSubscribed){ showSupportModal(); e.preventDefault(); return; }
-});
-
-/* Telegram helpers */
-function buildPrefillMessage(){
-  const pair = pairValue?.textContent || '—';
-  const tf = tfValue?.textContent || '—';
-  return `Activation / Balance Request (ASTRONBOT.MAX)\nPair: ${pair}\nTimeframe: ${tf}\nPlease verify activation and account balance. Account email: [your email here]`;
-}
-function buildTelegramShareURL(message){
-  const base = 'https://t.me/share/url';
-  const params = new URLSearchParams({ url:'', text: message });
-  return base + '?' + params.toString();
-}
-btnTelegram?.addEventListener('click', ()=> { window.open(buildTelegramShareURL(buildPrefillMessage()), '_blank', 'noopener'); });
-
-/* tailored premium modal messaging to drive conversions */
-function showPremiumModalFor(action){
-  const key = String(action || '').toUpperCase();
-  if(key.includes('REPORT')) {
-    premiumTitle.textContent = 'Reports locked — preview available';
-    premiumCopy.innerHTML = '<strong>Unlock detailed reports:</strong> subscribe to download full reports, see historic performance and export CSV. Try a short demo to evaluate the signal quality.';
-  } else if(key.includes('BROKER')) {
-    premiumTitle.textContent = 'Broker integration';
-    premiumCopy.innerHTML = '<strong>Why integrate?</strong> Auto-sync trades, lower latency, and one-click execution with supported brokers. Subscribe to enable broker APIs and priority setup.';
-  } else if(key.includes('DOWNLOAD')) {
-    premiumTitle.textContent = 'Export access';
-    premiumCopy.innerHTML = '<strong>Export & audit-ready sheets:</strong> downloadable reports contain full meta and confidence scores—ideal for audits. Subscribe to enable CSV exports.';
-  } else {
-    premiumTitle.textContent = 'Premium required';
-    premiumCopy.innerHTML = '<strong>Why this is premium:</strong> Detailed readouts and integrations depend on our real-time model. Subscribe to unlock priority signals and export.';
-  }
-  showPremiumModal();
-}
-
-/* buttons: blocked if not subscribed */
-[btnReport, btnBroker, btnDownload, btnLogout].forEach(btn => {
-  btn.addEventListener('click', (e)=>{
-    if(!isSubscribed){
-      // tailored persuasion per button
-      showPremiumModalFor(btn.textContent.trim());
-      e.preventDefault();
-      return;
-    }
-    if(btn===btnDownload){
-      const csv = 'pair,timeframe,up,down\n' + pairValue.textContent + ',' + tfValue.textContent + ',' + (upText.textContent || '') + ',' + (downText.textContent || '');
-      const blob = new Blob([csv], {type:'text/csv'});
-      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='sheet.csv'; document.body.appendChild(a); a.click(); a.remove();
-    } else {
-      alert('Feature: ' + btn.textContent + ' (real app should implement).');
-    }
-  });
-});
-
-/* keyboard open for chips */
-pairSelect.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') { e.preventDefault(); openPairsDropdown(); }});
-tfSelect.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') { e.preventDefault(); openTFDropdown(); }});
-
-/* integration hook & live feed */
-window.onPairTimeframeUpdate = window.onPairTimeframeUpdate || null;
-window.feedLive = function(msg){ if(!msg || typeof msg.up !== 'number') return; setTriangles(msg.up, msg.down); };
-
-/* gentle auto updates (visual only) */
-let autoUpdate = setInterval(()=>{
-  const up = +(Math.random()*70 + 8).toFixed(2);
-  setTriangles(up, +(100-up).toFixed(2));
-}, 5200);
-window.addEventListener('beforeunload', ()=> { clearInterval(autoUpdate); });
-</script>
-</body>
-</html>
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200" preserveAspectRatio="xMidYMid meet">
+  <title>ABROX — Ultra Refined Vector</title>
+
+  <defs>
+    <!-- primary gradients -->
+    <linearGradient id="gTop" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff64bb"/>
+      <stop offset="0.38" stop-color="#d14aff"/>
+      <stop offset="1" stop-color="#7a36ff"/>
+    </linearGradient>
+
+    <linearGradient id="gBottom" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8d49ff"/>
+      <stop offset="0.55" stop-color="#5949ff"/>
+      <stop offset="1" stop-color="#2762ff"/>
+    </linearGradient>
+
+    <linearGradient id="gText" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7f2bff"/>
+      <stop offset="0.5" stop-color="#7b24ff"/>
+      <stop offset="1" stop-color="#5a00ff"/>
+    </linearGradient>
+
+    <!-- subtle glossy highlight -->
+    <linearGradient id="gloss" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.85"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- inner dark shading (for depth slices) -->
+    <linearGradient id="innerShadeTop" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a1438" stop-opacity="0.5"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0.45"/>
+    </linearGradient>
+
+    <!-- small glow and soft shadow -->
+    <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+    <filter id="dropShadow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="8" result="blur"/>
+      <feOffset dx="0" dy="10" result="off"/>
+      <feColorMatrix in="off" type="matrix"
+         values="0 0 0 0 0
+                 0 0 0 0 0
+                 0 0 0 0 0
+                 0 0 0 0.35" result="shadow"/>
+      <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- main centered group -->
+  <g transform="translate(600,600)">
+
+    <!-- TOP CHEVRON (precise bevels, highlights, inner depth) -->
+    <g transform="translate(0,-330)" filter="url(#dropShadow)">
+      <!-- left slab (outer shape) -->
+      <path d="M-260,-40 L-145,-220 L-95,-190 L-210,-10 Z" fill="url(#gTop)"/>
+      <!-- right slab (outer shape) -->
+      <path d="M260,-40 L145,-220 L95,-190 L210,-10 Z" fill="url(#gTop)"/>
+      <!-- white outline to simulate thick bevel edge -->
+      <path d="M-145,-220 L-95,-190" stroke="#ffffff" stroke-width="7" stroke-linecap="round" stroke-opacity="0.25" fill="none"/>
+      <path d="M145,-220 L95,-190" stroke="#ffffff" stroke-width="7" stroke-linecap="round" stroke-opacity="0.25" fill="none"/>
+      <!-- inner dark slice (depth) -->
+      <path d="M-110,-160 L-55,-108 L-82,-86 L-140,-134 Z" fill="url(#innerShadeTop)" opacity="0.9"/>
+      <path d="M110,-160 L55,-108 L82,-86 L140,-134 Z" fill="url(#innerShadeTop)" opacity="0.9"/>
+      <!-- subtle glossy strips -->
+      <path d="M-210,-20 L-150,-90 L-120,-70 L-180,-6 Z" fill="url(#gloss)" opacity="0.18"/>
+      <path d="M210,-20 L150,-90 L120,-70 L180,-6 Z" fill="url(#gloss)" opacity="0.18"/>
+      <!-- small top cap bevels -->
+      <path d="M-200,-240 L-120,-160 L-75,-190 L-155,-260 Z" fill="#ffffff" opacity="0.06"/>
+      <path d="M200,-240 L120,-160 L75,-190 L155,-260 Z" fill="#ffffff" opacity="0.06"/>
+    </g>
+
+    <!-- WORDMARK — ABROX (high-detail path shapes; no font) -->
+    <g transform="translate(-520,-40)" fill="none" stroke="none">
+
+      <!-- A (with interior triangle removed using even-odd fill-rule) -->
+      <path d="M70 0 L120 0 L200 -160 L160 -160 L135 -110 L85 -110 L65 -160 L25 -160 Z
+               M110 -60 L95 -100 L125 -100 Z" fill="url(#gText)" fill-rule="evenodd"/>
+
+      <!-- B (rounded double-bowl — approximated with cubic bezier curves) -->
+      <path d="M220 0 L260 0 L260 -160 L220 -160 L220 -90
+               C220 -70,245 -70,245 -50 C245 -30,225 -30,220 -30 L220 -30 Z
+               M220 -30 L220 -90 Z" fill="url(#gText)"/>
+
+      <!-- R (stem + bowl + diagonal leg) -->
+      <path d="M320 0 L360 0 L360 -160 L320 -160 L320 -90
+               C320 -70,345 -70,345 -50 C345 -30,325 -30,320 -30 L320 -30 Z
+               M360 -30 L420 0 L440 0 L380 -70 Z
+               M380 -70 L430 -160 L390 -160 L350 -90 Z" fill="url(#gText)"/>
+
+      <!-- O (rounded rectangle style to match logo) -->
+      <path d="M470 0 L560 0 C600 0 600 -30 600 -60 L600 -100
+               C600 -130 600 -160 560 -160 L470 -160 C430 -160 430 -130 430 -100 L430 -60 C430 -30 430 0 470 0 Z" fill="url(#gText)"/>
+
+      <!-- X (geometric, thick strokes) -->
+      <path d="M690 0 L730 0 L780 -60 L820 0 L860 0 L810 -80 L860 -160 L820 -160 L780 -100 L730 -160 L690 -160 L740 -80 Z" fill="url(#gText)"/>
+
+    </g>
+
+    <!-- BOTTOM CHEVRON (rotated match of top with blue gradient and sharper inner highlights) -->
+    <g transform="translate(0,340) rotate(180)" filter="url(#dropShadow)">
+      <!-- left slab -->
+      <path d="M-260,-40 L-145,-220 L-95,-190 L-210,-10 Z" fill="url(#gBottom)"/>
+      <!-- right slab -->
+      <path d="M260,-40 L145,-220 L95,-190 L210,-10 Z" fill="url(#gBottom)"/>
+      <!-- white bevel edges -->
+      <path d="M-145,-220 L-95,-190" stroke="#ffffff" stroke-width="6" stroke-linecap="round" stroke-opacity="0.22" fill="none"/>
+      <path d="M145,-220 L95,-190" stroke="#ffffff" stroke-width="6" stroke-linecap="round" stroke-opacity="0.22" fill="none"/>
+      <!-- inner dark slices (opacity via fill-opacity) -->
+      <path d="M-110,-160 L-55,-108 L-82,-86 L-140,-134 Z" fill="#000000" fill-opacity="0.45"/>
+      <path d="M110,-160 L55,-108 L82,-86 L140,-134 Z" fill="#000000" fill-opacity="0.45"/>
+      <!-- gloss -->
+      <path d="M-210,-20 L-150,-90 L-120,-70 L-180,-6 Z" fill="url(#gloss)" opacity="0.16"/>
+      <path d="M210,-20 L150,-90 L120,-70 L180,-6 Z" fill="url(#gloss)" opacity="0.16"/>
+    </g>
+
+  </g>
+</svg>
