@@ -1,413 +1,103 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Abrox — Testimonials & Landing</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AstronBot Max</title>
 
-  <!-- Google Poppins -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
-
-  <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Lucide icons -->
-  <script src="https://unpkg.com/lucide@0.276.0/dist/lucide.min.js"></script>
-
-  <style>
-    :root{
-      --bg-0:#050914;
-      --bg-1:#071525;
-      --text:#eaf5ff;
-      --muted:#98A8B8;
-      --accent-from:#7A4BFF;
-      --accent-to:#00D0FF;
-      --cta-from:#17b03f;
-      --cta-to:#36d37a;
-      --price-old:#9aa3b2;
-      --price-new:#061f0f;
-    }
-    html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg-0),var(--bg-1));font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,Arial;color:var(--text);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
-    /* cosmic layers */
-    .cosmic{position:fixed;inset:0;z-index:-3;pointer-events:none;overflow:hidden}
-    .layer{position:absolute;inset:-20%;background-repeat:no-repeat;background-position:center;opacity:.12;filter:blur(36px);transform-origin:center;animation:drift 34s linear infinite}
-    .l1{background:radial-gradient(500px 300px at 10% 18%, rgba(122,75,255,0.42), transparent 18%), radial-gradient(420px 250px at 85% 82%, rgba(0,208,255,0.18), transparent 18%);animation-duration:36s}
-    .l2{background:radial-gradient(380px 220px at 60% 6%, rgba(0,208,255,0.18), transparent 18%), radial-gradient(300px 180px at 24% 78%, rgba(122,75,255,0.12), transparent 14%);animation-duration:48s;opacity:.08}
-    @keyframes drift{0%{transform:translateY(0)}50%{transform:translateY(12%)}100%{transform:translateY(0)}}
-    canvas#stars{position:fixed;inset:0;z-index:-2;opacity:0.09;pointer-events:none}
-
-    /* glass cards */
-    .glass{ background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.03); border-radius:14px; backdrop-filter: blur(6px); }
-
-    /* logo glow */
-    .logo-wrap{display:block;width:max-content;margin:22px auto 6px;position:relative}
-    .logo-halo{position:absolute;inset:-12px;z-index:-1;border-radius:12px;pointer-events:none;background:radial-gradient(closest-side, rgba(122,75,255,0.16), transparent 30%), radial-gradient(closest-side, rgba(0,208,255,0.06), transparent 40%);filter:blur(24px);animation:haloPulse 3.8s ease-in-out infinite}
-    @keyframes haloPulse{0%{transform:scale(.98);opacity:.86}50%{transform:scale(1.03);opacity:1}100%{transform:scale(.98);opacity:.86}}
-    .logo{width:220px;max-width:46vw;height:auto;display:block;filter:drop-shadow(0 10px 28px rgba(122,75,255,0.24)) drop-shadow(0 18px 40px rgba(0,208,255,0.12));transition:transform .18s ease}
-    .logo:hover{transform:translateY(-2px) scale(1.01)}
-
-    /* hero */
-    main{padding-left:20px;padding-right:20px;max-width:1080px;margin:0 auto;padding-bottom:60px}
-    .hero-h{text-align:center;margin-top:6px}
-    .hero-h h1{font-weight:800;line-height:1;font-size:2.25rem}
-    @media(min-width:900px){ .hero-h h1{font-size:3.5rem} }
-
-    /* price cards */
-    .price-grid{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:12px }
-    .price-card { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-radius:12px; padding:12px 16px; border:1px solid rgba(255,255,255,0.04); min-width:220px; text-align:center }
-    .price-old{ text-decoration:line-through;color:var(--price-old); font-weight:700; margin-right:10px }
-    .price-new{ background:linear-gradient(90deg,var(--cta-from),var(--cta-to)); color:var(--price-new); padding:6px 12px; border-radius:8px; font-weight:800; display:inline-block; margin-top:6px }
-
-    /* CTA & Telegram */
-    .cta-block{border-radius:16px;padding:18px;background:linear-gradient(90deg,var(--cta-from),var(--cta-to));color:#032612;font-weight:800;text-align:center;font-size:18px;box-shadow:0 24px 48px rgba(2,6,23,0.6);margin-top:18px}
-    .btn-telegram{display:inline-flex;gap:10px;align-items:center;padding:10px 14px;border-radius:12px;background:linear-gradient(90deg,#00a0d6,#0088cf);color:white;font-weight:700}
-
-    /* online pill */
-    .online-pill{position:fixed;right:18px;top:18px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:10px 14px;display:flex;gap:12px;align-items:center;border:1px solid rgba(255,255,255,0.03);backdrop-filter:blur(6px);z-index:60}
-    .online-dot{width:12px;height:12px;border-radius:999px;background:#22c55e;box-shadow:0 0 0 6px rgba(34,197,94,0.08);animation:statusPulse 2.2s infinite}
-    @keyframes statusPulse{0%{transform:scale(1)}50%{transform:scale(1.14)}100%{transform:scale(1)}}
-
-    /* testimonials carousel */
-    .carousel{position:relative;overflow:hidden;width:100%}
-    .track{display:flex;gap:16px;transition:transform 650ms cubic-bezier(.22,.9,.37,1);will-change:transform;padding:6px 2px}
-    .card{min-width:86%;max-width:86%;background:rgba(255,255,255,0.02);border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 12px 28px rgba(0,0,0,0.45)}
-    @media(min-width:640px){ .card{min-width:46%;max-width:46%} }
-    @media(min-width:1024px){ .card{min-width:30%;max-width:30%} }
-    .avatar{width:56px;height:56px;border-radius:999px;object-fit:cover;border:2px solid rgba(255,255,255,0.04)}
-    .star{width:16px;height:16px;display:inline-block;margin-right:4px}
-    .dots{display:flex;gap:8px;justify-content:center;margin-top:12px}
-    .dot{width:10px;height:10px;border-radius:999px;background:rgba(255,255,255,0.12)}
-    .dot.active{background:linear-gradient(90deg,var(--accent-from),var(--accent-to))}
-
-    /* purchase toast */
-    .toast{position:fixed;left:20px;bottom:18px;background:linear-gradient(90deg,var(--cta-from),var(--cta-to));color:white;padding:14px 16px;border-radius:12px;display:flex;align-items:center;gap:12px;box-shadow:0 18px 40px rgba(0,0,0,0.5);transform:translateY(120%);opacity:0;transition:all 420ms cubic-bezier(.2,.9,.3,1);z-index:80}
-    .toast.show{transform:translateY(0);opacity:1}
-
-    footer{color:var(--muted);margin-top:28px;text-align:center;font-size:13px;padding-bottom:28px}
-  </style>
-</head>
-<body>
-
-  <!-- cosmic background + stars -->
-  <div class="cosmic" aria-hidden="true"><div class="layer l1"></div><div class="layer l2"></div></div>
-  <canvas id="stars" aria-hidden="true"></canvas>
-
-  <!-- header/logo -->
-  <header class="pt-6 pb-2">
-    <div class="logo-wrap">
-      <div class="logo-halo" aria-hidden="true"></div>
-      <img src="assets/abrox-source.png" alt="Abrox" class="logo" />
-    </div>
-  </header>
-
-  <!-- online pill -->
-  <div class="online-pill" id="onlinePill" aria-live="polite" role="status">
-    <svg data-lucide="user" width="18" height="18"></svg>
-    <div id="onlineCount" style="font-weight:700">—</div>
-    <div class="online-dot" aria-hidden="true"></div>
-  </div>
-
-  <main>
-    <!-- hero -->
-    <section class="hero-h text-center px-4">
-      <h1 class="font-extrabold leading-tight text-3xl md:text-5xl">Transform Your<br>Way of <span style="background:linear-gradient(90deg,var(--accent-from),var(--accent-to)); -webkit-background-clip:text; color:transparent; font-weight:800">Trading in the Market</span></h1>
-      <p class="mt-4 text-sm md:text-base text-gray-300 max-w-2xl mx-auto">Pro-grade signals, clear volume analytics and a focused trading workflow — fast, private, and premium.</p>
-    </section>
-
-    <!-- PRICE — two premium options -->
-    <section class="mt-6 text-center px-4">
-      <div class="max-w-xl mx-auto">
-        <div class="price-grid">
-          <div class="price-card">
-            <div style="font-size:13px;color:var(--muted)">Standard Lifetime</div>
-            <div style="margin-top:6px">
-              <span class="price-old">$599</span>
-              <div class="price-new">$299 <span style="font-size:11px;color:#06331e;margin-left:8px;font-weight:600">Lifetime</span></div>
-            </div>
-            <div style="margin-top:10px;color:var(--muted);font-size:13px">All core signals + email support</div>
-          </div>
-
-          <div class="price-card">
-            <div style="font-size:13px;color:var(--muted)"><strong>Pro Lifetime</strong></div>
-            <div style="margin-top:6px">
-              <span class="price-old">$899</span>
-              <div class="price-new">$499 <span style="font-size:11px;color:#06331e;margin-left:8px;font-weight:600">Lifetime</span></div>
-            </div>
-            <div style="margin-top:10px;color:var(--muted);font-size:13px">All features + priority Telegram support & future pro modules</div>
-          </div>
-        </div>
-
-        <div style="margin-top:14px">
-          <button id="telegramBtn" class="btn-telegram inline-flex items-center gap-3">
-            <img src="assets/telegram.png" alt="Telegram" style="width:20px;height:20px;display:inline-block"/>
-            <span>Telegram Support</span>
-          </button>
-        </div>
-        <div style="margin-top:10px;color:var(--muted);font-size:13px">Limited-time pricing — original prices anchored above</div>
-      </div>
-    </section>
-
-    <!-- decorative progress -->
-    <div class="video-progress-wrap mt-6 max-w-[920px] w-full mx-auto"><div id="videoProgress" class="video-progress-bar" style="width:18%"></div></div>
-
-    <!-- chart + testimonials area -->
-    <section class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6 px-4">
-      <div class="chart-card glass p-3">
-        <canvas id="miniChart" width="700" height="300" style="width:100%;height:100%"></canvas>
-      </div>
-
-      <div>
-        <h3 class="text-xl font-semibold mb-4">What traders say</h3>
-
-        <div class="carousel">
-          <div id="track" class="track" aria-live="polite"></div>
-        </div>
-
-        <div id="dots" class="dots" aria-hidden="false"></div>
-      </div>
-    </section>
-
-    <footer><div class="mt-8"><span id="year"></span> © Abrox</div></footer>
-  </main>
-
-  <!-- purchase toast -->
-  <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true">
-    <div style="width:46px;height:46px;border-radius:999px;background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-weight:800">✓</div>
-    <div>
-      <div id="toastName" style="font-weight:800">Sophie Martin</div>
-      <div id="toastText" style="color:rgba(255,255,255,0.92);font-size:13px">France — Just purchased!</div>
-    </div>
-  </div>
-
   <script>
-    // ---------- Helpers ----------
-    function rand(min, max){ return Math.random() * (max - min) + min }
-    function clamp(v, a, b){ return Math.max(a, Math.min(b, v)) }
-
-    // Replace Lucide icons when ready
-    window.addEventListener('load', ()=> lucide.replace());
-
-    // Footer year
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    // ---------- starfield (lightweight) ----------
-    (function starfield(){
-      try {
-        const canvas = document.getElementById('stars');
-        const ctx = canvas.getContext('2d');
-        let W = innerWidth, H = innerHeight, DPR = devicePixelRatio || 1;
-        function resize(){ W = innerWidth; H = innerHeight; canvas.width = W * DPR; canvas.height = H * DPR; canvas.style.width = W + 'px'; canvas.style.height = H + 'px'; ctx.setTransform(DPR,0,0,DPR,0,0); }
-        let particles = [];
-        function init(){
-          resize();
-          particles = [];
-          const target = Math.round(Math.min(180, (W*H)/70000 ));
-          for (let i=0;i<target;i++){
-            particles.push({ x:rand(0,W), y:rand(0,H), r:rand(0.3,1.2), vx:rand(-0.03,0.03), vy:rand(-0.03,0.03), a:rand(0.04,0.26) });
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            bgDark: '#05070a',
           }
         }
-        function loop(){
-          ctx.clearRect(0,0,W,H);
-          for (const p of particles){
-            p.x += p.vx; p.y += p.vy;
-            if (p.x < -10) p.x = W+10; if (p.x > W+10) p.x = -10;
-            if (p.y < -10) p.y = H+10; if (p.y > H+10) p.y = -10;
-            ctx.beginPath();
-            ctx.fillStyle = `rgba(255,255,255,${p.a})`;
-            ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-            ctx.fill();
-          }
-          requestAnimationFrame(loop);
-        }
-        window.addEventListener('resize', init);
-        init(); loop();
-      } catch(e){ console.warn('starfield failed', e) }
-    })();
-
-    // ---------- online pill realistic simulation ----------
-    (function onlineSim(){
-      const el = document.getElementById('onlineCount');
-      let value = 16890;
-      el.textContent = value.toLocaleString();
-      function tick(){
-        const r = Math.random();
-        let delta = 0;
-        if (r < 0.02) delta = Math.round(Math.random() * 220 + 40);
-        else if (r < 0.06) delta = -Math.round(Math.random() * 120 + 12);
-        else delta = Math.round((Math.random() - 0.48) * 18);
-        value = clamp(value + delta, 42, 9999999);
-        el.style.transition = 'transform 420ms cubic-bezier(.2,.9,.3,1)';
-        el.style.transform = 'translateY(-6px)';
-        setTimeout(()=> el.style.transform = 'translateY(0)', 420);
-        el.textContent = value.toLocaleString();
       }
-      function schedule(){ setTimeout(()=>{ tick(); schedule(); }, 3000 + Math.floor(Math.random() * 6000)); }
-      schedule();
-    })();
-
-    // ---------- purchase toast ----------
-    (function toastDemo(){
-      const box = document.getElementById('toast');
-      const nameEl = document.getElementById('toastName');
-      const textEl = document.getElementById('toastText');
-      const demos = [['Sophie Martin','France'],['Lucas M','Brazil'],['Aisha Khan','UK'],['Ibrahim','Nigeria'],['Elena','Spain']];
-      let i = 0;
-      function show(n, c){ nameEl.textContent = n; textEl.textContent = `${c} — Just purchased!`; box.classList.add('show'); setTimeout(()=> box.classList.remove('show'), 4200); }
-      setTimeout(()=> show(demos[0][0], demos[0][1]), 900);
-      setInterval(()=> { i = (i+1) % demos.length; show(demos[i][0], demos[i][1]); }, 22000);
-    })();
-
-    // ---------- small demo candlestick chart ----------
-    (function demoChart(){
-      try {
-        const canvas = document.getElementById('miniChart'); if (!canvas) return;
-        const ctx = canvas.getContext('2d');
-        const DPR = devicePixelRatio || 1;
-        function fit(){ canvas.width = canvas.clientWidth * DPR; canvas.height = canvas.clientHeight * DPR; ctx.setTransform(DPR,0,0,DPR,0,0); }
-        fit(); window.addEventListener('resize', fit);
-        const N = 60; let price = 420; const data = [];
-        for (let i=0;i<N;i++){ const open = price; const close = price + (Math.random()-0.45)*10; const high = Math.max(open,close)+Math.random()*8; const low = Math.min(open,close)-Math.random()*8; data.push({open,close,high,low}); price = close; }
-        function render(){
-          const w = canvas.clientWidth, h = canvas.clientHeight; ctx.clearRect(0,0,w,h); ctx.fillStyle='rgba(255,255,255,0.02)'; ctx.fillRect(0,0,w,h);
-          const margin = 6, cw = (w-margin*2)/data.length; const values = data.flatMap(d=>[d.high,d.low]); const min = Math.min(...values), max = Math.max(...values);
-          const y = v => margin + (h-margin*2)*(1 - (v-min)/(max-min));
-          for (let i=0;i<data.length;i++){
-            const x = margin + i*cw + cw*0.2; const d = data[i];
-            const col = d.close >= d.open ? '#2bff9a' : '#ff6b6b';
-            ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = Math.max(1, cw*0.06);
-            ctx.beginPath(); ctx.moveTo(x+cw*0.35, y(d.high)); ctx.lineTo(x+cw*0.35, y(d.low)); ctx.stroke();
-            const bodyTop = y(Math.max(d.open,d.close)); const bodyH = Math.max(2, Math.abs(y(d.open)-y(d.close)));
-            ctx.fillRect(x, bodyTop, cw*0.7, bodyH);
-          }
-        }
-        render();
-      } catch(e){ console.warn('chart error', e) }
-    })();
-
-    // ---------- TESTIMONIALS data (22 items with flagcdn small icons) ----------
-    const TESTIMONIALS = [
-      { name:'Marco Rossi', cc:'it', avatar:'https://randomuser.me/api/portraits/men/32.jpg', title:'Pro Trader • Italy', text:'Been using Abrox 2 months — entries cleaner, less FOMO. Honestly surprised.'},
-      { name:'Aisha Khan', cc:'pk', avatar:'https://randomuser.me/api/portraits/women/65.jpg', title:'Swing Trader • Pakistan', text:'Signals are sharp. setup detection is fast. I\'ve cut my losing trades a lot.'},
-      { name:'David Johnson', cc:'us', avatar:'https://randomuser.me/api/portraits/men/45.jpg', title:'Day Trader • USA', text:'Fast alerts, low-latency. My morning routine is tighter now — big win.'},
-      { name:'Elena García', cc:'es', avatar:'https://randomuser.me/api/portraits/women/44.jpg', title:'Swing Trader • Spain', text:'Nice UX. The volume view helped me spot accumulation I missed before.'},
-      { name:'Lucas Moreira', cc:'br', avatar:'https://randomuser.me/api/portraits/men/21.jpg', title:'Scalper • Brazil', text:'Light on mobile, fast on cheap phones. Scalp results have improved.'},
-      { name:'Fatima Noor', cc:'sa', avatar:'https://randomuser.me/api/portraits/women/12.jpg', title:'Options Trader • Saudi Arabia', text:'Great for timing options entries — saves me from dumb entries.'},
-      { name:'Yuri Petrov', cc:'ru', avatar:'https://randomuser.me/api/portraits/men/77.jpg', title:'Algo Dev • Russia', text:'Integrated quickly into my alerts. Good hooks, clear docs.'},
-      { name:'Keiko Tanaka', cc:'jp', avatar:'https://randomuser.me/api/portraits/women/11.jpg', title:'Investor • Japan', text:'Useful for longer-term positions too. Not just scalp stuff.'},
-      { name:'Omar Abdel', cc:'eg', avatar:'https://randomuser.me/api/portraits/men/16.jpg', title:'Retail • Egypt', text:'Affordable & useful — felt professional from day 1.'},
-      { name:'Sarah Williams', cc:'gb', avatar:'https://randomuser.me/api/portraits/women/68.jpg', title:'Copy Trader • UK', text:'My followers trust it — conversion rose after adding Abrox alerts.'},
-      { name:'Pedro Alvarez', cc:'mx', avatar:'https://randomuser.me/api/portraits/men/55.jpg', title:'Fund Analyst • Mexico', text:'T-card volume gave me edge on flows. Solid product.'},
-      { name:'Nora Svensson', cc:'se', avatar:'https://randomuser.me/api/portraits/women/29.jpg', title:'Day Trader • Sweden', text:'Nice consistency. signals feel less noisy than others.'},
-      { name:'Ibrahim Musa', cc:'ng', avatar:'https://randomuser.me/api/portraits/men/81.jpg', title:'Trader • Nigeria', text:'Works even with slow net. solid performance and nice support.'},
-      { name:'Marta Nowak', cc:'pl', avatar:'https://randomuser.me/api/portraits/women/50.jpg', title:'Swing Trader • Poland', text:'I like the volume insight — it helped me avoid a bad trade last week.'},
-      { name:'Jean Dupont', cc:'fr', avatar:'https://randomuser.me/api/portraits/men/5.jpg', title:'Investor • France', text:'Good signal quality, low noise. Recommend if you want clarity.'},
-      { name:'Priya Sharma', cc:'in', avatar:'https://randomuser.me/api/portraits/women/21.jpg', title:'Retail • India', text:'Easy to use, reliable alerts. My results improved surprisingly quick.'},
-      { name:'Thomas Müller', cc:'de', avatar:'https://randomuser.me/api/portraits/men/91.jpg', title:'Quant • Germany', text:'Stable & low latency. Integrates well into algos.'},
-      { name:'Sofia Rossi', cc:'ar', avatar:'https://randomuser.me/api/portraits/women/14.jpg', title:'Swing Trader • Argentina', text:'Great docs and the signals are consistent. Clean UI.'},
-      { name:'Ahmed Khalid', cc:'ps', avatar:'https://randomuser.me/api/portraits/men/88.jpg', title:'Crypto Trader • Palestine', text:'Solid across coins. Support answered me fast, very helpful.'},
-      { name:'Lina Berg', cc:'no', avatar:'https://randomuser.me/api/portraits/women/35.jpg', title:'Instructor • Norway', text:'I show this in class — students get results fast.'},
-      { name:'Carlos Ruiz', cc:'co', avatar:'https://randomuser.me/api/portraits/men/13.jpg', title:'Pro Trader • Colombia', text:'Cleaner entries, fewer false signals. My P/L improved.'},
-      { name:'Hana Kim', cc:'kr', avatar:'https://randomuser.me/api/portraits/women/7.jpg', title:'Analyst • South Korea', text:'Great for quick decisions. I use it daily.'}
-    ];
-
-    // ---------- build testimonial cards & slider (with flagcdn) ----------
-    (function buildSlider(){
-      const track = document.getElementById('track');
-      const dots = document.getElementById('dots');
-
-      // create cards
-      TESTIMONIALS.forEach((t, i) => {
-        const el = document.createElement('div');
-        el.className = 'card';
-        const cc = (t.cc || '').toLowerCase();
-        // flagcdn small icon (24x18) - reliable CDN
-        const flagUrl = `https://flagcdn.com/24x18/${cc}.png`;
-        el.innerHTML = `
-          <div class="flex items-start gap-4">
-            <img class="avatar" src="${t.avatar}" alt="${t.name}" loading="lazy"/>
-            <div style="flex:1">
-              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
-                <div style="font-weight:700">
-                  ${t.name}
-                  <span style="font-weight:600;color:var(--muted);margin-left:8px">
-                    <img src="${flagUrl}" alt="" style="width:20px;height:15px;vertical-align:middle;margin-right:6px;border-radius:2px" />
-                    ${t.title}
-                  </span>
-                </div>
-                <div style="display:flex;align-items:center;gap:2px">
-                  ${[1,2,3,4,5].map(()=>`<svg class="star" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill="#FFD166" d="M10 1.6l1.96 4 4.33.63-3.14 3.06.74 4.31L10 12.9l-3.89 2.66.74-4.31L3.7 6.23l4.33-.63L10 1.6z"/></svg>`).join('')}
-                </div>
-              </div>
-              <div style="color:var(--muted);margin-top:10px;font-size:14px">${t.text}</div>
-            </div>
-          </div>
-        `;
-        track.appendChild(el);
-      });
-
-      // slider logic (robust: waits for images to load)
-      let idx = 0;
-      let slidesToShow = 1;
-      function calc(){ const w = window.innerWidth; slidesToShow = w >= 1024 ? 3 : (w >= 640 ? 2 : 1); }
-      calc();
-      window.addEventListener('resize', ()=> { calc(); renderDots(); render(); });
-
-      function renderDots(){
-        dots.innerHTML = '';
-        const pages = Math.ceil(TESTIMONIALS.length / slidesToShow);
-        for (let i=0;i<pages;i++){
-          const d = document.createElement('div');
-          d.className = 'dot';
-          d.onclick = ()=> { idx = i; render(); };
-          dots.appendChild(d);
-        }
-      }
-
-      function render(){
-        const children = track.children;
-        if (!children.length) return;
-        // guard: if width is zero, try again a bit later
-        const cwRaw = children[0].offsetWidth;
-        if (!cwRaw || isNaN(cwRaw)) {
-          setTimeout(render, 120);
-          return;
-        }
-        const cardW = cwRaw + 16;
-        const shift = idx * cardW;
-        track.style.transform = `translateX(-${shift}px)`;
-        Array.from(dots.children).forEach((el, i) => el.classList.toggle('active', i === Math.floor(idx)));
-      }
-
-      function auto(){
-        idx = (idx + 1) % Math.ceil(TESTIMONIALS.length / slidesToShow);
-        render();
-      }
-
-      renderDots();
-      // wait for images to finish loading so measurements are correct
-      const imgs = track.querySelectorAll('img');
-      if (imgs.length === 0) {
-        render();
-        var id = setInterval(auto, 3200);
-      } else {
-        let loaded = 0;
-        imgs.forEach(img => {
-          if (img.complete) { loaded++; }
-          else img.addEventListener('load', ()=> { loaded++; if (loaded === imgs.length) { render(); id = setInterval(auto, 3200); }});
-        });
-        // fallback start after 1 second in case some images stall
-        setTimeout(()=>{ if (typeof id === 'undefined') { render(); id = setInterval(auto, 3200); } }, 1000);
-      }
-
-      const carousel = document.querySelector('.carousel');
-      carousel?.addEventListener('mouseenter', ()=> clearInterval(id));
-      carousel?.addEventListener('mouseleave', ()=> id = setInterval(auto, 3200));
-      // ensure an initial render after load
-      window.addEventListener('load', ()=> setTimeout(()=> render(), 260));
-    })();
-
-    // ---------- small guard ----------
-    window.addEventListener('error', (e)=> console.warn('Page error (non-fatal):', e.message));
+    }
   </script>
+</head>
+
+<body class="min-h-screen bg-gradient-to-b from-[#03060a] via-[#050a12] to-[#020407] text-[#e6e8eb] font-sans relative">
+
+  <!-- Noise overlay -->
+  <div
+    class="pointer-events-none fixed inset-0 z-0 opacity-[0.025]"
+    style="background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E&quot;)"
+  ></div>
+
+  <div class="relative z-10">
+
+    <!-- LOGO (tighter mobile) -->
+    <header class="flex justify-center pt-3 pb-1 px-4">
+      <img
+        src="assets/logo.png"
+        alt="AstronBot Max Logo"
+        class="w-full max-w-[170px] sm:max-w-[240px] md:max-w-[320px] lg:max-w-[380px] h-auto"
+        loading="eager"
+      />
+    </header>
+
+    <!-- HERO (reduced dominance on mobile) -->
+    <section class="flex justify-center px-4">
+      <img
+        src="assets/hero.png"
+        alt="AstronBot Max Hero"
+        class="w-full max-w-[20rem] sm:max-w-[32rem] md:max-w-4xl lg:max-w-5xl xl:max-w-6xl h-auto mx-auto mb-1 sm:mb-2"
+        loading="lazy"
+      />
+    </section>
+
+    <!-- VIDEO SECTION (mobile-first) -->
+    <section class="flex justify-center px-3 sm:px-4 mt-2">
+      <div class="w-full max-w-full sm:max-w-[560px] md:max-w-[720px] lg:max-w-[900px] xl:max-w-[1024px]">
+
+        <!-- Video frame -->
+        <div class="relative aspect-video rounded-lg sm:rounded-xl overflow-hidden bg-black border border-white/10 shadow-[0_14px_40px_rgba(0,0,0,0.5)]">
+          <video
+            id="demoVideo"
+            src="assets/demo.mp4"
+            controls
+            preload="metadata"
+            class="w-full h-full object-contain"
+          ></video>
+        </div>
+
+        <!-- Player utilities (stack on mobile) -->
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mt-2 text-sm text-white/60">
+          <div class="flex items-center gap-2">
+            <select
+              class="bg-transparent border border-white/10 rounded-md px-3 py-1.5 text-white/80 focus:outline-none"
+              onchange="document.getElementById('demoVideo').playbackRate = this.value"
+            >
+              <option value="0.75">0.75×</option>
+              <option value="1" selected>1×</option>
+              <option value="1.25">1.25×</option>
+              <option value="1.5">1.5×</option>
+              <option value="2">2×</option>
+            </select>
+            <span class="text-white/50">Speed</span>
+          </div>
+
+          <a
+            href="mailto:support@astronbotmax.com?subject=Video%20Playback%20Issue"
+            class="hover:text-white transition self-start sm:self-auto"
+          >
+            Report issue
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER (compact mobile) -->
+    <footer class="mt-4 sm:mt-6 border-t border-white/10 bg-gradient-to-t from-black/40 to-transparent">
+      <p class="text-center text-[0.8rem] sm:text-[0.85rem] text-white/60 py-2 sm:py-3 tracking-wide">
+        © 2026 AstronBot Max. All rights reserved.
+      </p>
+    </footer>
+
+  </div>
 </body>
 </html>
